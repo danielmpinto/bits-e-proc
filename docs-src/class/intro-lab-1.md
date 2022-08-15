@@ -15,7 +15,7 @@ O git será uma das ferramentas mais importantes para o projeto, com as etapas a
 
 O [Scrum Master](https://www.scrum.org/resources/what-is-a-scrum-master) do grupo (escolham entre vocês) deverá realizar o [fork](https://help.github.com/articles/fork-a-repo/) do repositório do projeto do computador Z01, para isso, basta acessar a página do github do projeto:
 
-- https://github.com/Insper/bits-e-proc
+- https://github.com/Insper/bits-e-proc-proj
 
 E no site clicar em **fork**:
 
@@ -102,7 +102,7 @@ Na pagina web do seu repositório no github em commits deve aparecer uma pequena
 !!! note
     Cada teste leva em torno de alguns minutos já que toda a infraestrutura é instalada sempre do zero, não utilize o sistema de Integração Contínua para validar as suas novas implementações, esse sistema deve ser utilizado para encontrar problemas mais amplos ou para o scrum master aceitar ou não um pull-request, já que o resultado do sucesso ou não dessa requisição é visível facilmente.
 
-### Arquivo GRUPO.json de configuração 
+### Arquivo GRUPO.ym de configuração 
 
 !!! warning "Um por grupo"
     Somente um do grupo deve realizar isso.
