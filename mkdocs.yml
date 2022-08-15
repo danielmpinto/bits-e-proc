@@ -100,8 +100,8 @@ nav:
 
   - "Projetos":
       - "class/intro-proj.md"
-      - "class/comb-proj.md"
-      - "class/ula-proj.md"
+  #      - "class/comb-proj.md"
+  #      - "class/ula-proj.md"
   #  #- 'ula-Projeto-dicas.md'
   #  - 'seq-Projeto.md'
   #  - 'assembly-Projeto.md'
@@ -116,18 +116,18 @@ nav:
   - Labs:
       - "class/intro-benchmark-lab.md"
       - "class/intro-lab-1.md"
-      - "class/intro-lab-2.md"
-      - "Lab 4: Transistores/ CI": "commum-content/labs/A-Transistores-Lab-1.md"
-      - "class/comb-lab-1.md"
-      - "class/ula-lab-1.md"
-      - "class/ula-lab-2.md"
-      - "class/ula-lab-3.md"
-      - "class/seq-lab-1.md"
-      - "class/asm-lab-1.md"
-      - "class/asm-lab-2.md"
-      - "class/asm-lab-3.md"
-      - "class/asm-lab-4.md"
-      - "class/asm-lab-HW.md"
+  #      - "class/intro-lab-2.md"
+  #      - "Lab 4: Transistores/ CI": "commum-content/labs/A-Transistores-Lab-1.md"
+  #      - "class/comb-lab-1.md"
+  #      - "class/ula-lab-1.md"
+  #      - "class/ula-lab-2.md"
+  #      - "class/ula-lab-3.md"
+  #      - "class/seq-lab-1.md"
+  #      - "class/asm-lab-1.md"
+  #      - "class/asm-lab-2.md"
+  #      - "class/asm-lab-3.md"
+  #      - "class/asm-lab-4.md"
+  #      - "class/asm-lab-HW.md"
   #  - 'ula-lab-4.md'
   #  - 'cpu-lab-1.md'
   #  - 'Lab 16: Assembler':
@@ -145,30 +145,30 @@ nav:
   - Teoria:
       - "commum-content/teoria/Teoria-Dados.md"
       - "commum-content/teoria/Teoria-Algebra-Booleana.md"
-      - "commum-content/teoria/Teoria-CMOS.md"
-      - "commum-content/teoria/Teoria-RTL.md"
-      - "commum-content/teoria/Teoria-Componentes.md"
-      - "commum-content/teoria/Teoria-Aritmetica-Binaria.md"
-      - "commum-content/teoria/Teoria-Aritmetica-Binaria-HW.md"
-      - "commum-content/teoria/Teoria-ULA.md"
-      - "commum-content/teoria/Teoria-Logica-Sequencial.md"
-      - "commum-content/teoria/Teoria-Sequencial-Componentes.md"
-      - "commum-content/teoria/Teoria-Z01.md"
-      - "commum-content/teoria/Teoria-Assembly.md"
-      - "commum-content/teoria/Teoria-Z01-mapadeMemoria.md"
-      - "commum-content/teoria/Teoria-nasm-jump.md"
-      - "commum-content/teoria/Teoria-Linguagem-de-Maquina.md"
-      - "commum-content/teoria/Teoria-Assembler.md"
-      - "commum-content/teoria/Teoria-Assembler-SymbolTable.md"
-      - "commum-content/teoria/Teoria-vm.md"
-      - "commum-content/teoria/Teoria-vm-segmentos.md"
-      - "commum-content/teoria/Teoria-vm-jump.md"
-      - "commum-content/teoria/Teoria-vm-funcoes.md"
-      - "commum-content/teoria/Teoria-vm-memoria.md"
-      - "commum-content/teoria/Vídeo Aulas (Luciano)": "Util-Video-Aulas.md"
+  #    - "commum-content/teoria/Teoria-CMOS.md"
+  #    - "commum-content/teoria/Teoria-RTL.md"
+  #    - "commum-content/teoria/Teoria-Componentes.md"
+  #    - "commum-content/teoria/Teoria-Aritmetica-Binaria.md"
+  #    - "commum-content/teoria/Teoria-Aritmetica-Binaria-HW.md"
+  #    - "commum-content/teoria/Teoria-ULA.md"
+  #    - "commum-content/teoria/Teoria-Logica-Sequencial.md"
+  #    - "commum-content/teoria/Teoria-Sequencial-Componentes.md"
+  #    - "commum-content/teoria/Teoria-Z01.md"
+  #    - "commum-content/teoria/Teoria-Assembly.md"
+  #    - "commum-content/teoria/Teoria-Z01-mapadeMemoria.md"
+  #    - "commum-content/teoria/Teoria-nasm-jump.md"
+  #    - "commum-content/teoria/Teoria-Linguagem-de-Maquina.md"
+  #    - "commum-content/teoria/Teoria-Assembler.md"
+  #    - "commum-content/teoria/Teoria-Assembler-SymbolTable.md"
+  #    - "commum-content/teoria/Teoria-vm.md"
+  #    - "commum-content/teoria/Teoria-vm-segmentos.md"
+  #    - "commum-content/teoria/Teoria-vm-jump.md"
+  #    - "commum-content/teoria/Teoria-vm-funcoes.md"
+  #    - "commum-content/teoria/Teoria-vm-memoria.md"
+  #    - "commum-content/teoria/Vídeo Aulas (Luciano)": "Util-Video-Aulas.md"
 
-  - MyHDL:
-      - "teoria/myhdl-1.md"
+  #- MyHDL:
+  #    - "teoria/myhdl-1.md"
   #
   #- 'VHDL':
   #  - 'VHDL-basico.md'
@@ -185,10 +185,10 @@ nav:
       - "Resumo VM": "commum-content/z01/z01-Resumo-VM.md"
 
   - Estudo:
-      - "commum-content/exercicios/Exercicio-Algebra-Booleana-1.md"
-      - "commum-content/exercicios/Exercicio-Algebra-Booleana-2.md"
       - "Dados Digitais - 1": https://docs.google.com/spreadsheets/d/1rN_zQqYaVI8PjAhKqEBCmY-_06I0X9dD0RddcI-miJs/edit?usp=sharing
       - "commum-content/exercicios/Exercicio-Dados-2.md"
+      - "commum-content/exercicios/Exercicio-Algebra-Booleana-1.md"
+      - "commum-content/exercicios/Exercicio-Algebra-Booleana-2.md"
       - "Aritmética binária - HW": https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Exercicio-Aritmetica-Booleana.pdf
       - "Lógica Sequencial": "https://forms.gle/XMsFCDMYsmz1qUP86"
       - "Linguagem de Máquina": "https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Linguagem_de_maquina.pdf"

@@ -4,11 +4,6 @@ Devemos começar a preparar o terreno para os projetos em grupo que estarão por
 
 O grupo irá trabalhar de forma colaborativa via a utilização do git/ github. É imprescindível que todos trabalhem dessa forma, pois será a maneira que iremos avaliar individualmente vocês. 
 
-!!! exercise
-    Após criarem os grupos, preencham a tabela a seguir:
-
-    https://docs.google.com/spreadsheets/d/1eb_euZeNXjk3d51_2NCpdM_xwvyj-cBYoPgfGHtwfOQ/edit?usp=sharing
-
 ## GitHub
 
 O git será uma das ferramentas mais importantes para o projeto, com as etapas a seguir vocês realizaram um [Fork](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow) do repositório do projeto e adicionaram os colaboradores.
