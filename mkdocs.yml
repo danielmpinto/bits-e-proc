@@ -47,46 +47,28 @@ extra:
     #      - exercise
     #      - example
     report:
-      api-base: https://127.0.0.1:8080/api/offerings/1/
-      url: https://127.0.0.1:8080/api/offerings/1/exercises/
+      api-base: https://devlife.insper-comp.com.br/api/offerings/1/
+      url: https://devlife.insper-comp.com.br/api/offerings/1/exercises/
 
 markdown_extensions:
-  - markdown.extensions.attr_list
   - markdown.extensions.admonition
-  - markdown.extensions.codehilite:
-      guess_lang: false
-  - markdown.extensions.def_list
-  - markdown.extensions.footnotes
-  - markdown.extensions.meta
-  - markdown.extensions.toc:
-      permalink: true
-  - pymdownx.arithmatex:
-      generic: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.details
+  - pymdownx.tabbed
+  - pymdownx.superfences
+  - pymdownx.magiclink
+  - pymdownx.critic:
+      mode: view
   - pymdownx.betterem:
       smart_enable: all
   - pymdownx.caret
-  - pymdownx.critic
-  - pymdownx.details
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.smartsymbols
   - pymdownx.emoji:
       emoji_generator: !!python/name:pymdownx.emoji.to_svg
-  - pymdownx.inlinehilite
-  - pymdownx.keys
-  - pymdownx.magiclink:
-      repo_url_shorthand: true
-      user: squidfunk
-      repo: mkdocs-material
-  - pymdownx.mark
-  - pymdownx.smartsymbols
-  - pymdownx.superfences
-  - pymdownx.tabbed:
-      alternate_style: true
-  - pymdownx.tasklist:
-      custom_checkbox: true
-  - pymdownx.tilde
   - attr_list
-  - md_in_html
-  - pymdownx.superfences
-  - pymdownx.tabbed:
 
 nav:
   - Home:
