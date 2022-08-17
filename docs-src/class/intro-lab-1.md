@@ -112,9 +112,7 @@ Após clonar o repositório o mediador desse projeto deve editar o arquivo json 
 Exemplo um grupo com a letra **M**, `GRUPO.json`:
 
 ```yml
-{
-  Nome-Grupo: "Macarrao" 
-}
+Nome-Grupo: "Macarrao"
 ```
 
 Após editar o arquivo deve-se: fazer um `commit` e um `push` para o repositório. 
