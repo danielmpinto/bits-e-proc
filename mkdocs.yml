@@ -104,7 +104,7 @@ nav:
       - "class/intro-benchmark-lab.md"
       - "class/intro-lab-1.md"
       - "class/intro-lab-2.md"
-      - "Lab 4: Transistores/ CI": "commum-content/labs/A-Transistores-Lab-1.md"
+      - "class/transistores-lab-1.md"
   #      - "class/comb-lab-1.md"
   #      - "class/ula-lab-1.md"
   #      - "class/ula-lab-2.md"
