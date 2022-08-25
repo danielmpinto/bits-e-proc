@@ -135,7 +135,7 @@ nav:
       #    - "commum-content/teoria/Teoria-CMOS.md"
       - "commum-content/teoria/Teoria-RTL.md"
       - "commum-content/teoria/Teoria-Componentes.md"
-  #    - "commum-content/teoria/Teoria-Aritmetica-Binaria.md"
+      - "commum-content/teoria/Teoria-Aritmetica-Binaria.md"
   #    - "commum-content/teoria/Teoria-Aritmetica-Binaria-HW.md"
   #    - "commum-content/teoria/Teoria-ULA.md"
   #    - "commum-content/teoria/Teoria-Logica-Sequencial.md"
@@ -154,16 +154,8 @@ nav:
   #    - "commum-content/teoria/Teoria-vm-memoria.md"
   #    - "commum-content/teoria/Vídeo Aulas (Luciano)": "Util-Video-Aulas.md"
 
-  #- MyHDL:
-  #    - "teoria/myhdl-1.md"
-  #
-  #- 'VHDL':
-  #  - 'VHDL-basico.md'
-  #  - 'VHDL-Combinacional.md'
-  #  - 'VHDL-port-map.md'
-  #  - 'VHDL-Sequencial.md'
-  #  - 'VHDL-RTL.md'
-  #  - 'VHDL-exemplos.md'
+  - MyHDL:
+      - "teoria/myhdl-1.md"
 
   - "Z01":
       - "Resumo Assembly": "commum-content/z01/z01-Resumo-Assembly.md"
