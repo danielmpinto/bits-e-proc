@@ -75,7 +75,7 @@ O grupo deve se organizar e executar da melhor forma possível (com todos partic
 
 Iremos implementar uma porta lógica do tipo NOT usando transistores BJT. 
 
-![RTL Not](figs/A-Transistores/rtl-not.png){width=500}
+![RTL Not](figs/A-Transistores/rtl-notNEW.png){width=500}
 
 Para isso vocês deverão:
 
