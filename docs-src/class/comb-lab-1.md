@@ -7,10 +7,10 @@ Leitura prévia necessária:
 
 Este laboratório é introdutório para o desenvolvimento do projeto ([`Lógica-Combinacional`](/bits-e-proc/class/logiComb-Projeto)), onde iremos criar componentes de hardware que serão os alicerces do nosso computador. Primeiro precisamos praticar um pouco de `MyHDL` e entender a ferramenta e o fluxo de compilação, teste e como conseguimos executar o hardware em uma FPGA.
 
-Os exercícios dos laboratórios estão localizados no repositório:  https://github.com/rafaelcorsi/bits-e-proc-labs, cada aluno de forma individual deve realizar um fork do repositório e trabalhar individualmente nele. Os laboratórios não po ffssuem entregas, mas devem ser realizados para estudo.
+Os exercícios dos laboratórios estão localizados no repositório:  https://github.com/insper/bits-e-proc-labs, cada aluno de forma individual deve realizar um fork do repositório e trabalhar individualmente nele. Os laboratórios não po ffssuem entregas, mas devem ser realizados para estudo.
 
 !!! exercise
-    1. Realize um fork do repositório de labs
+    1. Realize um fork do repositório de labs (https://github.com/insper/bits-e-proc-labs)
     1. Clone o repositório para a sua máquina
     
 !!! exercise
