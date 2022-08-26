@@ -40,10 +40,17 @@ Agora baixe o arquivo de disco `bits.vdi` (20G) para o seu computador, se não t
     1. O download só vai funcionar conectado na rede Insper.
     1. O Will ficou com uma cópia no pendrive que é mais rápido. Se não quiserem esperar 30min falem com ele!
 
+<<<<<<< HEAD
 !!! exercise
     Download do arquivo [bits.vdi](http://10.103.11.93/bits/)
     
     - http://10.103.11.93/bits/
+=======
+!!! info
+    O Will ficou com uma cópia no pendrive que é mais rápido. Se não quiserem esperar 30min falem com ele!
+
+- [bits.vdi](http://10.103.11.93/bits/)
+>>>>>>> 1261dcf (add infra vm)
 
 Com o download feito, abra o virtualbox e siga os passos a seguir:
 
