@@ -31,6 +31,28 @@ Os exercícios dos laboratórios estão localizados no repositório:  https://gi
     
     Se for utilizar o VSCODE para fazer o desenvolvimento dos projetos e exercícios, basta abrir a pasta raiz do repositório que o code já utiliza o ambiente virtual (eu criei o arquivo `.vscode/settings.json` que configura isso.)
     
+### Configurando telemetria
+
+Para entender melhor o comportamento de vocês ao longo dos laboratórios e atividades da disciplina, nós coletamos alguns dados de telemetria, como:
+
+- user 
+- teste realizado e status
+- horário do teste
+
+A ideia aqui não é utilizar os dados para avaliação, mas sim para melhorias futuras. Esta técnica é muito utilizado em disciplinas da ciência da computação (inclusive devlife).
+
+Antes de trabalharmos no laboratório será que vocês se autentiquem no servidor (eu dei uma trabalhada nisso no domingo e agora a autentica)
+
+!!! exercise
+    Execute no terminal:
+    
+    ```bash
+    $ telemetry auth
+    ```
+    
+    1. Ele deve abrir uma página no navegador e pedir para vocês logarem no github
+    1. Após logar você deve receber um token e colar o valor no terminal
+    
 ### pytest
 
 Bits e Processadores utiliza uma metodologia de desenvolvimento de projeto chamada de **test driven development (TDD)**, ou seja, para cada etapa do projeto teremos um teste associado a ele. Os testes podem ser do tipo unitário e de integraćão. Para realizarmos os testes em python utilizaremos o módulo `pytest` e o plugin de dev-life (para fazer o report do progresso de vocês para o servidor).

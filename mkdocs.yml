@@ -105,7 +105,7 @@ nav:
       - "class/intro-lab-1.md"
       - "class/intro-lab-2.md"
       - "class/transistores-lab-1.md"
-  #      - "class/comb-lab-1.md"
+      - "class/comb-lab-1.md"
   #      - "class/ula-lab-1.md"
   #      - "class/ula-lab-2.md"
   #      - "class/ula-lab-3.md"
