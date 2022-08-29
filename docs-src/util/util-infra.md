@@ -74,7 +74,7 @@ Inicializando a VM:
 
 Ao inicializar a VM você logar com:
 
-- user `van`
+- user `vann`
 - senha: `102030`
 
 O desenvolvimento dos projetos, laboratórios e avaliacões práticas devem ser realizadas dentro da VM.
