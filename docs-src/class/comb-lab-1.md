@@ -19,6 +19,7 @@ Os exercícios dos laboratórios estão localizados no repositório:  https://gi
     ```
     python3.8 -m venv env
     . env/bin/activate
+    pip3 install --upgrade pip
     pip3 install -r requirements.txt
     ```
 
@@ -74,7 +75,7 @@ A seguir um exemplo do teste falhando e então solucionado e testado novamente:
     ```diff
     def exe1():
     -    pass
-    +    q.next = a or (and b)
+    +    q.next = a or (not b)
     ```
     
     Execute o `pytest` novamente e note que o código passa no teste.
@@ -185,18 +186,18 @@ O processo de gerar um hardware que posso ser executado na FPGA é complexo e at
     O processo é demorado para quem está acostumado a apenas programar em python, a geracão do arquivo pode demorar alguns minutos.
 
 !!! exercise
-    Na raiz do repositório `comb/quartus`, execute:
+    Na raiz do repositório execute:
     1. `make -C quartus clean`
-    1. `make -c quartus all`
+    1. `make -C quartus all`
     1. Aguardem compilar
     1. Verifiquem que um novo arquivo `quartus/DE0_CV_Default.sof` foi gerado
     
 ### Programando FPGA
 
-Agora com a FPGA plugada no computador podemos programar, para isso usaremos o comando `make program` que deve enviar para a ROM da FPGA o bitstream.
+Agora com a FPGA plugada no computador podemos programar, para isso usaremos o comando `make -C quartus program` que deve enviar para a ROM da FPGA o bitstream.
 
 !!! exercise
-    1. execute `make program`
+    1. execute `make -C quartus program`
     1. Mexa nas chaves 0 e 1 e notem o LED 0 obedece a equacao `sw0 and (not sw1)`
     
 ## Praticando - parte 2
