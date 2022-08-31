@@ -1,9 +1,29 @@
 # Lab 5: MyHDL
 
+## Atualizacão da infra
+
+Você já comecou o lab na segunda? Então deve executar os seguintes comandos no terminal e na raiz do repositório do laboratório:
+
+Atualizando infra:
+
+```
+rm ~/.telemetry.ini 
+pip install --upgrade --force-reinstall -r requirements.txt
+```
+
+Atualizando lab:
+
+```
+git remote add upstream git@github.com:Insper/bits-e-proc-labs.git
+git fetch upstream
+git merge upstream/main
+```
+
+## Lab
+
 Leitura prévia necessária:
 
 - `MyHDL/MyHDL Básico`
-- `Teoria/FPGA` (TODO)
 
 Este laboratório é introdutório para o desenvolvimento do projeto ([`Lógica-Combinacional`](/bits-e-proc/class/logiComb-Projeto)), onde iremos criar componentes de hardware que serão os alicerces do nosso computador. Primeiro precisamos praticar um pouco de `MyHDL` e entender a ferramenta e o fluxo de compilação, teste e como conseguimos executar o hardware em uma FPGA.
 
@@ -47,9 +67,14 @@ Antes de trabalharmos no laboratório será que vocês se autentiquem no servido
 !!! exercise
     Execute no terminal:
     
-    ```bash
-    $ telemetry auth
-    ```
+    === "Linux"
+        ```bash
+        $ telemetry auth
+        ```
+    === "Mac"
+        ```bash
+        $python3.8 -m telemetry auth
+        ```
     
     1. Ele deve abrir uma página no navegador e pedir para vocês logarem no github
     1. Após logar você deve receber um token e colar o valor no terminal
@@ -94,8 +119,8 @@ Vamos comecar descrevendo algumas circuitos lógicos combinacionais bem simples 
 !!! exercise
     Para cada exercício implemente a solução no arquivo `comb_modules.py` e teste com `pytest`. A descrição do exercício está no próprio módulo.
 
-    - `exe2()`  teste: `pytest -k exe2`
-    - `exe3()`  teste: `pytest -k exe3`
+    - `exe2()` teste: `pytest -k exe2`
+    - `exe3()` teste: `pytest -k exe3`
 
 !!! progress
     Continuar...
