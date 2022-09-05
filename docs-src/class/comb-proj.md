@@ -2,14 +2,26 @@
 
 | Data da entrega |
 |-----------------|
-| ??              |
+| 11/09 - Domingo |
 
 - Arquivo: `hw/components.py`
 
 ![](figs/LogiComb/sistema-comb.svg)
 
-!!! tip "Scrum Master"
-    Você é `Scrum Master` e não sabe por onde começar? De uma olhada nessas dicas: [Vixi! Sou Scrum Master](https://insper.github.io/Z01.1/Util-vixi-sou-scrum/)
+!!! tip "Antes de começar"
+    Siga os passos em:
+    
+    - https://insper.github.io/bits-e-proc/commum-content/util/Util-Comecando-novo-projeto/
+
+!!! tip "Vixi Sou scrum master"
+    Você é o scrum do projeto? Leia:
+    
+    - https://insper.github.io/bits-e-proc/commum-content/util/Util-vixi-sou-scrum/
+
+!!! tip "Vixi! Sou desenvolvedor"
+    Seu papel é o de desenvolvedor? Leia:
+    
+    - https://insper.github.io/bits-e-proc/commum-content/util/Util-vixi-sou-dev/
 
 Esse projeto tem como objetivo trabalhar com portas lógicas e sistemas digitais combinacionais (sem um clock) em FPGA e MyHDL. Os elementos lógicos desenvolvidos nessa etapa serão utilizados como elementos básicos para a construção do computador. 
 
@@ -43,20 +55,39 @@ Nas discussões com os outros colegas o scrum master deve definir os módulos qu
     - Testar os códigos
     - Realizar os pull-requests
 
-### Testes CI
+### Testes
 
-!!! info
-    preparar os testes..
+Cada módulo da entrega possui um teste de unidade (similar ao dos labs), para executar o teste rode:
+
+```py
+pytest -k hw/componentes.py -k MODULO
+```
+
+- MODULO: Módulo a ser testado
+
+### Configurando Testes CI
 
 Cada desenvolvedor além de editar o arquivo `hw/components.py` deve editar o arquivo `.github/workflows/ components.yml` adicionando o teste referente ao modulo que implementou.
 
 !!! example
     Exemplo de como testar o componente `and16`.
 
-    ```yml
-    - name: Test Projeto B
+    ``` yml title=".github/workflows/componentes.yml"
+    - name: Test and16
       run: |
         pytest hw/test_components.py -k and16
+    ```
+    
+    Para testar mais módulos basta replicar o bloco anterior:
+    
+    ``` yml title=".github/workflows/componentes.yml"
+    - name: Test and16
+      run: |
+        pytest hw/test_components.py -k and16
+
+    - name: Test or16
+      run: |
+        pytest hw/test_components.py -k or16
     ```
 
 ## Entrega
@@ -70,14 +101,6 @@ A entrega **final** deve ser feita no ramo `master` do git.
 ### Rubricas para avaliação do projeto
 
 Cada integrante do grupo irá receber duas notas: Uma referente ao desenvolvimento total do projeto (Projeto) e outra referente a sua participação individual no grupo.
-
-=== "Grupo"
-    Para atingir os objetivos A e B, deve-se antes atingir o C.
-    
-=== "Individual"
-    As rubricas a serem seguidas serão comuns a todos os projeto e está descrito no link:
-
-    - [Rubricas Scrum e Desenvolvedor](/Z01.1/Sobre-Rubricas/)
 
 ### Conceito C
 
@@ -94,6 +117,61 @@ Cada integrante do grupo irá receber duas notas: Uma referente ao desenvolvimen
 
 ### Conceito B
 
+- `bin2bcd(b, bcd1, bcd0)`
+- `test_bin2bcd`
+- `toplevel.py`
+
+Para o conceito B vocês devem desenvolver um módulo e seu teste que converte um valor binário (`b`) para
+BCD, a ideia de uso deste componente é: Poder exibir um valor de 00 até 99 nos displays de 7segmentos que temos na FPGA:
+
+![](figs/comb/comb-proj-b.svg){width=300}
+
+Além de desenvolverem o módulo  `components.py bin2bcd` vocês devem criar um teste que irá ajudar vocês verificar se o componente foi implementando corretamente. A entrega final deve ser o `bin2bcd` e o teste `test_components.py test_bin2bcd`.
+
+!!! tip
+    Você pode implementar um [look-up-table](https://en.wikipedia.org/wiki/Lookup_table) usando uma ROM (http://docs.myhdl.org/en/stable/manual/conversion_examples.html?highlight=rom#rom-inference)
+
+#### FPGA
+
+O `toplevel.py` já está configurado para testar na FPGA, usando as chaves SW como input:
+
+```py
+    bc0 = Signal(intbv[4])
+    bc1 = Signal(intbv[4])
+    hex0 = Signal(intbv[7:])
+    hex1 = Signal(intbv[7])
+
+    ic1 = bin2bcd(SW[8:], bc1, bc0)
+    ihex1 = bin2hex(hex1, bc1)
+    ihex0 = bin2hex(hex0, bc0)
+```
+
+- Vocês devem copiar o módulo `bin2hex` que desenvolveram no laboratório 5 para o `components.py`.
+    
+Para validar vocês devem programar a FPGA e gravar um vídeo do mesmo funcionando (mudando as chaves sw exibindo o valor nos dois hex).
+
 ### Conceito A
 
+TODO
+
+<!--
+
+- `parity(data)`
+- `test_parity`
+
+Para o conceito A vocês devem desenvolver alguns componentes novos e seus respectivos testes.
+
+Paridade:
+
+- `parity(data)`: Verifica a [paridade par](https://pt.wikipedia.org/wiki/Paridade_(telecomunica%C3%A7%C3%B5es)) de um vetor de 8 bits
+- `test_parity()` Testa se o módulo `parity` funciona corretamente.
+
+BCD para Binário:
+
+- `bcd2bin(bcd1, bcd0, b)` É o inverso do `bin2bcd` aqui o componente recebe dois dígitos e converte o resultado para binário.
+- `test_bcd2bin()` Testa se o módulo `bcd2bin` funciona corretamente.
+-->
+
 ### Formulários
+
+TODO

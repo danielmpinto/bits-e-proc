@@ -87,7 +87,7 @@ nav:
 
   - "Projetos":
       - "class/intro-proj.md"
-  #      - "class/comb-proj.md"
+      - "class/comb-proj.md"
   #      - "class/ula-proj.md"
   #  #- 'ula-Projeto-dicas.md'
   #  - 'seq-Projeto.md'
@@ -177,6 +177,7 @@ nav:
   - Útil:
       - "commum-content/util/Util-Comecando-novo-projeto.md"
       - "commum-content/util/Util-vixi-sou-scrum.md"
+      - "commum-content/util/Util-vixi-sou-dev.md"
       - "util/util-infra.md"
 #
 #- História:
