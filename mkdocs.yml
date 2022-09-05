@@ -1,17 +1,4 @@
-site_name: "Bits e Processadores"
-theme:
-  custom_dir: "theme"
-  name: active-handout
-  features:
-    - navigation.instant
-    - navigation.tabs
-    - navigation.tabs.sticky
-    - toc.integrate
-    - content.tabs.link
-    - content.code.annotate # (1)
-  palette:
-    - scheme: default
-      primary: indigo
+
       accent: indigo
 
 docs_dir: "docs-src"
@@ -41,32 +28,7 @@ plugins:
 extra:
   ihandout_config:
     #    calendar: /active-handout/reference/calendar/calendar.yml
-    #    counter:
-    #      - question
-    #      - tip
-    #      - exercise
-    #      - example
-    report:
-      api-base: https://devlife.insper-comp.com.br/api/offerings/1/
-      url: https://devlife.insper-comp.com.br/api/offerings/1/exercises/
 
-markdown_extensions:
-  - markdown.extensions.admonition
-  - pymdownx.tasklist:
-      custom_checkbox: true
-  - pymdownx.details
-  - pymdownx.tabbed
-  - pymdownx.superfences
-  - pymdownx.magiclink
-  - pymdownx.critic:
-      mode: view
-  - pymdownx.betterem:
-      smart_enable: all
-  - pymdownx.caret
-  - pymdownx.mark
-  - pymdownx.tilde
-  - pymdownx.smartsymbols
-  - pymdownx.emoji:
       emoji_generator: !!python/name:pymdownx.emoji.to_svg
   - attr_list
   - pymdownx.arithmatex:
