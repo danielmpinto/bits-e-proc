@@ -122,16 +122,38 @@ Cada integrante do grupo irá receber duas notas: Uma referente ao desenvolvimen
 - `toplevel.py`
 
 Para o conceito B vocês devem desenvolver um módulo e seu teste que converte um valor binário (`b`) para
-BCD, a ideia de uso deste componente é: Poder exibir um valor de 00 até 99 nos displays de 7segmentos que temos na FPGA:
+BCD (não é necessário testar na FPGA), a ideia de uso deste componente é: Poder exibir um valor de 00 até 99 nos displays de 7segmentos.
+
+Além de desenvolverem o módulo  `components.py bin2bcd` vocês devem criar um teste que irá ajudar vocês verificar se o componente foi implementando corretamente. A entrega final deve ser o `bin2bcd` e o teste `test_components.py test_bin2bcd`, eu já dei um template do teste pronto no arquivo `test_components.py`, o teste deve tentar ser genérico e validar vários cenários.
+
+Exemplo:
+
+```
+dig1 = Signal(modbv(0))
+dig2 = Signal(modbv(0))
+bin2bcd(72, dig1, dig0)
+print(dig1)
+>> 7
+print(dig0)
+>> 2
+
+bin2bcd(84, dig1, dig0)
+print(dig1)
+>> 8
+print(dig0)
+>> 4
+```
+
+!!! tip
+    Você pode implementar usando uma [look-up-table](https://en.wikipedia.org/wiki/Lookup_table) com uma [ROM em MyHDL](http://docs.myhdl.org/en/stable/manual/conversion_examples.html?highlight=rom#rom-inference), ou se preferir é possível fazer uma tabela verdade e encontrar as equações (vai dar um certo trabalho). Mas podem usar o [SymPy](https://docs.sympy.org/latest/modules/logic.html) que encontra uma equação booleana de uma tabela verdade (e você gera a tabela de um script...). Existe outra solucão que seria usar um algorítimo chamada de [Double dabble](https://en.wikipedia.org/wiki/Double_dabble).
+
+### Conceito A
+
+Para validar vocês devem programar a FPGA e gravar um vídeo do mesmo funcionando (mudando as chaves sw exibindo o valor nos dois hex).
 
 ![](figs/comb/comb-proj-b.svg){width=300}
 
-Além de desenvolverem o módulo  `components.py bin2bcd` vocês devem criar um teste que irá ajudar vocês verificar se o componente foi implementando corretamente. A entrega final deve ser o `bin2bcd` e o teste `test_components.py test_bin2bcd`.
-
-!!! tip
-    Você pode implementar um [look-up-table](https://en.wikipedia.org/wiki/Lookup_table) usando uma ROM (http://docs.myhdl.org/en/stable/manual/conversion_examples.html?highlight=rom#rom-inference)
-
-#### FPGA
+- Vocês devem copiar o módulo `bin2hex` que desenvolveram no laboratório 5 para o `components.py`.
 
 O `toplevel.py` já está configurado para testar na FPGA, usando as chaves SW como input:
 
@@ -145,32 +167,6 @@ O `toplevel.py` já está configurado para testar na FPGA, usando as chaves SW c
     ihex1 = bin2hex(hex1, bc1)
     ihex0 = bin2hex(hex0, bc0)
 ```
-
-- Vocês devem copiar o módulo `bin2hex` que desenvolveram no laboratório 5 para o `components.py`.
-    
-Para validar vocês devem programar a FPGA e gravar um vídeo do mesmo funcionando (mudando as chaves sw exibindo o valor nos dois hex).
-
-### Conceito A
-
-TODO
-
-<!--
-
-- `parity(data)`
-- `test_parity`
-
-Para o conceito A vocês devem desenvolver alguns componentes novos e seus respectivos testes.
-
-Paridade:
-
-- `parity(data)`: Verifica a [paridade par](https://pt.wikipedia.org/wiki/Paridade_(telecomunica%C3%A7%C3%B5es)) de um vetor de 8 bits
-- `test_parity()` Testa se o módulo `parity` funciona corretamente.
-
-BCD para Binário:
-
-- `bcd2bin(bcd1, bcd0, b)` É o inverso do `bin2bcd` aqui o componente recebe dois dígitos e converte o resultado para binário.
-- `test_bcd2bin()` Testa se o módulo `bcd2bin` funciona corretamente.
--->
 
 ### Formulários
 
