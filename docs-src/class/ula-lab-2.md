@@ -127,13 +127,13 @@ def runAdder():
     s = Signal(modbv()[2:])
     c = Signal(bool())
 
-    dut = adder2(x, y, s, c)
+    dut = adderIntbv(x, y, s, c)
 ```
 
 
 !!! exercise
     - File: `ula/ula_modules.py `
-    - Módulo: `def adder2(a, b, soma, carry):`
+    - Módulo: `def adderIntbv(a, b, soma, carry):`
     - Run: `./runAdderIntbv.py`
  
 
