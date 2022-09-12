@@ -170,4 +170,6 @@ O `toplevel.py` já está configurado para testar na FPGA, usando as chaves SW c
 
 ### Formulários
 
-TODO
+- O scrum deve preencher este: https://docs.google.com/forms/d/e/1FAIpQLScf_G8nLvN45edhR7o043xig2aAWB8jb9ZSM6yCvbHP7DziZA/viewform?usp=sf_link
+
+- Os desenvolvedores devem preencher este: https://docs.google.com/forms/d/e/1FAIpQLScYtzwG9xI6Aef3hWBJSD6GocEyhZC05NsEXzCVK3C7aKGZ-Q/viewform?usp=sf_link
