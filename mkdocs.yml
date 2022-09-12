@@ -88,7 +88,7 @@ nav:
   - "Projetos":
       - "class/intro-proj.md"
       - "class/comb-proj.md"
-  #      - "class/ula-proj.md"
+      - "class/ula-proj.md"
   #  #- 'ula-Projeto-dicas.md'
   #  - 'seq-Projeto.md'
   #  - 'assembly-Projeto.md'
@@ -106,9 +106,9 @@ nav:
       - "class/intro-lab-2.md"
       - "class/transistores-lab-1.md"
       - "class/comb-lab-1.md"
-  #      - "class/ula-lab-1.md"
-  #      - "class/ula-lab-2.md"
-  #      - "class/ula-lab-3.md"
+      - "class/ula-lab-1.md"
+      - "class/ula-lab-2.md"
+      - "class/ula-lab-3.md"
   #      - "class/seq-lab-1.md"
   #      - "class/asm-lab-1.md"
   #      - "class/asm-lab-2.md"
