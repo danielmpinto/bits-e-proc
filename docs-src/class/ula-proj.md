@@ -121,14 +121,16 @@ A entrega **final** deve ser feita no ramo `master` do git.
 
 - Testar na FPGA a ULA e gravar um vídeo dela funcionando.
 
-### B
+### B - Nova topologia de somador (adder)
 
-- `addcla4`
-- `addcla16`
-- `ula_test.py`
+Entrega:
 
-Para o conceito B vocês devem implementar um novo somador, com uma topologia diferente da do visto em sala (que é chamdo de `Ripple-carry adder`). O que vocês devem implementar agora é chamado de `Carry-lookahead adder`, que tem um topologia que aumenta a velocidade na qual o resultado do add é gerado.
+- `addcla4`: Somador de 4 bits do tipo carry-lookahead
+- `addcla16`: Somador de 16 bits utilizando 4x `addcla4`
+- `test_addcl4.py`: Teste para verificar o somador de 4 bits
+- `test_addcl16.py`: Teste para verificar o somador de 16 bits
 
+Para o conceito B vocês devem implementar um novo somador, com uma topologia diferente da realizada em sala de aula (que é chamado de `Ripple-carry adder`). O que vocês devem implementar agora é chamado de `Carry-lookahead adder`, que tem uma topologia que aumenta a velocidade na qual o resultado da adição é gerado.
 
 Para isso deverão implementar dois módulos: `addcla4` que é um somador de carry lookahead de 4 bits e então usar quatro deste modulo para criar o `addcla16`:
 
@@ -142,26 +144,31 @@ Vocês encontram mais detalhes na wiki: https://en.wikipedia.org/wiki/Lookahead_
 - https://en.wikipedia.org/wiki/Carry-lookahead_adder
 `add`, existem várias topologias 
 
+### A - Mais funcionalidades
 
+Entrega:
 
+- `ula_new()`: Nova ULA com a adição das funcionalidades.
+- `bcdAdder(x, y, z)`: Somador de dois valores em BCD
+- `test_bcdAdder()`: Teste do somador em BCD
+- `test_ula_new()`: Teste da ULA modificada verificando as funcionalidades.
+- Diagrama de blocos indicando a nova ULA (no `README.md` do repositório)
 
-| Conceito |                                                                                                       |
-|----------|-------------------------------------------------------------------------------------------------------|
-| A+       | - Modifique a ULA adicionando a operação de shift left/right                                          |
-|          | - Modifique o `toplevel` para mostrar o resultado da ULA nos displays de 7s (em hexa)                 |
-|          |                                                                                                       |
-| B+       | - Modifique a ULA adicionando o sinal de estouro da soma (carry) a saída da ULA                       |
-|          | - Modifique a ULA adicionando a operação: X xor Y                                                     |
-|          | - Compila no Quartus a ULA do grupo e faz um vídeo demonstrando o seu funcionamento (FPGA).           |
-|          |                                                                                                       |
-| C+       | - Configurou o Actions para testar o projeto                                                          |
-|          | - Todos os modulos implementando e passam nos testes                                                  |
-|          | - Faz reaproveitamentos dos módulos via `port map` sempre que possível                                |
-|          | - Possui a forma de onda de todos os módulos (.png).                                                  |
-|          |                                                                                                       |
-| D        | - Implementou todos os módulos menos a ULA.                                                           |
-|          |                                                                                                       |
-| I        | - Não implementou os módulos Add16, ULA, Comparador, FullAdder, HalfAdder, Inc16, Inversosr, Zerador. |
+Aqui iremos adicionar mais funcionalidades a nossa ULA (mesmo que não precisando) e chamar-la de `ula_new`, para cada nova funcionalidades vocês devem implementar um novo teste, que:
 
+- Valida individualmente o módulo
+- Valida o módulo quando integrado na ULA
 
+Os módulos devem ser integrados na `ula_new` e um diagrama fornecido indicando como os módulos foram utilizados na nova ULA.
+
+!!! info "shift right/ left"
+    Deve adicionar duas entradas ao controle da ula: `sr` (shift right) e `sf` (shift left) que deslocará o vetor de bits da  entrada X da ULA para direita ou esquerda Y vezes, sendo Y o valor da entrada Y da ula.
+    
+    Para esta nova operação vocês devem utilizar o `barrelShifter` da entrega anterior que recebe as entradas `x` e `y` a direção `dir` da rotação e resulta em um vetor de saída `z` com o resultado da operação.
+    
+!!! info "BCD adder"
+    Iremos considerar que a nossa ULA pode tratar as entradas X e Y como números em BCD e pode realizar uma operação de soma entre eles. Para essa operação vocês devem criar um novo módulo `bcdAdder(x, y, z)` que recebe dois vetores de entrada `x` e `y` e resulta em um novo vetor `z` que é a soma em BCD dos valores.
+    
+    Exemplo: `x=1000, y=1000 ==> z=0001_0110`
+    
 
