@@ -93,6 +93,10 @@ Para cada exercício, anote a operação no papel e entenda o que está acontece
 
 ## Executando na FPGA
 
+!!! warning
+    - Só funciona na VM
+    - Precisa da FPGA
+
 Podemos executar a ULA na FPGA, para isso iremos disponibilizar o binário da FPGA com a ULA já implementada, o arquivo está dentro da pasta do lab da ula e é chamado de `ula/Z011-ULA.sof`. 
 
 Mas antes de programarmos a FPGA será necessário instalar um pacote python que possui a infra da disciplina, no terminal execute:
