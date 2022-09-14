@@ -1,4 +1,4 @@
-# Lab 8: Depurando
+# Lab 9: Depurando
 
 Depurar hardaware (debugar) não é uma tarefá fácil, o problema pode estar em vários lugares diferentes: Componente queimando, solda com mal contato, erros no projeto de hardware, erro no software, clock com jiter ..... A lista de onde um problema pode estar é enorme e envolve várias áreas. 
 
