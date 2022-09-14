@@ -4,6 +4,17 @@ O objetivo desse laboratório é o de trabalharmos com o controle dos sinais da 
 
 1. Executando o simulador
 1. Controlando ULA para realizar operações específicas (exercícios)
+1. Programar a FPGA na ULA e realizar operações.
+
+## Antes de começar
+
+Vamos atualizar o repositório de vocês com o oficial da disciplina, execute os comandos a seguir no terminal (dentro da pasta do lab):
+
+```bash
+git remote add upstream git@github.com:Insper/bits-e-proc-labs.git
+git fetch upstream
+git merge upstream/main
+```
 
 ## Simulador
 
@@ -24,44 +35,67 @@ Você deve obter a seguinte interface:
 
 Com o simulador podemos testar a ULA modificando seus sinais de controle. A seguir uma proposta de operações lógicas que devem ser realizadas na ULA, seus sinais de controle e resultados devem ser anotados nas tabelas.
 
-!!! tip 
-    O projeto **FIXA** as entradas da ULA com os valores:
+Para cada exercício, anote a operação no papel e entenda o que está acontecendo.
 
-    - X = 0x73  
-    - Y = 0x5F
-
-!!! example "Tarefa: `out = X`"
-    - Configure os controles da ULA para fazer com que a saída da ULA seja a entrada **X**
+!!! exercise
+    ```
+    out = X
+    ```
+    Configure os controles da ULA para fazer com que a saída da ULA seja a entrada **X**
     
-    Para isso você deve mexer nas chaves da FPGA e verificar a saída nos leds.
+!!! exercise 
+    ```
+    out = Y
+    ```
+    Configure os controles da ULA para fazer com que a saída da ULA seja a entrada Y
 
-!!! example "Tarefa: `out = Y`"
-    - Configure os controles da ULA para fazer com que a saída da ULA seja a entrada Y
+!!! exercise 
+    ```
+    out = !Y
+    ```
+    Configure os controles da ULA para fazer com que a saída da ULA seja a entrada a entrada Y negada
 
-!!! example "Tarefa: `out = !Y`"
-    - Configure os controles da ULA para fazer com que a saída da ULA seja a entrada a entrada Y negada
+!!! exercise 
+    ```
+    out = 0
+    ```
+    Faça com que a saída da ULA seja 0
 
-!!! example "Tarefa: `out = 0`"
-    - Faça com que a saída da ULA seja 0
+!!! exercise 
+    ```
+    out = 1
+    ```
+    Faça com que a saída da ULA seja 1
 
-!!! example "Tarefa: `out = 1`"
-    - Faça com que a saída da ULA seja 1
+!!! exercise 
+    ```
+    out = -1
+    ```
+    Faça com que a saída da ULA seja -1 (em complemento de 2)
 
-!!! example "Tarefa: `out = -1`"
-    - Faça com que a saída da ULA seja -1 (em complemento de 2)
+!!! exercise 
+    ```
+    out = X+Y
+    ```
+    Faça com que a saída da ULA seja a entrada X + a entrada Y
 
-!!! example "Tarefa: `out = X+Y`"
-    - Faça com que a saída da ULA seja a entrada X + a entrada Y
+!!! exercise "(difícil)"
+    ```
+    `out = X or Y
+    ```
+    Faça com que a saída da ULA seja X ou Y
 
-!!! example "Tarefa (difícil): `out = X or Y`"
-    - Faça com que a saída da ULA seja X ou Y
-
-!!! example "Tarefa (difícil): `out = X - Y`"
-    - Faça com que a saída da ULA seja a entrada X menos a entrada Y
+!!! exercise "(difícil)"
+    ```
+    `out = X - Y`"
+    ```
+    Faça com que a saída da ULA seja a entrada X menos a entrada Y
 
 ## Executando na FPGA
 
-Podemos executar a ULA na FPGA, para isso iremos disponibilizar o binário da FPGA com a ULA já implementada, o arquivo está dentro da pasta do lab da ula e é chamado de `ula/Z011-ULA.sof`. Mas antes de programarmos a FPGA será necessário instalar um pacote python que possui a infra da disciplina, no termina execute:
+Podemos executar a ULA na FPGA, para isso iremos disponibilizar o binário da FPGA com a ULA já implementada, o arquivo está dentro da pasta do lab da ula e é chamado de `ula/Z011-ULA.sof`. 
+
+Mas antes de programarmos a FPGA será necessário instalar um pacote python que possui a infra da disciplina, no terminal execute:
 
 ```
 pip3 install git+https://github.com/Insper/bits-e-proc-tools
@@ -73,10 +107,12 @@ O pacote da disciplina chama `bits` e ao longo do curso ele será atualizado com
 $ bits program fpga Z011-ULA.sof
 ```
 
-Agora basta controlar as chaves da FPGA e ver o resultado da ULA nos LEDS. Note que as entradas X e Y da ula são fixas:
+Agora basta controlar as chaves da FPGA e ver o resultado da ULA nos LEDS. Note que as entradas X e Y da ula são fixas em:
 
 - X: `01110011`
 - Y: `01011111`
+
+Repita algumas operações realizados no simulador.
 
 ![](figs/D-ULA/D-ula-fpga-1.png)
 ![](figs/D-ULA/D-ula-fpga-2.png)
