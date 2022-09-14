@@ -11,7 +11,7 @@ O objetivo desse laboratório é o de trabalharmos com o controle dos sinais da 
 Vamos atualizar o repositório de vocês com o oficial da disciplina, execute os comandos a seguir no terminal (dentro da pasta do lab):
 
 ```bash
-git remote add upstream git@github.com:Insper/bits-e-proc-labs.git
+git remote add upstream https://github.com/insper/bits-e-proc-labs 
 git fetch upstream
 git merge upstream/main
 ```
@@ -23,7 +23,7 @@ Iremos utilizar um simulador da ULA feito em python + Qt. Siga os passos a segui
 ```sh
 git clone https://github.com/eduardomarossi/z01.1-ula
 cd z01.1-ula
-pip3 install -r requirements.txt --user
+pip3 install -r requirements.txt
 python3 main.py
 ```
 
