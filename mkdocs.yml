@@ -24,9 +24,6 @@ repo_url: "https://github.com/insper/bits-e-proc"
 
 copyright: "Copyright &copy; Rafael Corsi @ insper"
 
-extra_css:
-  - https://cdn.jsdelivr.net/gh/insper-education/active-handout-css@main/devlife.css
-
 extra_javascript:
   - js/mathjax.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6

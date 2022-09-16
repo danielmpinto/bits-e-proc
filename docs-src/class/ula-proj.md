@@ -123,6 +123,8 @@ A entrega **final** deve ser feita no ramo `master` do git.
 
 ### B - Nova topologia de somador (adder)
 
+!!! video
+
 Entrega:
 
 - `addcla4`: Somador de 4 bits do tipo carry-lookahead
@@ -138,12 +140,74 @@ Para isso deverão implementar dois módulos: `addcla4` que é um somador de car
 |------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
 | ![](https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/4-bit_carry_lookahead_adder.svg/500px-4-bit_carry_lookahead_adder.svg.png) | ![](https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/16-bit_lookahead_carry_unit.svg/500px-16-bit_lookahead_carry_unit.svg.png) |
 
-Vocês encontram mais detalhes na wiki: https://en.wikipedia.org/wiki/Lookahead_carry_unit
+Vocês encontram mais detalhes na wiki: https://en.wikipedia.org/wiki/Lookahead_carry_unit . Para eu entender melhor, assisti os vídeos:
 
-- https://en.wikipedia.org/wiki/Carry-lookahead_adder
-- https://en.wikipedia.org/wiki/Carry-lookahead_adder
-`add`, existem várias topologias 
+- https://www.youtube.com/watch?v=6Z1WikEWxH0
+- https://www.youtube.com/watch?v=9lyqSVKbyz8
 
+!!! tip "MyHDL"
+    O MyHDL é meio chatinho e vocês tem que lembrar de algumas coisas quando forem implementar o módulo:
+    
+    - `a` e `b` são entradas do tipo `intbv/modbv` para mapearmos um único bit para um módulo já existente é necessário usarmos o tal de shadow signal:
+    
+    ```py
+    # opcao 1
+    a_ = [a(i) for i in range(4)]
+    b_ = [a(i) for i in range(4)]
+    for i ...:
+        falist[i] = fullAdder(a_[i], b_[i], ...)
+    
+    # opcao 2
+      for i ...:
+          falist[i] = fullAdder(a(i), b(i), ...)
+    ```
+
+    - Um sinal de entrada do tipo intbv quando mapeado para um módulo nem sempre vira um sinal, a solução é criarmos um sinal temporário, e então atualizar a saída:
+    
+    ```py
+    q_ = [Signal(bool(0)) for i in range(4)]
+    
+    for i ...:
+        falist[i] = fullAdder(.., .., .. , q_[i], ...)
+    
+    @always_comb
+    def comb():
+        for i in range(4):
+            q.next[i] = q_[i]
+    ```
+    
+    Essa é a solução para o erro do tipo:
+    
+    ```diff
+    - E       AttributeError: 'bool' object has no attribute 'next'
+    ```
+
+    Como alternativa podemos usar o `concatSignal` em `q_` para não ter que fazer o loop:
+    
+    ```py
+    @always_comb
+    def comb():
+        q.next = ConcatSignal(*reversed(q_))
+    ```
+    
+    - Pode ser necessário criar uma variável temporária para podermos escrever e ler de um mesmo vetor:
+    
+    ```bash
+    @always_comb
+    def comb():
+        carry = [0 for i in range(5)]
+        for i in range(5):
+            carry[i+1] = .... carry[i] # lógica com o próprio valor
+    ```
+    
+    > Note que Carry não tem tipo e não é um Sinal, e é criado no `@always_comb` pois ele só é usado para facilitar a criação do HW.
+    
+    Essa é a solução para o erro do tipo:
+    
+    ```diff
+    - E           myhdl.AlwaysCombError: signal ({'cin'}) used as inout in always_comb function argument
+    ```
+    
 ### A - Mais funcionalidades
 
 Entrega:
