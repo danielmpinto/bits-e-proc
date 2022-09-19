@@ -97,7 +97,7 @@ Com a possibilidade de executarmos uma acão por clock, conseguimos realizar tar
     #            LEDR[i].next = ledr_s[i]
     ```
     
-    ??? tip "Solucao"
+    ??? tip "Solução"
         ```py
         @block
         def contador(leds, clk, rst):
@@ -110,6 +110,14 @@ Com a possibilidade de executarmos uma acão por clock, conseguimos realizar tar
 
             return instances()
         ```
+        
+        Seria muito tentador fazer algo como:
+        
+        ```
+        leds.next = leds + 1
+        ```
+        
+        Mas precisamos lembrar que um sinal do módulo (argumento) não pode ser *entrada* e *saída* ao mesmo tempo. Por isso temos que criar o sinal auxiliar `tmp`. Sinais auxiliares podem ser entradas e saídas... na verdade não podemos dizer que ele é entrada ou saída pois só existe dentro do módulo.
  
 ### Clock
 
@@ -261,7 +269,7 @@ def seq():
     
     Dica:
     
-    Você vai precisar de mais um contador indo de 0 a 9
+    Você vai precisar de um contador para contar clocks.
     
     Toplevel:
     
@@ -273,7 +281,28 @@ def seq():
     #    for i in range(len(ledr_s)):
     #        LEDR[i].next = ledr_s[i]
     ```
+      
+    ??? tip "Solução"
+        ```py
+        cnt = Signal(intbv(0)[32:])
+        l = Signal(bool(0))
+
+        @always_seq(clk.posedge, reset=rst)
+        def seq():
+            if cnt < 25000000:
+                cnt.next = cnt + 1
+            else:
+                cnt.next = 0
+                l.next = not l
+
+        @always_comb 
+        def comb():
+            led.next = l
+
+        return instances()
+        ```
         
+        Aqui é a mesma coisa, os sinais `l` e `cnt` são internos e podem ser lidos e escritos. A cada contagem de tempo eu inverto o valor do sinal booleano `l` e atualizo a saída `led` com o valor.
     
 !!! exercise
     - File: `seq_modules.py`
