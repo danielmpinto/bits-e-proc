@@ -86,7 +86,7 @@ nav:
       - "class/intro-proj.md"
       - "class/comb-proj.md"
       - "class/ula-proj.md"
-  #  - 'seq-Projeto.md'
+      - "class/seq-proj.md"
   #  - 'assembly-Projeto.md'
   #  - 'F - CPU':
   #      - 'cpu-Projeto.md'
