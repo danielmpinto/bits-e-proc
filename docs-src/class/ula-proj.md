@@ -233,6 +233,6 @@ Os módulos devem ser integrados na `ula_new` e um diagrama fornecido indicando 
 !!! info "BCD adder"
     Iremos considerar que a nossa ULA pode tratar as entradas X e Y como números em BCD e pode realizar uma operação de soma entre eles. Para essa operação vocês devem criar um novo módulo `bcdAdder(x, y, z)` que recebe dois vetores de entrada `x` e `y` e resulta em um novo vetor `z` que é a soma em BCD dos valores.
     
-    Exemplo: `x=1000, y=1000 ==> z=0001_0110`
+    Exemplo: `x=0000000000001000, y=0000000000001000 ==> z=0000000000010110`
     
 
