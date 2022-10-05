@@ -8,7 +8,15 @@ Ao final desse lab você deve ser capaz de:
 
 !!! warning "Antes de começar"
     1. Atualize o seu repositório de laboratório com o `upstream`
-    1  Atualize a ferramenta: 
+    
+    ```
+    git remote add upstream git@github.com:Insper/bits-e-proc-proj.git
+    git fetch upstream
+    git checkout main
+    git merge upstream/main
+    ```
+    
+    1.  Atualize a ferramenta: 
     
     ```
     pip install --upgrade --force-reinstall -r requirements.txt
