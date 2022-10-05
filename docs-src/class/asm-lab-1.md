@@ -7,9 +7,28 @@ Ao final desse lab você deve ser capaz de:
 1. Executar script de teste do assembly
 
 !!! warning "Antes de começar"
-    Toda vez que um novo projeto começar será necessário realizar algumas configurações no repositório do grupo, vocês devem seguir para o documento: [`Util/Começando novo Projeto`](https://insper.github.io/Z01.1/Util-Comecando-novo-projeto/) e depois voltar para esse lab.
+    1. Atualize o seu repositório de laboratório com o `upstream`
+    1  Atualize a ferramenta: 
+    
+    ```
+    pip install --upgrade --force-reinstall -r requirements.txt
+    ```
 
-    - Não seguir sem realizar a etapa anterior.
+    1. Valide executando no terminal `bits`:
+    
+    ```
+    ➜ bits 
+    Usage: bits [OPTIONS] COMMAND [ARGS]...
+
+    Options:
+    -b, --debug  Enables verbose mode.
+    --help       Show this message and exit.
+
+    Commands:
+    assembly
+    gui
+    program
+    ```
 
 ## Simulador
 
