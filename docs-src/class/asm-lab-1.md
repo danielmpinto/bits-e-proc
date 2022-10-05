@@ -19,7 +19,7 @@ Ao final desse lab você deve ser capaz de:
     1.  Atualize a ferramenta: 
     
     ```
-    pip install --upgrade --force-reinstall -r requirements.txt
+    pip3 install --upgrade --force-reinstall -r requirements.txt
     ```
 
     1. Valide executando no terminal `bits`:
