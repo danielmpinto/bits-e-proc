@@ -87,7 +87,7 @@ nav:
       - "class/comb-proj.md"
       - "class/ula-proj.md"
       - "class/seq-proj.md"
-  #  - 'assembly-Projeto.md'
+      - "class/asm-proj.md"
   #  - 'F - CPU':
   #      - 'cpu-Projeto.md'
   #      - 'cpu-Testando.md'
@@ -110,7 +110,7 @@ nav:
       - "class/asm-lab-1.md"
       - "class/asm-lab-2.md"
       - "class/asm-lab-3.md"
-  #     - "class/asm-lab-4.md"
+      - "class/asm-lab-4.md"
   #      - "class/asm-lab-HW.md"
   #  - 'ula-lab-4.md'
   #  - 'cpu-lab-1.md'
