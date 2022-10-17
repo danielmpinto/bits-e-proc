@@ -10,7 +10,7 @@ Ao final desse lab você deve ser capaz de:
     1. Atualize o seu repositório de laboratório com o `upstream`
     
     ```
-    git remote add upstream git@github.com:Insper/bits-e-proc-proj.git
+    git remote add upstream https://github.com/Insper/bits-e-proc-proj
     git fetch upstream
     git checkout main
     git merge upstream/main
