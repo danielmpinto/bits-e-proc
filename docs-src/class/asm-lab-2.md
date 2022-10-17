@@ -12,7 +12,7 @@ Ao final desse lab você deve ser capaz de:
 !!! note
     Dúvidas sobre assembly? [Z01->Resumo Assembly](https://insper.github.io/Z01.1/Util-Resumo-Assembly/)
 
-Esse lab deve ser feito no Z01Simulador, para abrir o programa basta ==executar o script `Z01simulador.py`== dentro da pasta do projeto `E-Assembly`
+Esse lab deve ser feito no Z01Simulador, para abrir o programa digitar `bits nasm gui` com o **env ativado!**
 
 Todos os arquivos possuem teste, após programar no `Simulador` execute o teste
 
@@ -25,7 +25,7 @@ Problemas relacionados ao LED do nosso Z01
     
     [](/commum-content/figs/Z0-mapa-de-memoria.svg)
     
-    - [ ] 21184
+    - [ ] 21186
     - [ ] 16383
     - [ ] 16384
     - [ ] 21183
