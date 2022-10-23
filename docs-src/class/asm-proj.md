@@ -2,7 +2,7 @@
 
 | Entrega      |
 |--------------|
-| 28/04 - Quinta |
+| 24/10 - Segunda |
 
 ![Assembly](figs/F-Assembly/sistema-assembly.svg)
 
