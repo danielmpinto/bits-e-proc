@@ -91,7 +91,7 @@ nav:
   #  - 'F - CPU':
   #      - 'cpu-Projeto.md'
   #      - 'cpu-Testando.md'
-  #  - 'assembler-Projeto.md'
+      - 'class/assembler-proj.md'
   #  - 'vm-Projeto.md'
   #  - 'J-VMtranslator-Projeto.md'
   #  - 'X-Processadores-Projeto.md'
@@ -111,10 +111,9 @@ nav:
       - "class/asm-lab-2.md"
       - "class/asm-lab-3.md"
       - "class/asm-lab-4.md"
-  #      - "class/asm-lab-HW.md"
   #  - 'ula-lab-4.md'
   #  - 'cpu-lab-1.md'
-  #  - 'Lab 16: Assembler':
+  #    - 'Lab 16: Assembler':
   #    - 'assembler-Lab-1.md'
   #    - 'assembler-Lab-1-parte-1.md'
   #    - 'assembler-Lab-1-parte-2.md'
@@ -170,6 +169,7 @@ nav:
       - "Linguagem de Máquina": "https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Linguagem_de_maquina.pdf"
       - "commum-content/exercicios/Exercicio-CPU-1.md"
       - "commum-content/exercicios/Exercicio-CPU-2.md"
+      - "commum-content/exercicios/Linguagem_de_maquina.pdf"
 
   - Útil:
       - "commum-content/util/Util-Comecando-novo-projeto.md"
