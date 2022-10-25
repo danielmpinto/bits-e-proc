@@ -111,6 +111,8 @@ nav:
       - "class/asm-lab-2.md"
       - "class/asm-lab-3.md"
       - "class/asm-lab-4.md"
+      - "class/assembler-lab-1.md"
+
   #  - 'ula-lab-4.md'
   #  - 'cpu-lab-1.md'
   #    - 'Lab 16: Assembler':
