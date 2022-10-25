@@ -94,7 +94,7 @@ nav:
       - 'class/assembler-proj.md'
   #  - 'vm-Projeto.md'
   #  - 'J-VMtranslator-Projeto.md'
-  #  - 'X-Processadores-Projeto.md'
+      - 'class/x-proj.md'
   #
   - Labs:
       - "class/intro-benchmark-lab.md"
