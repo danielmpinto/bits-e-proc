@@ -60,7 +60,7 @@ Você deverá escolher um dos processadores listados a seguir:
 
 ## Entrega
 
-Você deve entregar um vídeo que explica a CPU em questão, neste vídeo (de 10 minutos) deve conter:
+Você deve entregar um vídeo que explica a CPU em questão, este vídeo ==de 10 minutos== deve conter:
 
 - Explicativo do hardware
 - Código Assembly Comentado
