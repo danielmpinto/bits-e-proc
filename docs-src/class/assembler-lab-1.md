@@ -71,25 +71,32 @@ END;
 
 O assembler será um programa escrito em python e que foi estruturado em **quatro classes**:
     
+!!! info ""    
+    Arquivos localizados no repositório de projetos: `sw/assembler/`
+
 - ASM
     - **Arquivo**: `ASM.py`
     - **Descrição**: Classe responsável por criar o código de máquina, ela que **efetivamente** faz a varredura do arquivo `.nasm` de entrada e escreve o arquivo `.hack` de saída, gerando o código de máquina. 
     - **Dependências**: `ASMcode.py`, `Parser.py`, `SymbolTable.py`
+    - **Teste**: `test_asm.py`
 
 - Code
     - **Arquivo**   : `ASMcode.py`
     - **Descrição** :  Traduz mnemônicos da linguagem assembly para códigos binários da arquitetura Z0.
     - **Dependências** : none
+    - **Teste**: `test_asmcode.py`
 
 - Parser
     - **Arquivo**: `ASMparser.py`
     - **Descrição** : Encapsula o código de leitura. Carrega as instruções na linguagem assembly, analisa, e oferece acesso as partes da instrução  (campos e símbolos). Além disso, remove todos os espaços em branco e comentários.
     - **Dependências** : none
-
+    - **Teste**: `test_asmparser.py`
+    
 - SymbolTable
     - **Arquivo**   : `ASMsymbolTable.py`
     - **Descrição** :  Mantém uma tabela com a correspondência entre os rótulos simbólicos e endereços numéricos de memória.
     - **Dependências** : none
+    - **Teste**: `test_asmsymboltable.py`
 
 Note que o 'orquestrador' da montagem (esse é o termo em português utilizado) é a classe 'Assemble', nela que estará toda a lógica de montagem acessoada pelas demais classes. 
 
@@ -116,6 +123,28 @@ No **vscode** abra o código `ASMcode.py` e procure pelo método `jump`:
         return bits
 ```
 
+Agora abra o arquivo `test_asmcode` e procure pelo `test_jump`, você deve ver algo como:
+
+```py
+
+def test_jump():
+    test_vector = [
+        .....
+        [["orw", "%D", "%A", "%A"], "000"],
+        [["jmp"], "111"],
+        [["je"], "010"],
+        [["jne"], "101"],
+        [["jg"], "001"],
+        [["jge"], "011"],
+        [["jl"], "100"],
+        [["jle"], "110"],
+    ]
+    code = Code()
+    for t in test_vector:
+        result = code.jump(t[0])
+        assert result == t[1], erroMsg(t, result)
+```
+
 Note que o input dessa função é um array de strings, chamado `mnemnonic` e seu retorno é uma string. No mnemnonic será passado a instrução a ser executada da seguinte forma:
 
 - `{"jmp"}`
@@ -133,7 +162,7 @@ E deve retornar o binário correspondente aos bits j2, j1 e j0 do comando de jum
     - File: `sw/assembler/ASMcode.py`
     - Teste: `pytest -k test_jump`
     
-    Implemente a classe `jump` e teste sua implementação.
+    Implemente o método `jump` e teste sua implementação.
 
     Dica: Lembre que a disciplina utiliza da metodologia TDD, onde vocês devem basear o desenvolvimento no testes. Abra o arquivo de teste `test_asmcode.py` e analise como o `test_jump` é realizado.
     
@@ -174,41 +203,53 @@ Vamos pegar como exemplo o método `commandType` do `sw/assembler/ASMparser.py`:
         pass
 ```
 
-E seu teste unitário:
+!!! exercise choice two-cols
+    Qual arquivo `test_*.py*` tem o teste do `commandType`?
+    
+    - [ ] `test_asm.py`
+    - [ ] `test_asmcode.py`
+    - [x] `test_asmparser.py`
+    - [ ] `test_symboltable.py`
 
-```py
-def test_commandType():
-    fnasm = open('test_assets/mult.nasm', 'r')
-    ptest = Parser(fnasm)
+    !!! answer
+        O módulo `commandType` pertence ao `parser`, logo o teste estará localizado no `test_asmparser.py`
 
-    ptest.currentCommand = ['leaw', '$2', '%A']
-    assert ptest.commandType() == ptest.CommandType['A']
+!!! exercise long
+    Analisando o comentário do módulo e o arquivo de teste, responsa o que o módulo deve fazer. 
+    
+    !!! answer
 
-    ptest.currentCommand = ['movw', '$1', '%A']
-    assert ptest.commandType() == ptest.CommandType['C']
+        - Nesse teste é passado o vetor `["leaw", "$2",  "%A"]` para o método `parser.commandType` e esperasse na saída `A_COMMAND`, .... .
+        
+        ```py
+        def test_commandType():
+            fnasm = open('test_assets/mult.nasm', 'r')
+            ptest = Parser(fnasm)
 
-    ptest.currentCommand = ['WHILE:']
-    assert ptest.commandType() == ptest.CommandType['L']
+            ptest.currentCommand = ['leaw', '$2', '%A']
+            assert ptest.commandType() == ptest.CommandType['A']
 
-    ptest.currentCommand = ['leaw', '$31', '%A']
-    assert ptest.commandType() == ptest.CommandType['A']
+            ptest.currentCommand = ['movw', '$1', '%A']
+            assert ptest.commandType() == ptest.CommandType['C']
 
-    ptest.currentCommand = ['addw', '%D', '%A', '%D']
-    assert ptest.commandType() == ptest.CommandType['C']
+            ptest.currentCommand = ['WHILE:']
+            assert ptest.commandType() == ptest.CommandType['L']
 
-    ptest.currentCommand = ['rsubw', '%D', '%A', '%D']
-    assert ptest.commandType() == ptest.CommandType['C']
-```
+            ptest.currentCommand = ['leaw', '$31', '%A']
+            assert ptest.commandType() == ptest.CommandType['A']
 
-- Nesse teste é passado o vetor `["leaw", "$2",  "%A"]` para o método `parser.commandType` e esperasse na saída `A_COMMAND`, .... .
+            ptest.currentCommand = ['addw', '%D', '%A', '%D']
+            assert ptest.commandType() == ptest.CommandType['C']
 
-Com essa informação complementar conseguimos iniciar o desenvolvimento dessa classe.
+            ptest.currentCommand = ['rsubw', '%D', '%A', '%D']
+            assert ptest.commandType() == ptest.CommandType['C']
+        ```
 
 !!! exercise
     - File: `sw/assembler/ASMparser.py`
-    - Teste: `pytest -k test_commandType
+    - Teste: `pytest -k test_commandType`
     
-    Implemente a classe `commandType` e teste sua implementação.
+    Implemente o método `commandType` e teste sua implementação.
     
     ==NOTA:== O teste verifica apenas alguns casos, você deve tentar generalizar a implementacão da classe, lembre que instruções do tipo C podem ser das mais diversas.
 
@@ -231,7 +272,6 @@ Com essa informação complementar conseguimos iniciar o desenvolvimento dessa c
 ## Parte 4 - Symboltable
 
 Implemente o método `init` da classe `SymbolTable` utilizando os conceitos visto nos outros labs. 
-
 
 !!! exercise
     - File: `sw/assembler/ASMsymbolTable.py`
