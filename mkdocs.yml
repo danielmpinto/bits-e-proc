@@ -112,21 +112,8 @@ nav:
       - "class/asm-lab-3.md"
       - "class/asm-lab-4.md"
       - "class/assembler-lab-1.md"
+      - "class/vm-lab-1.md"
 
-  #  - 'ula-lab-4.md'
-  #  - 'cpu-lab-1.md'
-  #    - 'Lab 16: Assembler':
-  #    - 'assembler-Lab-1.md'
-  #    - 'assembler-Lab-1-parte-1.md'
-  #    - 'assembler-Lab-1-parte-2.md'
-  #    - 'assembler-Lab-1-parte-3.md'
-  #    - 'assembler-Lab-1-parte-4.md'
-  #    - 'assembler-Lab-1-parte-5.md'
-  #  - 'vm-Lab-1.md'
-  #  - 'Lab 18: VMtranslator':
-  #    - 'VMtranslator-Lab-1-old.md'
-  #    - 'VMtranslator-Lab-1.md'
-  #
   - Teoria:
       - "commum-content/teoria/Teoria-Dados.md"
       - "commum-content/teoria/Teoria-Algebra-Booleana.md"
