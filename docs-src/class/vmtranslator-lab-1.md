@@ -4,6 +4,7 @@ Este laboratório é uma introdução para o nosso último projeto, o vmtranslat
 
 1. Modificar o vmtranslator 
 1. Realizar testes
+1. Ver o teste passar =)
 
 !!! exercise "Antes de começar"
 
@@ -24,7 +25,7 @@ O VMtranslator já foi fornecido quase todo pronto (ufa!!) vocês só precisam i
 
 O único arquivo que vocês vão precisar mexer de todo o projeto é o `Code.py`. Mas se tiver energia, de uma olhada na estrutura geral do projeto.
 
-## Aritmética
+### Aritmética
 
 Vamos comecar o lab implementando a operacoes aritméticas, mais especifica a de `add` (que soma dois elementos na pilha), abra o código do `Code.py` e procure pelas linhas:
 
@@ -103,7 +104,7 @@ Um desafio (e que todo mundo deve conseguir fazer).
 
 !!! exercise
     - File: `sw/vmtranlator/Code.py`
-    - Method: writeArithmetic`
+    - Method: `writeArithmetic`
     - Command: `gt`
     - Test: `pytest -k gt`
  
