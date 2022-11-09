@@ -8,18 +8,19 @@
     - Realizar o laboratório individualmente. Mas trabalhar no grupo e trocar ideias.
 
 !!! exercise
-    Atualize a infra do python!
-    
+    Atualize a infra do python (se criar um novo venv não é necessário)
+        
     ```bash
-    pip3 install -r requirements
+    pip install pip-upgrader
+    pip-upgrade requirements.txt
     ```
 
 !!! exercise
-    O laboratório está disponível via um repositório no classroom:
+    ⚠️ O laboratório está disponível via um repositório no classroom (e não no repositório de labs):
     
     https://classroom.github.com/a/S4qxTwiq
     
-    - O repositório possui teste automatizado e autograding (lembrem de dar push).
+    - Notem que o repositório possui teste automatizado e autograding (lembrem de dar push para contar as notas).
 
 No laboratório iremos praticar a linguagem VM para o nosso Z01.1, essa entrega é individual e **vale nota**. Esse laboratório mistura exercícios com leitura de teoria, é essencial que você realize as leituras recomendadas para cada secção e então voltar para fazer os exercícios. 
 
@@ -32,7 +33,6 @@ Primeiro iremos praticar o conceito básico da linguagem VM, que é a notação 
 1. `3 × (4 + (5 × (6 + 7)))`   (Dica: comece pelo parêntese mais interno)
 1. $1/\sqrt{121}$
 1. `23^2 – (13 × 9) + (5/7)`
-
 
 > Exercícios extraídos de: https://hansklav.home.xs4all.nl/rpn/ , no site tem várias dicas muito legais!
 
