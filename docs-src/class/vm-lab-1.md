@@ -92,13 +92,13 @@ div(10,2) + div(mult(mult(15,3), sqrt(121.2))), exp(2,5))
 Vamos agora trabalhar com funções na nossa VM, implementem os códigos a seguir:
 
 !!! exercise "(00 HW/ 01 SW) call"
-    - File: `1a-calculadora/Main.vm`
+    - File: `2a-calculadora/Main.vm`
     - Teste: `pytest -k 2a`
     
     Neste exercício a funções `mult` já foi dada pronta, você deve agora apenas fazer uso dela.
     
 !!! exercise "(00 HW/ 02 SW) div function"
-    - File: `1b-calculadora/div.vm`
+    - File: `2b-calculadora/div.vm`
     - Teste: `pytest -k 2b`
 
     Neste exercício você deve implementar uma funções `div` que recebe dois argumentos e faz a divisão. Para isso, declare no comeco do arquivo: `function div X` onde X é o número de variáveis temporária que deseja utilizar.

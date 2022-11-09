@@ -113,6 +113,7 @@ nav:
       - "class/asm-lab-4.md"
       - "class/assembler-lab-1.md"
       - "class/vm-lab-1.md"
+      - "class/vmtranslator-lab-1.md"
 
   - Teoria:
       - "commum-content/teoria/Teoria-Dados.md"
@@ -158,7 +159,7 @@ nav:
       - "Linguagem de Máquina": "https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Linguagem_de_maquina.pdf"
       - "commum-content/exercicios/Exercicio-CPU-1.md"
       - "commum-content/exercicios/Exercicio-CPU-2.md"
-      - "commum-content/exercicios/Linguagem_de_maquina.pdf"
+      - "linguagem de máquina": commum-content/exercicios/Linguagem_de_maquina.pdf"
 
   - Útil:
       - "commum-content/util/Util-Comecando-novo-projeto.md"
