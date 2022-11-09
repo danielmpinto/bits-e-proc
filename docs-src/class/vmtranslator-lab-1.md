@@ -18,9 +18,11 @@ Este laboratório é uma introdução para o nosso último projeto, o vmtranslat
 
 ### Estrutura
 
-O VMtranslator já foi fornecido quase todo pronto (ufa!!) vocês só precisam implementar a parte que faz a tradução de um comando `vm` (pilha) em `nasm` (registrador-memória), o projeto possui estrutura muito similar ao do assembler.
+O VMtranslator já foi fornecido quase todo pronto (ufa!!) vocês só precisam implementar a parte que faz a tradução de um comando `vm` (pilha) em `nasm` (registrador-memória), o projeto possui estrutura muito similar ao do assembler, os códigos do VM Translator estão localizados em:
 
-O único arquivo que vocês vão precisar mexer é no `Code.py`. Mas se tiver energia, de uma olhada na estrutura geral do projeto.
+- `sw/vmtranlator/....`
+
+O único arquivo que vocês vão precisar mexer de todo o projeto é o `Code.py`. Mas se tiver energia, de uma olhada na estrutura geral do projeto.
 
 ## Aritmética
 
