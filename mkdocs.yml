@@ -88,12 +88,8 @@ nav:
       - "class/ula-proj.md"
       - "class/seq-proj.md"
       - "class/asm-proj.md"
-  #  - 'F - CPU':
-  #      - 'cpu-Projeto.md'
-  #      - 'cpu-Testando.md'
       - 'class/assembler-proj.md'
-  #  - 'vm-Projeto.md'
-  #  - 'J-VMtranslator-Projeto.md'
+      - "class/vmtranslator-proj.md"
       - 'class/x-proj.md'
   #
   - Labs:

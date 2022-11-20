@@ -1,4 +1,4 @@
-# Lab 9: Assembly 
+# Lab 9: (nasm) Assembly 
 
 Ao final desse lab você deve ser capaz de:
 
