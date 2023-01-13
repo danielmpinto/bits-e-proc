@@ -1,4 +1,4 @@
-# Lab 12: (nasm) Saltos
+# Lab 13: (nasm) Saltos
 
 Ao final desse lab você deve ser capaz de:
 

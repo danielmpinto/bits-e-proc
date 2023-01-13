@@ -1,4 +1,4 @@
-# Lab 8: Lógica Sequencial
+# Lab 10: Lógica Sequencial
 
 !!! warning
     :zap: O laboratório só pode ser realizado com FPGA. 
