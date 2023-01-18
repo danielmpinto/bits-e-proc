@@ -1,6 +1,6 @@
 #  F - Assembly - Dicas
 
-A seguir algumas dicas para atingir os conceitos B e A nessa entrega.
+A seguir algumas dicas para atingir os conceitos B e A nesta entrega.
 
 ## Rubrica - B
 
