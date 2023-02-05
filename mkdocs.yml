@@ -1,51 +1,28 @@
 site_name: "Bits e Processadores"
 theme:
-  custom_dir: "theme"
-  name: active-handout
-  features:
-    - navigation.tabs
-    - navigation.tabs.sticky
-    - toc.integrate
-    - content.tabs.link
-    - content.code.annotate # (1)
-  palette:
-    - scheme: default
-      primary: indigo
-      accent: indigo
+  name: active-handout-theme
 
 docs_dir: "docs-src"
-
 site_url: https://insper.github.io/bits-e-proc/
-edit_uri: "edit/docs/docs-src/"
-
 repo_name: "Insper/bits-e-proc"
 repo_url: "https://github.com/insper/bits-e-proc"
 
-copyright: "Copyright &copy; Rafael Corsi @ insper"
-
 extra_javascript:
-  - https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.0.0/js-yaml.min.js
-  - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
-  - https://cdn.jsdelivr.net/gh/insper-education/active-handout-plugins-js@main/package/plugin-bundle.js
-  - js/mathjax.js
 
 plugins:
-  - search
-  - active-exercises:
-      offering_id: 1
+  - active-handout:
+      telemetry: true
+      backend_url: https://devlife-api.insper-comp.com.br/
+      course_slug: 22b bits
 
 extra:
-  ihandout_config:
-    #    calendar: /active-handout/reference/calendar/calendar.yml
-    #    counter:
-    #      - question
-    #      - tip
-    #      - exercise
-    #      - example
-    report:
-      api-base: https://devlife.insper-comp.com.br/api/offerings/1/
-      url: https://devlife.insper-comp.com.br/api/offerings/1/exercises/
+  custom_variables:
+    lab_5_classroom: https://classroom.github.com/a/vL9MgUbs
+    lab_5_points: '2 HW / 1 SW'
+    lab_6_classroom: https://classroom.github.com/a/yQ34x1Xc
+    lab_6_points: '1 HW / 0 SW'
+
 
 markdown_extensions:
   - markdown.extensions.admonition
@@ -74,15 +51,10 @@ markdown_extensions:
 
 nav:
   - Home:
-      - "index.md"
       - "Sobre.md"
       - "Sobre-Criterios-de-Avaliacao.md"
       - "Sobre-Rubricas.md"
-
-  #- 'Util-Aulas.md'
-  #- '21a/Avaliacoes.md'
-
-  - "Projetos":
+  - Projetos:
       - "class/intro-proj.md"
       - "class/comb-proj.md"
       - "class/ula-proj.md"
@@ -91,7 +63,6 @@ nav:
       - 'class/assembler-proj.md'
       - "class/vmtranslator-proj.md"
       - 'class/x-proj.md'
-  #
   - Labs:
       - "class/intro-benchmark-lab.md"
       - "class/intro-lab-1.md"

@@ -3,23 +3,7 @@
 !!! warning
     :zap: O laboratório só pode ser realizado com FPGA. 
     
-    - Sugerimos trabalhar em dupla.
-
-## Antes de começar
-
-Vamos atualizar o repositório de vocês com o oficial da disciplina, execute os comandos a seguir no terminal (dentro da pasta do lab):
-
-```bash
-git remote add upstream https://github.com/insper/bits-e-proc-labs 
-git fetch upstream
-git merge upstream/main
-```
-
-Atualizando pacote de telemetria
-
-```bash
-pip3 install -r requirements --upgrade
-```
+    ==MAC M1? Use uma das NUCs do laboratório.==
 
 ## Começando
 
@@ -31,7 +15,7 @@ def comb():
     led.next = l
 ```
 
-Agora vamos começar usar um novo `decorator` (`@always_seq`) para indicar que uma função deve ser sequencial e depender do `clock` e do `reset`. O módulo aseguir demonstra como implementar um flip-flop tipo D em MyHDL:
+Agora vamos começar usar um novo `decorator` (`@always_seq`) para indicar que uma função deve ser sequencial e depender do `clock` e do `reset`. O módulo a seguir demonstra como implementar um flip-flop tipo D em MyHDL:
 
 ```py
 @block

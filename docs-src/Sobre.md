@@ -4,12 +4,12 @@ Bits e Processadores:
 
 - **Curso:** Ciência da Computacão
 - **Disciplina:** Bits e Processadores - [Insper](https://www.insper.edu.br/) - 2022a.
-- **Prof.** Rafael Corsi - rafael.corsi@insper.edu.br
-- **Local:** Dev. Space
-
+- **Prof.** Paulo Carlos Do Santos 
+- **Prof. Responsável** Rafael Corsi - rafael.corsi@insper.edu.br
+- **Local:** Dev. Space e Laboratório de Arquitetura De Computadores
 **© Todos os direitos reservados**
 
-Criado por prof. Rafael Corsi / rafael.corsi@insper.edu.br , baseada em [Elementos de Sistemas](github.com/insper/z01.1).
+Criado por prof. Rafael Corsi / rafael.corsi@insper.edu.br, baseado em [Elementos de Sistemas](github.com/insper/z01.1).
 
 -------------------------
 

@@ -2,12 +2,25 @@
 
 Neste laboratório iremos desenvolver somadores que serão utilizados no desenvolvimento da unidade lógica aritmética da nossa CPU.
 
-## Half e Full adder 
-
-Vamos comecar implementando com as duas unidades básicas de um somador o *half-adder* e *full-adder*. 
+!!! info "💰 Laboratório com pontos"
+    Algumas tarefas deste laboratório fornecem pontos de nota individual (hardware ou software), os exercícios marcados com 💰 são os que fornecem os pontos. Os pontos apenas são validados quando contabilizados pelo CI do github. Fiquem atentos para o deadline da entrega.
+    
+    Neste laboratório você pode receber até: **({{lab_6_points}})**.
 
 !!! exercise
-    - File: `ula/ula_modules.py `
+    1. Acesse o lab 6 pelo link {{lab_6_classroom}}
+    1. Clone o repositório criado 
+    1. Crie o ambiente virtual python (`python3 -m venv env`)
+    1. Ative o ambiente virtual (`. env/bin/activate`)
+    1. Instale as dependências (`pip3 install -r requirements.txt`)
+
+
+## Half e Full adder 
+
+Vamos começar implementando as duas unidades básicas de um somador: o *half-adder* e *full-adder*. 
+
+!!! exercise
+    - File: `ula_modules.py `
     - Modulo: `def halfAdder(a, b, soma, carry):`
     - Test: `pytest -k halfAdder`
  
@@ -100,7 +113,7 @@ Com isso temos um vetor de bits `s` que pode ser endereçado como `s[0]`, `s[1]`
             return instances()
         ```
 
-## Somador
+## 💰 Somador (1 HW / 0 SW)
 
 Agora com os dois módulos implementados podemos construir um somador mais completo, que soma dois vetores de bits. Para isso iremos precisar de um halfAdder (HA) e um fullAdders (FA) conectados da seguinte maneira:
 
@@ -132,7 +145,8 @@ Onde `x`, `y` e `s` são vetores do tipo `bool` de duas posições.
 !!! exercise
     Explique o que está acontecendo para o seu colega, você entendeu o porque dessa ligação e como ela funciona? 
 
-!!! exercise
+!!! exercise "💰 Somador ({{lab_6_points}}), exercício "
+    
     - Modulo: `def adder2bits(x, y, soma, vaiUm):`
     - Test: `pytest -k adder2bits`
     - Run: `./run_adder2bits.py`

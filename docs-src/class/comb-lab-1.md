@@ -1,25 +1,9 @@
 # Lab 5: MyHDL
 
-## Atualizacão da infra
-
-Você já comecou o lab na segunda? Então deve executar os seguintes comandos no terminal e na raiz do repositório do laboratório:
-
-Atualizando infra:
-
-```
-rm ~/.telemetry.ini 
-pip install --upgrade --force-reinstall -r requirements.txt
-```
-
-Atualizando lab:
-
-```
-git remote add upstream git@github.com:Insper/bits-e-proc-labs.git
-git fetch upstream
-git merge upstream/main
-```
-
-## Lab
+!!! info "💰 Laboratório com pontos"
+    Algumas tarefas deste laboratório fornecem pontos de nota individual (hardware ou software), os exercícios marcados com 💰 são os que fornecem os pontos. Os pontos apenas são validados quando contabilizados pelo CI do github. Fiquem atentos para o deadline da entrega.
+    
+    Neste laboratório você pode receber até: **({{lab_5_points}})**.
 
 Leitura prévia necessária:
 
@@ -27,22 +11,17 @@ Leitura prévia necessária:
 
 Este laboratório é introdutório para o desenvolvimento do projeto ([`Lógica-Combinacional`](/bits-e-proc/class/logiComb-Projeto)), onde iremos criar componentes de hardware que serão os alicerces do nosso computador. Primeiro precisamos praticar um pouco de `MyHDL` e entender a ferramenta e o fluxo de compilação, teste e como conseguimos executar o hardware em uma FPGA.
 
-Os exercícios dos laboratórios estão localizados no repositório:  https://github.com/insper/bits-e-proc-labs, cada aluno de forma individual deve realizar um fork do repositório e trabalhar individualmente nele. Os laboratórios não po ffssuem entregas, mas devem ser realizados para estudo.
+==Os laboratórios são individuais e possuem nota (atualizado para a nova versão do curso)==, cada laboratório contribui com um pouco dos pontos da avaliação individual. Todos os laboratórios devem ser realizados localmente e finalizados até o término da aula.
 
 !!! exercise
-    1. Realize um fork do repositório de labs (https://github.com/insper/bits-e-proc-labs)
-    1. Clone o repositório para a sua máquina
+    Para executar qualquer laboratório você deve seguir os passos a seguir:
+
+    1. Acesse o lab pelo link {{lab_5_classroom}} 
+    1. Clone o repositório criado 
+    1. Crie o ambiente virtual python (`python3 -m venv env`)
+    1. Ative o ambiente virtual (`. env/bin/activate`)
+    1. Instale as dependências (`pip3 install -r requirements.txt`)
     
-!!! exercise
-    Nós iremos trabalhar sempre com um ambiente virtual do python 3.8, para isso será necessário realizar as seguintes operações ==dentro da pasta clonada==:
-
-    ```
-    python3.8 -m venv env
-    . env/bin/activate
-    pip3 install --upgrade pip
-    pip3 install -r requirements.txt
-    ```
-
 !!! warning 
     Sempre que for abrir um terminal novo e acessar a pasta, será necessário ativar o ambiente virtual:
    
@@ -50,30 +29,22 @@ Os exercícios dos laboratórios estão localizados no repositório:  https://gi
     . env/bin/activate
     ```
     
-    Se for utilizar o VSCODE para fazer o desenvolvimento dos projetos e exercícios, basta abrir a pasta raiz do repositório que o code já utiliza o ambiente virtual (eu criei o arquivo `.vscode/settings.json` que configura isso.)
-    
 ### Configurando telemetria
 
-Para entender melhor o comportamento de vocês ao longo dos laboratórios e atividades da disciplina, nós coletamos alguns dados de telemetria, como:
+Para entender melhor o comportamento de vocês ao longo dos laboratórios e atividades da disciplina, nós coletamos alguns dados de telemetria. A ideia aqui não é utilizar os dados para avaliação, mas sim para melhorias futuras. Esta técnica é muito utilizado em disciplinas da ciência da computação (inclusive devlife).
 
-- user 
-- teste realizado e status
-- horário do teste
-
-A ideia aqui não é utilizar os dados para avaliação, mas sim para melhorias futuras. Esta técnica é muito utilizado em disciplinas da ciência da computação (inclusive devlife).
-
-Antes de trabalharmos no laboratório será que vocês se autentiquem no servidor (eu dei uma trabalhada nisso no domingo e agora a autentica)
 
 !!! exercise
-    Execute no terminal:
+    Antes de trabalharmos no laboratório será que vocês se autentiquem no servidor:
     
     === "Linux"
         ```bash
         $ telemetry auth
         ```
+        
     === "Mac"
         ```bash
-        $python3.8 -m telemetry auth
+        $ python -m telemetry auth
         ```
     
     1. Ele deve abrir uma página no navegador e pedir para vocês logarem no github
@@ -112,15 +83,15 @@ A seguir um exemplo do teste falhando e então solucionado e testado novamente:
 !!! progress
     Começando o laboratório.
     
-## Praticando - Parte 1
+## Praticando
 
-Vamos comecar descrevendo algumas circuitos lógicos combinacionais bem simples em MyHDL. 
+Agora é por sua conta, você deve descrever alguns circuitos lógicos combinacionais bem simples em MyHDL. 
 
-!!! exercise
+!!! exercise "💰 ({{lab_5_points}})"
     Para cada exercício implemente a solução no arquivo `comb_modules.py` e teste com `pytest`. A descrição do exercício está no próprio módulo.
 
-    - `exe2()` teste: `pytest -k exe2`
-    - `exe3()` teste: `pytest -k exe3`
+    - `def exe2()`: `pytest -k exe2`
+    - `def exe3()`: `pytest -k exe3`
 
 !!! progress
     Continuar...
@@ -184,9 +155,9 @@ Notem que os sinais criados são do tipo `Signal(intbv(0)[X:])`, isso indica que
  ```py title="comb_modules.py"
  @block
  def exe4(led, sw):
- @always_comb
- def comb():
-     led[0].next = sw[0] and (not sw[1])
+    @always_comb
+    def comb():
+        led[0].next = sw[0] and (not sw[1])
 
  return instances()
  ```
