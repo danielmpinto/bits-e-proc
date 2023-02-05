@@ -1,1 +1,3 @@
-/home/corsi/work/active-handout-plugins-py
+mkdocs
+git+https://github.com/insper-education/active-handout-plugins-py.git@main
+
