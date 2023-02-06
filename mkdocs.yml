@@ -18,6 +18,9 @@ plugins:
 
 extra:
   custom_variables:
+    lab_1_groups_spreadsheet: 'https://docs.google.com/spreadsheets/d/1V1h8e0awIF-E_OVm-Vc4zupaBRAQf-PcWidCq1knw74/edit?usp=sharing'
+    lab_1_mural: 'https://app.mural.co/t/elementos9119/m/elementos9119/1674526677441/31581d4e5c96eee30370b8f0896d4ed47928ff1?sender=ub569a9273c6e285461187641'
+    lab_1_benchmark: 'https://docs.google.com/spreadsheets/d/1-wJcqGsZMZzgkiVMG4cb2BI__cL7_cRLNCoCHIYf-GA/edit?usp=sharing'
     lab_5_classroom: https://classroom.github.com/a/vL9MgUbs
     lab_5_points: '2 HW / 1 SW'
     lab_6_classroom: https://classroom.github.com/a/yQ34x1Xc
@@ -51,7 +54,7 @@ markdown_extensions:
 
 nav:
   - Home:
-      - "Sobre.md"
+      - index: "Sobre.md"
       - "Sobre-Criterios-de-Avaliacao.md"
       - "Sobre-Rubricas.md"
   - Projetos:
@@ -116,7 +119,7 @@ nav:
       - "Instruction Set": "commum-content/z01/z01-InstructionSet.md"
       - "Resumo VM": "commum-content/z01/z01-Resumo-VM.md"
 
-  - Estudo:
+  - Exercícios:
       - "commum-content/exercicios/Exercicio-Algebra-Booleana-1.md"
       - "commum-content/exercicios/Exercicio-Algebra-Booleana-2.md"
       - "Dados Digitais - 1": https://docs.google.com/spreadsheets/d/1rN_zQqYaVI8PjAhKqEBCmY-_06I0X9dD0RddcI-miJs/edit?usp=sharing

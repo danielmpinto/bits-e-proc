@@ -7,11 +7,19 @@ Primeiro será necessário criar o grupo que vocês pretendem trabalhar ao longo
 !!! exercise
     Preencher a tabela a seguir após criados os grupos:
 
-    - https://docs.google.com/spreadsheets/d/1V1h8e0awIF-E_OVm-Vc4zupaBRAQf-PcWidCq1knw74/edit?usp=sharing
+    {{lab_1_groups_spreadsheet}}
 
 !!! exercise
 
-    Acessar o Mural e seguir as intruções do professor:
+    Acessar o Mural e siga as intruções do professor:
 
-    - https://app.mural.co/t/elementos9119/m/elementos9119/1674526677441/31581d4e5c96eee30370b8f0896d4ed47928ff1?sender=ub569a9273c6e285461187641
+    {{lab_1_mural}}
 
+!!! exercise
+    Agora vamos executar um benchmark no PC de vocês:
+
+    1. Instale https://www.geekbench.com/
+    2. Execute o teste de CPU (apenas)
+    3. Preencha a tabela a seguir:
+    
+    {{lab_1_benchmark}}
