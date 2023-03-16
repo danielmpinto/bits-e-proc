@@ -148,7 +148,7 @@ Use o resumo das instruções: [AssemblyZ1](https://insper.github.io/Z01.1/Util-
     
 ## Script automático de testes
 
-Além da interface gráfica do simulador, possuímos um script de teste automatizado (similar ao do MyHDL) que utiliza o pytest para executar testes no assembly. Esse script: `nasm/test_nasm.py` faz o seguinte:
+Além da interface gráfica do simulador, possuímos um script de teste automatizado (similar ao do MyHDL) que utiliza o pytest para executar testes no assembly. Esse script: `test_nasm.py` faz o seguinte:
 
 1. Inicializa a memória RAM com valores pré estabelecidos 
 1. Converte o `nasm` para `hack` e inicializa a memória ROM
@@ -182,19 +182,19 @@ Onde:
 Vamos implementar alguns códigos assembly, a descrição do que eles devem fazer estão no próprio arquivo `.nasm`.
 
 !!! exercise
-    - File: `nasm/add.nasm`
+    - File: `add.nasm`
     - Test: `pytest -k add`
     
     Tarefa: Leia o cabeçalho do arquivo e implemente o programa nasm que executa o que está descrito, teste com o `pytest`
 
 !!! exercise
-    - File: `nasm/sub.nasm`
+    - File: `sub.nasm`
     - Test: `pytest -k sub`
     
     Tarefa: Leia o cabeçalho do arquivo e implemente o programa nasm que executa o que está descrito, teste com o `pytest`
 
 !!! exercise "💰 ({{lab_11_points}})"
-    - File: `nasm/mov.nasm`
+    - File: `mov.nasm`
     - Test: `pytest -k mov`
     
     Tarefa: Leia o cabeçalho do arquivo e implemente o programa nasm que executa o que está descrito, teste com o `pytest`
