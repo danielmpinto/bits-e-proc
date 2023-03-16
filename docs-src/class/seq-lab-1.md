@@ -5,6 +5,22 @@
     
     ==MAC M1? Use uma das NUCs do laboratório.==
 
+!!! exercise
+    Para executar qualquer laboratório você deve seguir os passos a seguir:
+
+    1. Acesse o lab pelo link {{lab_10_classroom}} 
+    1. Clone o repositório criado 
+    1. Crie o ambiente virtual python (`python3 -m venv env`)
+    1. Ative o ambiente virtual (`. env/bin/activate`)
+    1. Instale as dependências (`pip3 install -r requirements.txt`)
+    
+!!! warning 
+    Sempre que for abrir um terminal novo e acessar a pasta, será necessário ativar o ambiente virtual:
+   
+    ```
+    . env/bin/activate
+    ```
+
 ## Começando
 
 Agora vamos ver como implementamos uma lógica sequencia em MyHDL! Até agora temos utilizado o `decorator`: `@always_comb` para indicar que uma função deve ser interpretada como um trecho combinacional:
@@ -40,28 +56,29 @@ Podemos interpretar o `def seq()` da seguinte maneira: Sempre que o sinal clock 
 ##  dff - FlipFlop tipo D
 
 !!! exercise
-    - File: `seq/seq_modules.py`
+    - File: `seq_modules.py` e `toplevel.py`
 
-    Tarefa:
-
-    Vamos validar o flip-flop, para isso modifique o `toplevel.py`:
+    Vamos validar o flip-flop para isso definimos o `toplevel.py` com:
     
     ```py
         ic0 = dff(ledr_s[0], sw_s[0], key_s[0], RESET_N)
     ```
     
-    E faça o processo completo para obtermos o hardware.
-    
-    Validando:
-    
     Mapeamos o clock para o `KEY[0]` e a entrada do dff para o `SW[0]`, notem que ao mexer a chave `SW[0]` nada acontece, o valor do LED muda apenas após apertar o `KEY[0]` (que é o `clock`).
+    
+    Tarefa: Execute na FPGA e teste com as chaves e botões.
+    
+    1. `python3.8 toplevel.py`
+    1. `make -C quartus clean`
+    1. `make -C quartus all`
+    1. `make -C quartus program`
     
 ### Aplicando
  
-Com a possibilidade de executarmos uma acão por clock, conseguimos realizar tarefas que não eram possíveis antes: como contar eventos. 
+Com a possibilidade de executarmos uma acão por clock, conseguimos realizar tarefas que não eram possíveis antes como por exemplo contar eventos. 
  
 !!! exercise
-    - File: `seq/seq_modules.py`
+    - File: `seq_modules.py`
     - Módulo `contador(cnt, clk, rst)`
     
     Vamos implementar um contador, a ideia aqui é contar quantas vezes o `clk` foi gerado:
@@ -107,7 +124,7 @@ Com a possibilidade de executarmos uma acão por clock, conseguimos realizar tar
 
 Os dois módulos anteriores foram realizados utilizando o botão 0 (`key_s[0]`) como sinal de clock para o nosso módulo, mas isso não é o jeito certo de trabalharmos com lógica sequência. O cenário correto, seria de usar um clock gerado em hardware e não pelo botão. A partir de agora iremos usar na entrada do clock o sinal `CLOCK_50` que é um clock de ==50Mhz== gerado pela placa. Notem que `50Mhz` significa `50 000 000` vezes por segundo! Isso parece muito né? Mas, dependendo do projeto, podemos elevar o clock para 200Mhz ou usar FPGAs mais rápidas que chegam próximo do 1GHz.
 
-## Piscando LED
+## Piscando o LED
 
 Agora com o uso da lógica sequencial conseguimos contar 'tempo' e gerar eventos em determinado momento. Ou seja: podemos contar 0.5 segundos e mudar o valor do led (usando como base o nosso clock que é um valor fixo), contar mais 0.5 s e mudar novamente (fazer o famoso **pisca led**). Para isso, teremos que conseguir contar eventos de clock, e quando o valor chegar em **25 000 000** inverter o valor do LED e zerar o contador e ficar nesse loop para sempre.
 
@@ -206,6 +223,13 @@ def seq():
     ```
     
     E façam o fluxo de rodar o módulo na FPGA. Verifiquem que o LED 0 pisca a aproximadamente 1s!!
+
+    Fluxo:
+    
+    1. `python3.8 toplevel.py`
+    1. `make -C quartus clean`
+    1. `make -C quartus all`
+    1. `make -C quartus program`
 
 !!! exercise short 
     O `cnt` de 32 bits está bem dimensionado? Esse valor faz alguma diferença? Qual o maior tempo que podemos contar com o contador de 32bits?
