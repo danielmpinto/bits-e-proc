@@ -18,7 +18,7 @@ Esse lab deve ser feito no Z01Simulador, para abrir o programa basta digitar no 
 ## Incondicional
 
 !!! exercise "lcd1.nasm" 
-    - File: `nasm/lcd1.nasm`
+    - File: `lcd1.nasm`
     - Test: Visual no simulador
     
     Task: Preencha todos os px do LCD de preto!
@@ -167,7 +167,7 @@ Saltos condicionais são utilizados para verificarmos condições no programa, v
         - Teste 2: RAM[0] = 2
 
 !!! example "jmp4.nasm" 
-    - File: `nasm/jmp4.nasm`
+    - File: `jmp4.nasm`
     - Test: Visual
     
     Task: Acione a metade superior dos pxs do LCD de preto.

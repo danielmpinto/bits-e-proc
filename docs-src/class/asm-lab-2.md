@@ -6,6 +6,9 @@ Ao final desse lab você deve ser capaz de:
 1. Ler das chaves (SW) do nosso Z01
 1. Escrever no LCD do nosso Z01
 
+!!! info
+    Vamos continuar com o mesmo repositório criado no lab passado.
+
 !!! tip
     Para fazer esse lab, você deve ter lido a teoria sobre [mapa de memória](https://insper.github.io/Z01.1/Teoria-Z01-mapadeMemoria/)
 
@@ -51,7 +54,7 @@ Problemas relacionados ao LED do nosso Z01
     ![](figs/F-Assembly/lab2-led1.png){width=350}
         
 !!! exercise "Led2"
-    - File: `nasm/led2.nasm`
+    - File: `led2.nasm`
     - Test: Visual no simulador
 
     Faça os LEDs: 9,7,5,3,1 acenderem:
@@ -95,8 +98,6 @@ Commands:
     Agora com a FPGA programada com o hardware do nosso computador, podemos transferir um programa para a memória ROM, para isso utilize o comando `bits program rom` que pode receber arquivos do tipo: `.nasm`, `.hack` ou `.mif`.
     
     Execute: `bits program rom led2.nasm` e observe os LEDs da FPGA acenderem na mesma sequência do simulador.
-    
-    
 
 ## SW
 
@@ -138,7 +139,7 @@ Problemas relacionado a chave do nosso Z01
         ```
 
 !!! exercise "SW2"
-    - File: `nasm/sw2.nasm`
+    - File: `sw2.nasm`
     - Test: Visual no simulador
     
     Antes de iniciar a simulação, você deve configurar as chaves:
@@ -156,7 +157,7 @@ Problemas relacionado a chave do nosso Z01
 Trabalhando com o LCD.
 
 !!! exercise "LCD1"
-    - File: `nasm/lcd1.nasm`
+    - File: `lcd1.nasm`
     - Test: Visual no simulador
  
     Task: Execute o arquivo no simulador o observe os 16 primeiros pxs acenderem  
@@ -164,7 +165,7 @@ Trabalhando com o LCD.
     Dica: `movw $-1, (%A)`: Gera o vetor `1111111111111` e grava no endereço que %A aponta (primeiros pxs do LCD)
 
 !!! exercise "LCD2"
-    - File: `nasm/lcd2.nasm`
+    - File: `lcd2.nasm`
     - Test: Visual no simulador
  
     Task: Acione todos os pxs da primeira posição de memória do LCD, do meio do LCD e da última posição de memória do LCD.
