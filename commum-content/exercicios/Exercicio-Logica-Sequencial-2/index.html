@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      
+        <title>Álgebra Booleana - 1 - Bits e Processadores</title>
+      
+    
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:700|Oxygen+Mono|Source+Sans+Pro:700|Source+Serif+Pro&amp;display=swap">
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <script>
+      // SETUP GLOBAL CONSTANTS
+      var base_url = '../../..';
+      
+      var telemetryEnabled = true;
+      var backendUrl = "https://devlife-api.insper-comp.com.br/";
+      var courseSlug = "22b bits";
+      
+      
+      var dashboardEnabled = false;
+      var tagTree = {};
+      
+
+      // SETUP PLUGIN
+      window.initialized = false;
+      if (!window.initializers) window.initializers = [];
+      window.registerInitializer = (initialize) => {
+        if (window.initialized) initialize();
+        else window.initializers.push(initialize);
+      };
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://unpkg.com/hyperscript.org"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="../../../assets/js/main.js"></script>
+    
+    
+  </head>
+  <body>
+    <div class="ah-main-container">
+      <header class="ah-header">
+        <button class="ah-menu-btn ah-button ah-button--borderless"
+                aria-label="toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
+</svg>
+        </button>
+        <a href="../../.."
+           title="Bits e Processadores"
+           class="ah-logo"
+           aria-label="Bits e Processadores">
+          Bits e Processadores
+        </a>
+        <div class="ah-header--right">
+          
+          
+          
+          <button id="resetHandoutButton">
+            <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+</svg></span>
+          </button>
+          
+
+          
+          <div id="user-menu" hx-get="https://devlife-api.insper-comp.com.br/user-menu" hx-trigger="load"> </div>
+          
+        </div>
+      </header>
+      <nav class="ah-navigation preload">
+        <div class="ah-nav-container">
+          <button class="ah-menu-btn ah-button ah-button--borderless close-menu"
+                  aria-label="close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
+</svg>
+          </button>
+          <ul class="ah-nav-body">
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Home</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../Sobre.md">index</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Sobre-Criterios-de-Avaliacao/">Critérios de Avaliação</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Sobre-Rubricas/">Rubricas individuais</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Projetos</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-proj/">A - Ambiente de desenvolvimento</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/comb-proj/">B - Lógica Combinacional</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-proj/">C - ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/seq-proj/">D - Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-proj/">E - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/assembler-proj/">G - Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vmtranslator-proj/">H - VM translator</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/x-proj/">Mundo Real</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Labs</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-benchmark-lab/">Lab 1: Visão geral</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-lab-1/">Lab 2: Configurando Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-lab-2/">Lab 3: Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/transistores-lab-1/">Lab 4: Transistores / CI</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/comb-lab-1/">Lab 5: MyHDL</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-1/">Lab 6: Adders</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-2/">Lab 7: Hardware types</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-4/">Lab 8: ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-3/">Lab 9: Depurando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/seq-lab-1/">Lab 10: Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-1/">Lab 11: (nasm) Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-2/">Lab 11: (nasm) Periféricos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-3/">Lab 13: (nasm) Saltos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-4/">Lab 14: (nasm) Praticando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/assembler-lab-1/">Lab 15: Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vm-lab-1/">Lab 16: VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vmtranslator-lab-1/">Lab 7 - VM translator</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Teoria</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Dados/">Dados Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Algebra-Booleana/">Álgebra Booleana</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-RTL/">Resistor-Transistor Logic (RTL)</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Componentes/">Componentes Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Aritmetica-Binaria/">Aritmética Binária</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Aritmetica-Binaria-HW/">Aritmética Binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-ULA/">ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Logica-Sequencial/">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Sequencial-Componentes/">Componentes Síncronos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Z01/">Z01</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Assembly/">ASM - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Z01-mapadeMemoria/">ASM - Mapa de memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-nasm-jump/">ASM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Linguagem-de-Maquina/">Linguagem de máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Assembler/">Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Assembler-SymbolTable/">Tabela de Símbolos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-vm/">VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-vm-segmentos/">VM - Segmentos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-vm-jump/">VM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-vm-funcoes/">VM - Funções</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-vm-memoria/">VM - Memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Util-Video-Aulas.md">commum-content/teoria/Vídeo Aulas (Luciano)</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">MyHDL</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../teoria/myhdl-1/">MyHDL Básico</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Z01</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Resumo-Assembly/">Resumo Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Cheat-Sheet/">Z01.1 Cheat Sheet</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-InstructionSet/">Instruction Set</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Resumo-VM/">Resumo VM</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Exercícios</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../Exercicio-Algebra-Booleana-1/">Álgebra Booleana - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Exercicio-Algebra-Booleana-2/">Álgebra Booleana - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://docs.google.com/spreadsheets/d/1rN_zQqYaVI8PjAhKqEBCmY-_06I0X9dD0RddcI-miJs/edit?usp=sharing">Dados Digitais - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Exercicio-Dados-2/">Dados Digitais - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Exercicio-Aritmetica-Booleana.pdf">Aritmética binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://forms.gle/XMsFCDMYsmz1qUP86">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Linguagem_de_maquina.pdf">Linguagem de Máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Exercicio-CPU-1/">Exercicio CPU - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Exercicio-CPU-2/">Exercicio CPU - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Linguagem_de_maquina.pdf"">linguagem de máquina</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Útil</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../util/Util-Comecando-novo-projeto/">Começando novo projeto</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/Util-vixi-sou-scrum/">Vixi! Sou desenvolvedor</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/Util-vixi-sou-dev/">Vixi! Sou scrum master</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../util/util-infra/">Infra</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  
+    <li>
+      <a href="../../../Avaliacoes/">Avaliações</a>
+    </li>
+  
+
+            
+          </ul>
+        </div>
+      </nav>
+      <main class="ah-content ah-typeset">
+        
+          <div class="ah-title-box">
+            <ul class="ah-breadcrumbs">
+              
+                
+                <li>Álgebra Booleana - 1</li>
+            </ul>
+            
+            
+          </div>
+          
+            <section class="progress-section show">
+<h1 id="algebra-booleana-1">Álgebra Booleana - 1</h1>
+<p><a href="https://github.com/Insper/Z01.1/raw/master/Exercicios/Exercicio-Algebra-Booleana-1.pdf"><img alt="" src="figs/pdf.png" width="25" /> Versão para impressão.</a></p>
+<div class="admonition tip">
+<p><a href="https://github.com/Insper/Z01.1/blob/master/Exercicios/Exercicio-Algebra-Booleana-1-resolucao.pdf"><img alt="📝" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/svg/1f4dd.svg" title=":pencil:" /> Resolução</a></p>
+</div>
+<h3 id="indique-o-nome-dos-elementos-logicos-a-seguir">Indique o nome dos elementos lógicos a seguir:</h3>
+<p><img alt="" src="figs/Exercicios/AlgebraBooleana-componentes.png" /></p>
+<hr />
+<h3 id="tabela-verdade">Tabela verdade</h3>
+<ul>
+<li>A tabela verdade a seguir representa qual porta lógica?</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>OUT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>A tabela verdade a seguir representa qual porta lógica?</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>OUT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p>\newpage</p>
+<h3 id="aplicando-a-lei-da-distributividade-na-expressao-abbarcd-se-tem">Aplicando a lei da Distributividade na expressão <span class="arithmatex">\(A(B+\bar{C}+D)\)</span> se tem:</h3>
+<ol>
+<li><span class="arithmatex">\(A . B + A . C + A . D\)</span></li>
+<li><span class="arithmatex">\(A . B . C . D\)</span></li>
+<li><span class="arithmatex">\(A + B + C + D\)</span></li>
+<li><span class="arithmatex">\(A B + A\bar{C} + A . D\)</span></li>
+</ol>
+<hr />
+<h3 id="aplicando-o-teorema-de-demorgan-na-expressao-overlineabc-obtem">Aplicando o teorema de DeMorgan na expressão <span class="arithmatex">\(\overline{ABC}\)</span>, obtem:</h3>
+<ol>
+<li>
+<p><span class="arithmatex">\(\bar{A}+\bar{B}+\bar{C}\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(\overline{A+B+C}\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(A + \bar{B} + C \bar{C}\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(A . (B+C)\)</span></p>
+</li>
+</ol>
+<hr />
+<h3 id="qual-simplificacao-esta-incorreta">Qual simplificação está incorreta:</h3>
+<ol>
+<li>
+<p><span class="arithmatex">\(\overline{(\bar{x}+\bar{y})} = \bar{\bar{x}}*\bar{y} = x * \bar{y}\)</span> </p>
+</li>
+<li>
+<p><span class="arithmatex">\(x ( \bar{x} + y ) = x . \bar{x} + x . y = 0 + x . y = x . y\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(x . y + x ( y + z ) = x . y + x . y + z = x . y + z\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(\bar{x} . \bar{y} . z + \bar{x} . y . z + x . \bar{y} = \bar{x} . z (\bar{y} + y) + x . \bar{y} = \bar{x} . z + x . \bar{y}\)</span></p>
+</li>
+</ol>
+<hr />
+<h3 id="qual-forma-canonica-esta-correta">Qual forma canônica está correta?</h3>
+<table>
+<thead>
+<tr>
+<th><strong>A</strong></th>
+<th><strong>B</strong></th>
+<th><strong>Q</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>
+<p><span class="arithmatex">\(Q = A \bar{B} + A \bar{B}\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(Q = A+B * \bar{A} \bar{B}\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(Q = A . B\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(Q = \bar{A} . \bar{B} + A . B\)</span></p>
+</li>
+</ol>
+<hr />
+<h3 id="dado-a-seguinte-tabela-verdade-entradas-a-b-e-c-e-a-saida-q">Dado a seguinte tabela verdade (entradas A, B e C, e a saída Q):</h3>
+<table>
+<thead>
+<tr>
+<th><strong>A</strong></th>
+<th><strong>B</strong></th>
+<th><strong>C</strong></th>
+<th><strong>Q</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Crie uma fórmula em álgebra booleana que represente a tabela via SoP e PoS.</li>
+<li>Simplifique SoP (interprete o resultado!)</li>
+<li>Desenhe um circuito usando os ícones da álgebra booleana. </li>
+</ol>
+<hr />
+<h3 id="quantas-saidas-com-1-existem-na-tabela-verdade-que-resulta-na-seguinte-formula-de-soma-de-produtos">Quantas saídas com 1 existem na tabela verdade que resulta na seguinte fórmula de soma de produtos:</h3>
+<p><span class="arithmatex">\(A \bar{B} \bar{C} + \bar{A} B C + \bar{A} B \bar{C} + A \bar{B} \bar{C} + A B C\)</span></p>
+<hr />
+<h3 id="qual-das-seguintes-opcoes-e-uma-caracteristica-importante-da-forma-canonica-de-soma-de-produtos">Qual das seguintes opções é uma característica importante da forma canônica de soma de produtos?</h3>
+<ol>
+<li>Os circuitos lógicos são reduzidos a nada mais do que simples portas AND e OR.</li>
+<li>Os tempos de atraso são muito reduzidas em relação a outras formas.</li>
+<li>Nenhum sinal deve passar por mais de dois portas lógicas, não incluindo inversores.</li>
+<li>O número máximo de portas que qualquer sinal deve passar é reduzido por um factor de dois.</li>
+</ol>
+<hr />
+<h3 id="qual-e-a-expressao-em-algebra-booleana-do-seguinte-circuito">Qual é a expressão em álgebra booleana do seguinte circuito:</h3>
+<p><img alt="" src="figs/Exercicios/Algebra-Booleana-1.png" /></p>
+<hr />
+<h3 id="gere-a-tabela-verdade-das-equacoes-a-seguir">Gere a Tabela Verdade das equações a seguir:</h3>
+<ul>
+<li><span class="arithmatex">\(A . B + \overline{B + A}\)</span></li>
+<li><span class="arithmatex">\(A \oplus B\)</span></li>
+<li><span class="arithmatex">\((A and B) or C\)</span></li>
+</ul>
+<hr />
+<h3 id="converta-a-seguinte-expressao-em-soma-de-produtos-para-produto-de-somas">Converta a seguinte expressão em Soma de Produtos para Produto de Somas:</h3>
+<p><span class="arithmatex">\(A . B . C + A \bar{B} \bar{C} + A . \bar{B} C + A . B . \bar{C} + \bar{A} . \bar{B} . C\)</span></p>
+<ol>
+<li>Faça a tabela verdade</li>
+<li>Encontre o PoS</li>
+</ol>
+<hr />
+<h3 id="determine-os-valores-de-a-b-c-e-d-que-fazem-a-formula-a-seguir-ser-igual-a-zero-z-0">Determine os valores de A, B, C e D que fazem a fórmula a seguir ser igual a zero (Z = 0).</h3>
+<p><span class="arithmatex">\(Z = \bar{A} + B + \bar{C} + D\)</span></p>
+<hr />
+<h3 id="qual-das-seguintes-propriedades-da-algebra-booleana-e-falsa">Qual das seguintes propriedades da álgebra booleana é falsa:</h3>
+<ol>
+<li><span class="arithmatex">\(A . (\bar{A} + B)= A . B\)</span></li>
+<li><span class="arithmatex">\(A + (A . B) = A\)</span></li>
+<li><span class="arithmatex">\(A + \bar{A} = 1\)</span></li>
+<li><span class="arithmatex">\(A . A = A\)</span></li>
+</ol>
+<hr />
+<h3 id="simplifique-a-seguinte-expressao">Simplifique a seguinte expressão:</h3>
+<p><span class="arithmatex">\(\bar{A} \bar{B} \bar{C} + \bar{A} B C + \bar{A} B \bar{C} + A \bar{B} \bar{C} + A B \bar{C}\)</span></p>
+<hr />
+<h3 id="encontre-as-equacoes-para-os-mapas-de-karnaugh-a-seguir">Encontre as equações para os mapas de Karnaugh a seguir:</h3>
+<p><img alt="" src="figs/Exercicios/AlgebraBooleana-MK-1.png" /></p>
+<hr />
+<p>\newpage</p>
+<h3 id="crie-o-mapa-de-karnaugh-e-encontre-a-equacao-da-tabela-verdade-a-seguir">Crie o mapa de Karnaugh e encontre a equação da tabela verdade a seguir.</h3>
+<table>
+<thead>
+<tr>
+<th><strong>A</strong></th>
+<th><strong>B</strong></th>
+<th><strong>C</strong></th>
+<th><strong>OUT</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="crie-o-mapa-de-karnaugh-da-tabela-verdade-de-quatro-entradas">Crie o mapa de Karnaugh da tabela verdade de quatro entradas.</h3>
+<table>
+<thead>
+<tr>
+<th><strong>A</strong></th>
+<th><strong>B</strong></th>
+<th><strong>C</strong></th>
+<th><strong>D</strong></th>
+<th><strong>OUT</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="crie-o-mapa-de-karnaugh-para-a-expressao-a-seguir-e-simplifique">Crie o mapa de Karnaugh para a expressão a seguir e simplifique:</h3>
+<p><span class="arithmatex">\(ABC\bar{D} + \bar{A}\bar{B}CD + A \bar{B}\bar{C}D + \bar{A} + \bar{B} + \bar{C} + \bar{D}\)</span>       </p>
+<h3 id="a-seguinte-expressao-foi-resultado-da-forma-canonica-do-produto-de-somas-de-uma-tabela-verdade-para-a-producao-de-um-circuito-logico-o-objetivo-e-simplificar-a-algebra-booleana-dessa-logica-para-o-menor-numero-possivel-de-portas-porem-visivelmente-quem-fez-essa-formula-nao-percebeu-que-se-tivesse-feito-a-soma-de-produtos-ja-partiria-com-um-numero-menor-de-termos-converta-essa-formula-para-a-soma-de-produtos-e-minimize-ela">A seguinte expressão foi resultado da forma canônica do produto de somas de uma tabela verdade para a produção de um circuito lógico. O objetivo é simplificar a álgebra booleana dessa lógica para o menor número possível de portas, porém visivelmente quem fez essa fórmula não percebeu que se tivesse feito a soma de produtos já partiria com um número menor de termos. Converta essa fórmula para a soma de produtos e minimize ela.</h3>
+<div class="highlight"><pre><span></span><code>               _       _       _         _ _
+(A+B+C) * (A+B+C) * (A+B+C) * (A+B+C) * (A+B+C)
+</code></pre></div>
+<hr />
+<p>Acabou? Os exercícios não param por aqui, tem a parte 2!</p>
+
+
+</section>
+          
+        
+      </main>
+      <footer class="ah-footer ah-typeset">
+        <div class="ah-footer-nav">
+          
+          
+        </div>
+      </footer>
+    </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+  </body>
+</html>

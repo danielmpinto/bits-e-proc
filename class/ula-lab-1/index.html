@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      
+        <title>Lab 6: Adders - Bits e Processadores</title>
+      
+    
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:700|Oxygen+Mono|Source+Sans+Pro:700|Source+Serif+Pro&amp;display=swap">
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <script>
+      // SETUP GLOBAL CONSTANTS
+      var base_url = '../..';
+      
+      var telemetryEnabled = true;
+      var backendUrl = "https://devlife-api.insper-comp.com.br/";
+      var courseSlug = "22b bits";
+      
+      
+      var dashboardEnabled = false;
+      var tagTree = {};
+      
+
+      // SETUP PLUGIN
+      window.initialized = false;
+      if (!window.initializers) window.initializers = [];
+      window.registerInitializer = (initialize) => {
+        if (window.initialized) initialize();
+        else window.initializers.push(initialize);
+      };
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://unpkg.com/hyperscript.org"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="../../assets/js/main.js"></script>
+    
+    
+  </head>
+  <body>
+    <div class="ah-main-container">
+      <header class="ah-header">
+        <button class="ah-menu-btn ah-button ah-button--borderless"
+                aria-label="toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
+</svg>
+        </button>
+        <a href="../.."
+           title="Bits e Processadores"
+           class="ah-logo"
+           aria-label="Bits e Processadores">
+          Bits e Processadores
+        </a>
+        <div class="ah-header--right">
+          
+          
+          
+          <button id="resetHandoutButton">
+            <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+</svg></span>
+          </button>
+          
+
+          
+          <div id="user-menu" hx-get="https://devlife-api.insper-comp.com.br/user-menu" hx-trigger="load"> </div>
+          
+        </div>
+      </header>
+      <nav class="ah-navigation preload">
+        <div class="ah-nav-container">
+          <button class="ah-menu-btn ah-button ah-button--borderless close-menu"
+                  aria-label="close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
+</svg>
+          </button>
+          <ul class="ah-nav-body">
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Home</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../Sobre.md">index</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Sobre-Criterios-de-Avaliacao/">Critérios de Avaliação</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Sobre-Rubricas/">Rubricas individuais</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Projetos</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../intro-proj/">A - Ambiente de desenvolvimento</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../comb-proj/">B - Lógica Combinacional</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-proj/">C - ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../seq-proj/">D - Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-proj/">E - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../assembler-proj/">G - Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../vmtranslator-proj/">H - VM translator</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../x-proj/">Mundo Real</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item opened">
+    <span class="ah-togglable-handle">Labs</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../intro-benchmark-lab/">Lab 1: Visão geral</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../intro-lab-1/">Lab 2: Configurando Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../intro-lab-2/">Lab 3: Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../transistores-lab-1/">Lab 4: Transistores / CI</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../comb-lab-1/">Lab 5: MyHDL</a>
+    </li>
+  
+
+      
+        
+  
+    <li class="active ah-togglable-item opened">
+      <span class="ah-togglable-handle">Lab 6: Adders</span>
+      <ul>
+        
+          <li class="ah-toc-item">
+            <a href="#lab-6-adders">Lab 6: Adders</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#half-e-full-adder">Half e Full adder</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#somador-1-hw-0-sw">💰 Somador (1 HW / 0 SW)</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#fpga">FPGA</a>
+          </li>
+          
+        
+      </ul>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-2/">Lab 7: Hardware types</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-4/">Lab 8: ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-3/">Lab 9: Depurando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../seq-lab-1/">Lab 10: Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-1/">Lab 11: (nasm) Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-2/">Lab 11: (nasm) Periféricos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-3/">Lab 13: (nasm) Saltos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-4/">Lab 14: (nasm) Praticando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../assembler-lab-1/">Lab 15: Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../vm-lab-1/">Lab 16: VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../vmtranslator-lab-1/">Lab 7 - VM translator</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Teoria</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Dados/">Dados Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Algebra-Booleana/">Álgebra Booleana</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-RTL/">Resistor-Transistor Logic (RTL)</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Componentes/">Componentes Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Aritmetica-Binaria/">Aritmética Binária</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Aritmetica-Binaria-HW/">Aritmética Binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-ULA/">ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Logica-Sequencial/">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Sequencial-Componentes/">Componentes Síncronos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Z01/">Z01</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembly/">ASM - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Z01-mapadeMemoria/">ASM - Mapa de memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-nasm-jump/">ASM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Linguagem-de-Maquina/">Linguagem de máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembler/">Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembler-SymbolTable/">Tabela de Símbolos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm/">VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-segmentos/">VM - Segmentos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-jump/">VM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-funcoes/">VM - Funções</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-memoria/">VM - Memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Util-Video-Aulas.md">commum-content/teoria/Vídeo Aulas (Luciano)</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">MyHDL</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../teoria/myhdl-1/">MyHDL Básico</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Z01</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Resumo-Assembly/">Resumo Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Cheat-Sheet/">Z01.1 Cheat Sheet</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-InstructionSet/">Instruction Set</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Resumo-VM/">Resumo VM</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Exercícios</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Algebra-Booleana-1/">Álgebra Booleana - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Algebra-Booleana-2/">Álgebra Booleana - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://docs.google.com/spreadsheets/d/1rN_zQqYaVI8PjAhKqEBCmY-_06I0X9dD0RddcI-miJs/edit?usp=sharing">Dados Digitais - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Dados-2/">Dados Digitais - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Exercicio-Aritmetica-Booleana.pdf">Aritmética binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://forms.gle/XMsFCDMYsmz1qUP86">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Linguagem_de_maquina.pdf">Linguagem de Máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-CPU-1/">Exercicio CPU - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-CPU-2/">Exercicio CPU - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Linguagem_de_maquina.pdf"">linguagem de máquina</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Útil</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-Comecando-novo-projeto/">Começando novo projeto</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-vixi-sou-scrum/">Vixi! Sou desenvolvedor</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-vixi-sou-dev/">Vixi! Sou scrum master</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/util-infra/">Infra</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  
+    <li>
+      <a href="../../Avaliacoes/">Avaliações</a>
+    </li>
+  
+
+            
+          </ul>
+        </div>
+      </nav>
+      <main class="ah-content ah-typeset">
+        
+          <div class="ah-title-box">
+            <ul class="ah-breadcrumbs">
+              
+                
+                  
+                    <li>Labs</li>
+                  
+                
+                <li>Lab 6: Adders</li>
+            </ul>
+            
+            
+          </div>
+          
+            <section class="progress-section show">
+<h1 id="lab-6-adders">Lab 6: Adders</h1>
+<p>Neste laboratório iremos desenvolver somadores que serão utilizados no desenvolvimento da unidade lógica aritmética da nossa CPU.</p>
+<div class="admonition info">
+<p class="admonition-title">💰 Laboratório com pontos</p>
+<p>Algumas tarefas deste laboratório fornecem pontos de nota individual (hardware ou software), os exercícios marcados com 💰 são os que fornecem os pontos. Os pontos apenas são validados quando contabilizados pelo CI do github. Fiquem atentos para o deadline da entrega.</p>
+<p>Neste laboratório você pode receber até: <strong>(1 HW / 0 SW)</strong>.</p>
+</div>
+<div class="admonition exercise self-progress" data-slug="class/ula-lab-1/exercise_1" id="exercise_1_0">
+<p class="admonition-title">Exercise 1</p>
+<form class="exercise-form">
+<ol>
+<li>Acesse o lab 6 pelo link <a href="https://classroom.github.com/a/yQ34x1Xc">https://classroom.github.com/a/yQ34x1Xc</a></li>
+<li>Clone o repositório criado </li>
+<li>Crie o ambiente virtual python (<code>python3 -m venv env</code>)</li>
+<li>Ative o ambiente virtual (<code>. env/bin/activate</code>)</li>
+<li>Instale as dependências (<code>pip3 install -r requirements.txt</code>)</li>
+</ol>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<h2 id="half-e-full-adder">Half e Full adder</h2>
+<p>Vamos começar implementando as duas unidades básicas de um somador: o <em>half-adder</em> e <em>full-adder</em>. </p>
+<div class="admonition exercise self-progress" data-slug="class/ula-lab-1/exercise_2" id="exercise_2_0">
+<p class="admonition-title">Exercise 2</p>
+<form class="exercise-form">
+<ul>
+<li>File: <code>ula_modules.py</code></li>
+<li>Modulo: <code>def halfAdder(a, b, soma, carry):</code></li>
+<li>Test: <code>pytest -k halfAdder</code></li>
+</ul>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<div class="admonition exercise self-progress" data-slug="class/ula-lab-1/exercise_3" id="exercise_3_0">
+<p class="admonition-title">Exercise 3</p>
+<form class="exercise-form">
+<ul>
+<li>Modulo: <code>def fullAdder(a, b, c, soma, carry):</code></li>
+<li>Test: <code>pytest -k fullAdder</code></li>
+</ul>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<h3 id="reutilizando-componente-structural-modeling">Reutilizando componente ( <code>Structural Modeling</code> )</h3>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Para mais detalhes acesse a documentação do MyHDL</p>
+<ul>
+<li><a href="http://docs.myhdl.org/en/stable/manual/structure.html">http://docs.myhdl.org/en/stable/manual/structure.html</a></li>
+</ul>
+</div>
+<p>A modelagem estrutural em hardware pode ser entendida como a utilização de diferentes módulos para construir um novo. Lembre que estamos desenvolvendo um hardware e não criando um software, e que esse hardware deve ser sintetizável (possível de implementar na FPGA ou em ASIC). </p>
+<p>Para isso devemos criar "instancias" de um componente, por exemplo: Podemos criar uma instância do <em>halfAdder</em> e outra do <em>fullAdder</em> para implementarmos um somador de dois bits. Podemos pensar nessas instâncias como "ir até o armário do laboratório e pegar um CI de cada tipo", cada instância é executada em paralelo e consume recursos próprios, quanto mais instâncias mais complexo é o hardware e mais recursos são utilizados.</p>
+<h4 id="halfadder">halfAdder</h4>
+<p>Como exemplo do processo vamos reimplementar o fullAdder, mas agora utilizando dois halfAdders, como demonstrado no diagrama a seguir:</p>
+<p><img alt="" src="../figs/ula/full-adder.svg" /></p>
+<p>O código em python fica:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@block</span>
+<span class="k">def</span> <span class="nf">fullAdder</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">soma</span><span class="p">,</span> <span class="n">carry</span><span class="p">):</span>
+    <span class="n">s0</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="c1"># (1)</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> 
+    <span class="n">s2</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+    <span class="n">half_1</span> <span class="o">=</span> <span class="n">halfAdder</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">s1</span><span class="p">)</span> <span class="c1"># (2)</span>
+    <span class="n">half_2</span> <span class="o">=</span> <span class="n">halfAdder</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">soma</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span> <span class="c1"># (3)</span>
+
+    <span class="nd">@always_comb</span>
+    <span class="k">def</span> <span class="nf">comb</span><span class="p">():</span>
+        <span class="n">carry</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">s1</span> <span class="o">|</span> <span class="n">s2</span> <span class="c1"># (4)</span>
+
+    <span class="k">return</span> <span class="n">instances</span><span class="p">()</span>
+</code></pre></div>
+<ol>
+<li>Sinais internos para conexão</li>
+<li>Primeira instancia do half adder</li>
+<li>Segunda instancia do half adder</li>
+<li>Implementação da porta <code>or</code> entre as saídas dos <code>carrys</code> </li>
+</ol>
+<p>Notem que na implementação anterior utilizamos três sinais binários interno (<code>s0</code>, <code>s1</code> e <code>s2</code>) no módulo para a conexão entre os componentes e que a lógica do <code>OR</code> entre os carrys é implementada em um bloco combinacional <code>def comb</code>.</p>
+<div class="admonition exercise self-progress" data-slug="class/ula-lab-1/exercise_4" id="exercise_4_0">
+<p class="admonition-title">Exercise 4</p>
+<form class="exercise-form">
+<ul>
+<li>Modulo: <code>def fullAdder(a, b, c, soma, carry):</code></li>
+<li>Test: <code>pytest -k fullAdder</code></li>
+</ul>
+<p>Tarefa: </p>
+<p>Modifique o fullAdder para utilizar dois hallAdders, execute o teste novamente e note que ele passa.</p>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<p>Podemos melhorar um pouco o código anterior se no lugar dos sinais <code>s0</code>, <code>s1</code> e <code>s2</code> criássemos um vetor de sinais <code>s[]</code> com três itens.</p>
+<div class="highlight"><pre><span></span><code><span class="gd">- s0 = Signal(bool(0)) </span>
+<span class="gd">- s1 = Signal(bool(0)) </span>
+<span class="gd">- s2 = Signal(bool(0))</span>
+<span class="gi">+ s = [Signal(bool(0)) for i in range(3)]</span>
+</code></pre></div>
+<p>Com isso temos um vetor de bits <code>s</code> que pode ser endereçado como <code>s[0]</code>, <code>s[1]</code> e <code>s[2]</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip 1</p>
+<p>O MyHDL possui um tipo próprio para tratar um vetor de bits (<code>intbv</code> ou <code>modbv</code>), mas por enquanto vamos usar o vetor criado por vários bools. A diferença entre os dois métodos é que no <code>intbv</code> os bits são interpretados como um único sinal (<code>unsigned</code> ou <code>signed</code>, como se fosse uma variável) e no vetor criado por <code>bools</code> os bits são independentes!</p>
+</div>
+<div class="admonition exercise self-progress" data-slug="class/ula-lab-1/exercise_5" id="exercise_5_0">
+<p class="admonition-title">Exercise 5</p>
+<form class="exercise-form">
+<p>Modifique novamenge o <code>fullAdder</code>, mas agora usando um vetor de bits <code>s[]</code> no lugar dos três sinais <code>s0</code>, <code>s1</code> e <code>s2</code>.</p>
+<details class="solução">
+<summary>Solução</summary>
+<div class="highlight"><pre><span></span><code><span class="nd">@block</span>
+<span class="k">def</span> <span class="nf">fullAdder</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">soma</span><span class="p">,</span> <span class="n">carry</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="n">Signal</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+
+    <span class="n">half_1</span> <span class="o">=</span> <span class="n">halfAdder</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> 
+    <span class="n">half_2</span> <span class="o">=</span> <span class="n">halfAdder</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">soma</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="nd">@always_comb</span>
+    <span class="k">def</span> <span class="nf">comb</span><span class="p">():</span>
+        <span class="n">carry</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">|</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">instances</span><span class="p">()</span>
+</code></pre></div>
+</details>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<h2 id="somador-1-hw-0-sw">💰 Somador (1 HW / 0 SW)</h2>
+<p>Agora com os dois módulos implementados podemos construir um somador mais completo, que soma dois vetores de bits. Para isso iremos precisar de um halfAdder (HA) e um fullAdders (FA) conectados da seguinte maneira:</p>
+<div class="highlight"><pre><span></span><code>           x1 y1                x0 y0
+            |  |  /--------\     |  |
+            |  |  |        |     |  |
+          .-v--v--v--.     |  .--v--v----.
+          | a  b  c  |     |  |  a  b    |
+          |          |     |  |          |
+ carry &lt;---carry     |     &lt;---carry     |
+          |     soma |        |     soma |
+          .--|-------.        .--|-------.
+             |     FA            |      HA
+             v                   v
+            q1                  q0
+</code></pre></div>
+<p>Nessa ligação, estamos somando dois vetores de dois bits cada: <code>x[1..0] + y[1..0]</code> que resulta em uma soma de dois bits: <code>q[1..0]</code> e um <code>carry</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@block</span>
+<span class="k">def</span> <span class="nf">adder2bits</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">soma</span><span class="p">,</span> <span class="n">carry</span><span class="p">):</span>
+    <span class="c1"># adder de 2 bits!</span>
+</code></pre></div>
+<p>Onde <code>x</code>, <code>y</code> e <code>s</code> são vetores do tipo <code>bool</code> de duas posições.</p>
+<div class="admonition exercise self-progress" data-slug="class/ula-lab-1/exercise_6" id="exercise_6_0">
+<p class="admonition-title">Exercise 6</p>
+<form class="exercise-form">
+<p>Explique o que está acontecendo para o seu colega, você entendeu o porque dessa ligação e como ela funciona? </p>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<div class="admonition exercise self-progress" data-slug="class/ula-lab-1/exercise_7" id="exercise_7_0">
+<p class="admonition-title">💰 Somador (1 HW / 0 SW), exercício  7</p>
+<form class="exercise-form">
+<ul>
+<li>Modulo: <code>def adder2bits(x, y, soma, vaiUm):</code></li>
+<li>Test: <code>pytest -k adder2bits</code></li>
+<li>Run: <code>./run_adder2bits.py</code></li>
+</ul>
+<p>Tarefa: </p>
+<ul>
+<li>Modifique o <code>adder2bits</code> para implementar um somador de dois bits como demonstrado no diagrama anterior.</li>
+<li>Teste com <code>pytest</code></li>
+<li>Você pode testar o módulo executando ele: <code>./run_adder2bits</code>. Você deve dar como entrada os valores de <code>x</code> e <code>y</code> em decimal. <mark>Lembre que para dois bits o valor máximo é 3</mark>.</li>
+</ul>
+<p><script id="asciicast-282J3aAGabeQLyhbSdTgGuRIB" src="https://asciinema.org/a/282J3aAGabeQLyhbSdTgGuRIB.js" async></script></p>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<h3 id="generalizando">Generalizando</h3>
+<p>O somador que criamos funciona apenas para vetores de dois bits, mas somos capazes de criar um módulo genérico que realiza a operação em N bits (N o tamanho dos vetores de entrada). Para isso deveremos usar um <code>for</code> que irá criar N instâncias do <code>FA</code> para atender a necessidade do tamanho das entradas.</p>
+<p>Para isso será necessário criar uma lista de componentes, que será gerada com base no tamanho do vetor da soma. Vamos analisar como fazer isso com o exemplo do FA que utiliza dois halfAdders, para isso iremos criar uma lista do tipo <code>None</code> e então inicializar cada elementos dela com um halfAdder:</p>
+<div class="highlight"><pre><span></span><code><span class="n">haList</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>  <span class="c1"># (1)</span>
+</code></pre></div>
+<p>Implementação fullAdder com lista de componentes fica assim:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@block</span>
+<span class="k">def</span> <span class="nf">fullAdder</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">soma</span><span class="p">,</span> <span class="n">carry</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="n">Signal</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+    <span class="n">haList</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>  <span class="c1"># (1)</span>
+
+    <span class="n">haList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">halfAdder</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> 
+    <span class="n">haList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">halfAdder</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">soma</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="nd">@always_comb</span>
+    <span class="k">def</span> <span class="nf">comb</span><span class="p">():</span>
+        <span class="n">carry</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">|</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">instances</span><span class="p">()</span>
+</code></pre></div>
+<ol>
+<li>Lista de dois componentes não inicializada </li>
+</ol>
+<div class="admonition exercise self-progress" data-slug="class/ula-lab-1/exercise_8" id="exercise_8_0">
+<p class="admonition-title">Exercise 8</p>
+<form class="exercise-form">
+<ul>
+<li>Modulo: <code>def fullAdder(a, b, soma, vaiUm):</code></li>
+<li>Test: <code>pytest -k fullAdder</code></li>
+</ul>
+<p>Tarefa:</p>
+<p>Modifique o fullAdder para usar uma lista de componentes.</p>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<p>Agora que sabemos como podemos criar uma lista de componentes, podemos fazer a implementação do adder que se adapta a quantidade de bits que ele recebe. Isso é interessante pois podemos usar o mesmo adder instanciado de diferentes maneiras como um hardware dedicado para somar vetores de <code>2</code> bits, <code>8</code> ou quanto quisermos. Vamos ver mais para frente que a largura do somador é determinada pela arquitetura da CPU, já reparou que alguns programas quando você vai baixar possuem a opção <code>x64</code> ou <code>x86</code>? Isso determina entre outras coisas, qual a largura de dados da CPU em questão, <code>64</code> ou <code>32</code> bits.</p>
+<div class="admonition exercise self-progress" data-slug="class/ula-lab-1/exercise_9" id="exercise_9_0">
+<p class="admonition-title">Exercise 9</p>
+<form class="exercise-form">
+<ul>
+<li>Modulo: <code>def adder(x, y, soma, carry):</code></li>
+<li>Test: <code>pytest -k adder</code></li>
+<li>Run: <code>./run_adder.py</code></li>
+</ul>
+<p>Tarefa:</p>
+<ul>
+<li>Implemente o módulo <code>adder</code> que é um somador genérico.</li>
+<li>Teste com <code>pytest test_adder</code></li>
+</ul>
+<p>Dicas:</p>
+<ul>
+<li>Para saber o tamanho do vetor use <code>n = len(x)</code></li>
+<li>Crie uma lista de componente de tamanho <code>faList = [None for i in range(n)]</code> </li>
+<li><img alt="✏️" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/svg/270f.svg" title=":pencil2:" />  Utilize caneta e papel, desenhe um módulo somador de tamanho 3 e tente depois generalizar. </li>
+<li><mark>Tente apenas usar <code>fullAdder</code> na implementação</mark></li>
+<li>Faça um loop para inicializar cada um dos componentes
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">faList</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">fullAdder</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="o">...</span><span class="p">)</span>
+</code></pre></div></li>
+</ul>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<h2 id="fpga">FPGA</h2>
+<p>Agora vamos executar o adder na FPGA! Vamos usar a implementação do <code>adder</code> genérico com 4 bits para o vetor <code>x</code> e 4 bits para o <code>y</code>, vamos mapear os bits para as chaves da FPGA e a saída do adder para os LEDs, o carry vai ser o último LED.</p>
+<p><img alt="" src="../figs/ula/adder.svg" width="400" /></p>
+<p>No <code>toplevel.py</code> eu estou usando o <code>bin2hex</code> do laboratório anterior para mostrar no display HEX0 o resultado da soma.</p>
+<div class="admonition exercise self-progress" data-slug="class/ula-lab-1/exercise_10" id="exercise_10_0">
+<p class="admonition-title">Exercise 10</p>
+<form class="exercise-form">
+<p>Modifique o <code>toplevel.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">ic1</span> <span class="o">=</span> <span class="n">adder</span><span class="p">(</span><span class="n">sw</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">],</span> <span class="n">sw</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">10</span><span class="p">],</span> <span class="n">ledr_s</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">],</span> <span class="n">ledr_s</span><span class="p">[</span><span class="mi">9</span><span class="p">])</span>
+<span class="n">ic2</span> <span class="o">=</span> <span class="n">bin2hex</span><span class="p">(</span><span class="n">HEX0</span><span class="p">,</span> <span class="n">ledr_bin</span><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li>Gerar o <code>toplevel.vhd</code> rodando <code>toplevel.py</code></li>
+<li>Compile o vhdl<ul>
+<li><code>make -C quartus clean</code></li>
+<li><code>make -C quartus all</code>.</li>
+<li><code>make -C quartus program</code></li>
+</ul>
+</li>
+<li>Validar na FPGA </li>
+</ol>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+
+
+</section>
+          
+        
+      </main>
+      <footer class="ah-footer ah-typeset">
+        <div class="ah-footer-nav">
+          
+            <a href="../comb-lab-1/"
+               class="ah-prev"
+               title="Lab 5: MyHDL">
+              <span class="nav-label">Previous</span>
+              <span class="nav-title">Lab 5: MyHDL</span>
+            </a>
+          
+          
+            <a href="../ula-lab-2/"
+               class="ah-next"
+               title="Lab 7: Hardware types">
+              <span class="nav-label">Next</span>
+              <span class="nav-title">Lab 7: Hardware types</span>
+            </a>
+          
+        </div>
+      </footer>
+    </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+  </body>
+</html>

@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      
+        <title>ASM - Mapa de memória - Bits e Processadores</title>
+      
+    
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:700|Oxygen+Mono|Source+Sans+Pro:700|Source+Serif+Pro&amp;display=swap">
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <script>
+      // SETUP GLOBAL CONSTANTS
+      var base_url = '../../..';
+      
+      var telemetryEnabled = true;
+      var backendUrl = "https://devlife-api.insper-comp.com.br/";
+      var courseSlug = "22b bits";
+      
+      
+      var dashboardEnabled = false;
+      var tagTree = {};
+      
+
+      // SETUP PLUGIN
+      window.initialized = false;
+      if (!window.initializers) window.initializers = [];
+      window.registerInitializer = (initialize) => {
+        if (window.initialized) initialize();
+        else window.initializers.push(initialize);
+      };
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://unpkg.com/hyperscript.org"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="../../../assets/js/main.js"></script>
+    
+    
+  </head>
+  <body>
+    <div class="ah-main-container">
+      <header class="ah-header">
+        <button class="ah-menu-btn ah-button ah-button--borderless"
+                aria-label="toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
+</svg>
+        </button>
+        <a href="../../.."
+           title="Bits e Processadores"
+           class="ah-logo"
+           aria-label="Bits e Processadores">
+          Bits e Processadores
+        </a>
+        <div class="ah-header--right">
+          
+          
+          
+          <button id="resetHandoutButton">
+            <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+</svg></span>
+          </button>
+          
+
+          
+          <div id="user-menu" hx-get="https://devlife-api.insper-comp.com.br/user-menu" hx-trigger="load"> </div>
+          
+        </div>
+      </header>
+      <nav class="ah-navigation preload">
+        <div class="ah-nav-container">
+          <button class="ah-menu-btn ah-button ah-button--borderless close-menu"
+                  aria-label="close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
+</svg>
+          </button>
+          <ul class="ah-nav-body">
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Home</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../Sobre.md">index</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Sobre-Criterios-de-Avaliacao/">Critérios de Avaliação</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Sobre-Rubricas/">Rubricas individuais</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Projetos</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-proj/">A - Ambiente de desenvolvimento</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/comb-proj/">B - Lógica Combinacional</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-proj/">C - ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/seq-proj/">D - Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-proj/">E - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/assembler-proj/">G - Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vmtranslator-proj/">H - VM translator</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/x-proj/">Mundo Real</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Labs</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-benchmark-lab/">Lab 1: Visão geral</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-lab-1/">Lab 2: Configurando Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-lab-2/">Lab 3: Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/transistores-lab-1/">Lab 4: Transistores / CI</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/comb-lab-1/">Lab 5: MyHDL</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-1/">Lab 6: Adders</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-2/">Lab 7: Hardware types</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-4/">Lab 8: ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-3/">Lab 9: Depurando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/seq-lab-1/">Lab 10: Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-1/">Lab 11: (nasm) Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-2/">Lab 11: (nasm) Periféricos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-3/">Lab 13: (nasm) Saltos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-4/">Lab 14: (nasm) Praticando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/assembler-lab-1/">Lab 15: Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vm-lab-1/">Lab 16: VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vmtranslator-lab-1/">Lab 7 - VM translator</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item opened">
+    <span class="ah-togglable-handle">Teoria</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../Teoria-Dados/">Dados Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Algebra-Booleana/">Álgebra Booleana</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-RTL/">Resistor-Transistor Logic (RTL)</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Componentes/">Componentes Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Aritmetica-Binaria/">Aritmética Binária</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Aritmetica-Binaria-HW/">Aritmética Binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-ULA/">ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Logica-Sequencial/">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Sequencial-Componentes/">Componentes Síncronos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Z01/">Z01</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Assembly/">ASM - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li class="active ah-togglable-item opened">
+      <span class="ah-togglable-handle">ASM - Mapa de memória</span>
+      <ul>
+        
+          <li class="ah-toc-item">
+            <a href="#asm-mapa-de-memoria">ASM - Mapa de memória</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#ram">RAM</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#leds">LEDs</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#sw">SW</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#lcd">LCD</a>
+          </li>
+          
+        
+      </ul>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-nasm-jump/">ASM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Linguagem-de-Maquina/">Linguagem de máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Assembler/">Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Assembler-SymbolTable/">Tabela de Símbolos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm/">VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm-segmentos/">VM - Segmentos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm-jump/">VM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm-funcoes/">VM - Funções</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm-memoria/">VM - Memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Util-Video-Aulas.md">commum-content/teoria/Vídeo Aulas (Luciano)</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">MyHDL</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../teoria/myhdl-1/">MyHDL Básico</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Z01</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Resumo-Assembly/">Resumo Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Cheat-Sheet/">Z01.1 Cheat Sheet</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-InstructionSet/">Instruction Set</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Resumo-VM/">Resumo VM</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Exercícios</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-Algebra-Booleana-1/">Álgebra Booleana - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-Algebra-Booleana-2/">Álgebra Booleana - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://docs.google.com/spreadsheets/d/1rN_zQqYaVI8PjAhKqEBCmY-_06I0X9dD0RddcI-miJs/edit?usp=sharing">Dados Digitais - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-Dados-2/">Dados Digitais - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Exercicio-Aritmetica-Booleana.pdf">Aritmética binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://forms.gle/XMsFCDMYsmz1qUP86">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Linguagem_de_maquina.pdf">Linguagem de Máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-CPU-1/">Exercicio CPU - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-CPU-2/">Exercicio CPU - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Linguagem_de_maquina.pdf"">linguagem de máquina</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Útil</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../util/Util-Comecando-novo-projeto/">Começando novo projeto</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/Util-vixi-sou-scrum/">Vixi! Sou desenvolvedor</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/Util-vixi-sou-dev/">Vixi! Sou scrum master</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../util/util-infra/">Infra</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  
+    <li>
+      <a href="../../../Avaliacoes/">Avaliações</a>
+    </li>
+  
+
+            
+          </ul>
+        </div>
+      </nav>
+      <main class="ah-content ah-typeset">
+        
+          <div class="ah-title-box">
+            <ul class="ah-breadcrumbs">
+              
+                
+                  
+                    <li>Teoria</li>
+                  
+                
+                <li>ASM - Mapa de memória</li>
+            </ul>
+            
+            
+          </div>
+          
+            <section class="progress-section show">
+<h1 id="asm-mapa-de-memoria">ASM - Mapa de memória</h1>
+<p>A forma na qual a maioria das CPUs acessam periféricos (teclado/ mouse/ USB/ tela/ ...) é a do periférico mapeado em memória. Essa técnica utiliza da capacidade do computador de escrever e ler da memória RAM, <strong>fazendo com que regiões de endereços da memória não sejam uma 'memória' física, mas sim um periférico do computador.</strong></p>
+<p><img alt="" src="../figs/Z0-mapa-de-memoria.svg" width="500" /></p>
+<p>Vamos trabalhar com o exemplo do nosso Z01, a memória é composta de:</p>
+<ul>
+<li>RAM </li>
+<li>LCD</li>
+<li>Chaves</li>
+<li>LEDs</li>
+</ul>
+<p>Nesse nosso hardware a memória que é visível pela CPU é organizada da seguinte maneira:</p>
+<table>
+<thead>
+<tr>
+<th>Endereço</th>
+<th>Periférico</th>
+<th>Leitura (<code>r</code>) / Escrita (<code>w</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0    -     16383</td>
+<td>RAM</td>
+<td>r/w</td>
+</tr>
+<tr>
+<td>16384 - 21183</td>
+<td>LCD</td>
+<td>w</td>
+</tr>
+<tr>
+<td>21184</td>
+<td>LED</td>
+<td>w</td>
+</tr>
+<tr>
+<td>21185</td>
+<td>SW</td>
+<td>r</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ram">RAM</h2>
+<table>
+<thead>
+<tr>
+<th>Endereço</th>
+<th>Periférico</th>
+<th>Leitura (<code>r</code>) / Escrita (<code>w</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0    -     16383</td>
+<td>RAM</td>
+<td>r/w</td>
+</tr>
+</tbody>
+</table>
+<p>A memória RAM é um componente do computador que permite guardar dados voláteis (que vão se perder após o reset do computador). É nela que guardamos as variáveis do programa. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Nossa memória RAM possui 16 bits de largura.</p>
+</div>
+<p>A princípio podemos utilizar qualquer endereço da memória RAM para armazenar dados temporários, isso não será verdade mais para frente do curso, onde iremos organizar nossa memória RAM em secções.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip 1</p>
+<p>Iremos dar alguns nomes para os endereços específicos da memória RAM:</p>
+<table>
+<thead>
+<tr>
+<th>endereço</th>
+<th>label / nome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>SP</td>
+</tr>
+<tr>
+<td>1</td>
+<td>LCL</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ARG</td>
+</tr>
+<tr>
+<td>3</td>
+<td>THIS</td>
+</tr>
+<tr>
+<td>4</td>
+<td>THAT</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>Vamos fazer um exemplo que lê um dado na RAM[3] o incrementa e salva novamente no mesmo endereço de memória:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">código</label><label for="__tabbed_1_2">simulador</label><label for="__tabbed_1_3">hardware</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span><span class="w">    </span><span class="c1">; faz %A = 3 (%A aponta para RAM[3])</span>
+<span class="nf">movw</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">),</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="w">  </span><span class="c1">; move o valor de RAM[%A] para %D</span>
+<span class="nf">incw</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="w">        </span><span class="c1">; incrementa o valor de D (D = D + 1, D = RAM[3] + 1)</span>
+<span class="nf">movw</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">)</span><span class="w">  </span><span class="c1">; move o valor incrementado de volta para a RAM[3]</span>
+</code></pre></div>
+<ul>
+<li>Podemos também usar o label <code>ARG</code> para referencia o endereço <code>3</code> da memória RAM:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="nv">ARG</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span><span class="w">  </span><span class="c1">; faz %A = 3 (%A aponta para RAM[ARG])</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p><img alt="" src="../figs/Z0-nasm-ram-simulator.gif" width="600" /></p>
+</div>
+<div class="tabbed-block">
+<p><img alt="" src="../figs/Z0-nasm-ram.gif" /></p>
+</div>
+</div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip 2</p>
+<p>Execute você esse código no simulador! E analise o resultado.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>É necessário notar que a memória RAM não é um registrador e possui uma <strong>grande limitação</strong>, <mark>não podemos realizar uma ação de ESCRITA E LEITURA no mesmo ciclo!</mark> O que impossibilita de fazermos o seguinte:</p>
+<div class="highlight"><pre><span></span><code><span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span><span class="w">  </span>
+<span class="nf">incw</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">)</span><span class="w">              </span><span class="c1">; Não funciona no nosso hardware!!</span>
+<span class="nf">addw</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">),</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">)</span><span class="w">    </span><span class="c1">; Nao funciona no nosso hardware!!</span>
+</code></pre></div>
+<ul>
+<li>O assembly permite que vocês escrevam essas operações, porém quando
+forem executar no hardware o resultado não vai ser o esperado.</li>
+</ul>
+</div>
+<h2 id="leds">LEDs</h2>
+<table>
+<thead>
+<tr>
+<th>Endereço</th>
+<th>Periférico</th>
+<th>Leitura (<code>r</code>) / Escrita (<code>w</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>21184</td>
+<td>LED</td>
+<td>w</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="" src="../figs/Z0-mapa-de-memoria-leds.svg" width="500" /></p>
+<p>Os LEDs da FPGA são mapeados no endereço de memória <code>21184</code> onde cada bit (9..0) representa um LED, se o bit específico estiver valor <code>1</code>o LED está aceso e <code>0</code> apagado.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>Como isso é traduzido para código? Imagine que desejamos acender um LED que nosso computador controla, para isso devemos fazer com que o registrador <code>%A</code> aponte para o endereço de memória na qual o LED está associado e então escreva nele:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">código</label><label for="__tabbed_2_2">simulador</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">21184</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span><span class="w">   </span><span class="c1">; endereço do LED</span>
+<span class="nf">movw</span><span class="w"> </span><span class="kc">$</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">)</span><span class="w">     </span><span class="c1">; move valor 1 para ele</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p><img alt="" src="../figs/Z0-mapa-de-memoria-leds.gif" width="600" /></p>
+</div>
+</div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip 3</p>
+<p>Execute você esse código no simulador!</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip 4</p>
+<p>Note que usamos <code>movw $1, (%A)</code>. Isso é possível porque nossa ULA é capaz de gerar os valores <code>1</code>, <code>-1</code> e <code>0</code>, mas outros valores não!</p>
+</div>
+<h2 id="sw">SW</h2>
+<table>
+<thead>
+<tr>
+<th>Endereço</th>
+<th>Periférico</th>
+<th>Leitura (<code>r</code>) / Escrita (<code>w</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>21185</td>
+<td>SW</td>
+<td>r</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><img alt="" src="../figs/Z0-mapa-de-memoria-sw.svg" width="500" /></p>
+<p>Os chaves (SW) da FPGA são mapeados no endereço de memória <code>21185</code> onde cada bit (9..0) representa uma chave, se o bit específico estiver valor <code>1</code> indica que a chave está ligada (on) e <code>0</code> desligada.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>O exemplo a seguir copia o valor das chaves para os LEDs:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">código</label><label for="__tabbed_3_2">simulador</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">21185</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span><span class="w">   </span><span class="c1">; endereço da chave</span>
+<span class="nf">movw</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">),</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="w">     </span><span class="c1">; copia valor das chaves para %D</span>
+<span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">21184</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span><span class="w">   </span><span class="c1">; endereço do LED</span>
+<span class="nf">movw</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">)</span><span class="w">     </span><span class="c1">; move valor das chaves para %D</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p><img alt="" src="../figs/Z0-nasm-sw-simulator.gif" width="600" /></p>
+</div>
+</div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip 5</p>
+<p>Execute você esse código no simulador!</p>
+</div>
+<h2 id="lcd">LCD</h2>
+<table>
+<thead>
+<tr>
+<th>Endereço</th>
+<th>Periférico</th>
+<th>Leitura (<code>r</code>) / Escrita (<code>w</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>16384 - 21183</td>
+<td>LCD</td>
+<td>w</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="" src="../figs/Z0-mapa-de-memoria-lcd.svg" width="500" /></p>
+<p>O nosso LCD é um dispositivo de <code>320x240</code> pixels. Cada linha do endereço de memória do LCD representa <code>16</code> pixels do dispositivo, conforme figura anterior. Para acender um pixel, basta colocar <code>1</code> ou <code>0</code> para apagar.-</p>
+<div class="admonition tip">
+<p class="admonition-title">endereços do LCD 6</p>
+<p>Como nosso LCD possui 320px na horizontal, e como cada endereço de memória acessa 16px por vez,
+uma linha é acessível por: <code>320/16 = 20</code> endereços. Ou seja, para acessar os primeiros px de cada linha devemos escrever endereço de memória:</p>
+<ul>
+<li>Primeira linha: <code>16384 + 0 vezes 20</code>: 16384</li>
+<li>Segunda  linha: <code>16384 + 1 vezes 20</code>: 16404</li>
+<li>Terceira linha: <code>16384 + 2 vezes 20</code>: 16424</li>
+<li>...</li>
+<li>Última linha:  <code>16384 + 239 vezes 20</code>: 21164</li>
+</ul>
+</div>
+<div class="admonition example">
+<p class="admonition-title">LCD</p>
+<p>Para desenhar um pixel no meio do LCD é necessário carregar o valor <code>0x0001</code> no endereço <code>18242</code></p>
+<div class="highlight"><pre><span></span><code><span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">18242</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span>
+<span class="nf">movw</span><span class="w"> </span><span class="kc">$</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip 7</p>
+<p>Execute você esse código no simulador!</p>
+</div>
+
+
+</section>
+          
+        
+      </main>
+      <footer class="ah-footer ah-typeset">
+        <div class="ah-footer-nav">
+          
+            <a href="../Teoria-Assembly/"
+               class="ah-prev"
+               title="ASM - Assembly">
+              <span class="nav-label">Previous</span>
+              <span class="nav-title">ASM - Assembly</span>
+            </a>
+          
+          
+            <a href="../Teoria-nasm-jump/"
+               class="ah-next"
+               title="ASM - jump">
+              <span class="nav-label">Next</span>
+              <span class="nav-title">ASM - jump</span>
+            </a>
+          
+        </div>
+      </footer>
+    </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+  </body>
+</html>

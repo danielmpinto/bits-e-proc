@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      
+        <title>Álgebra Booleana - 1 - Bits e Processadores</title>
+      
+    
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:700|Oxygen+Mono|Source+Sans+Pro:700|Source+Serif+Pro&amp;display=swap">
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <script>
+      // SETUP GLOBAL CONSTANTS
+      var base_url = '../../..';
+      
+      var telemetryEnabled = true;
+      var backendUrl = "https://devlife-api.insper-comp.com.br/";
+      var courseSlug = "22b bits";
+      
+      
+      var dashboardEnabled = false;
+      var tagTree = {};
+      
+
+      // SETUP PLUGIN
+      window.initialized = false;
+      if (!window.initializers) window.initializers = [];
+      window.registerInitializer = (initialize) => {
+        if (window.initialized) initialize();
+        else window.initializers.push(initialize);
+      };
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://unpkg.com/hyperscript.org"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="../../../assets/js/main.js"></script>
+    
+    
+  </head>
+  <body>
+    <div class="ah-main-container">
+      <header class="ah-header">
+        <button class="ah-menu-btn ah-button ah-button--borderless"
+                aria-label="toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
+</svg>
+        </button>
+        <a href="../../.."
+           title="Bits e Processadores"
+           class="ah-logo"
+           aria-label="Bits e Processadores">
+          Bits e Processadores
+        </a>
+        <div class="ah-header--right">
+          
+          
+          
+          <button id="resetHandoutButton">
+            <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+</svg></span>
+          </button>
+          
+
+          
+          <div id="user-menu" hx-get="https://devlife-api.insper-comp.com.br/user-menu" hx-trigger="load"> </div>
+          
+        </div>
+      </header>
+      <nav class="ah-navigation preload">
+        <div class="ah-nav-container">
+          <button class="ah-menu-btn ah-button ah-button--borderless close-menu"
+                  aria-label="close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
+</svg>
+          </button>
+          <ul class="ah-nav-body">
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Home</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../Sobre.md">index</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Sobre-Criterios-de-Avaliacao/">Critérios de Avaliação</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Sobre-Rubricas/">Rubricas individuais</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Projetos</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-proj/">A - Ambiente de desenvolvimento</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/comb-proj/">B - Lógica Combinacional</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-proj/">C - ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/seq-proj/">D - Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-proj/">E - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/assembler-proj/">G - Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vmtranslator-proj/">H - VM translator</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/x-proj/">Mundo Real</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Labs</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-benchmark-lab/">Lab 1: Visão geral</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-lab-1/">Lab 2: Configurando Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-lab-2/">Lab 3: Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/transistores-lab-1/">Lab 4: Transistores / CI</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/comb-lab-1/">Lab 5: MyHDL</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-1/">Lab 6: Adders</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-2/">Lab 7: Hardware types</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-4/">Lab 8: ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-3/">Lab 9: Depurando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/seq-lab-1/">Lab 10: Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-1/">Lab 11: (nasm) Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-2/">Lab 11: (nasm) Periféricos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-3/">Lab 13: (nasm) Saltos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-4/">Lab 14: (nasm) Praticando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/assembler-lab-1/">Lab 15: Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vm-lab-1/">Lab 16: VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vmtranslator-lab-1/">Lab 7 - VM translator</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Teoria</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Dados/">Dados Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Algebra-Booleana/">Álgebra Booleana</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-RTL/">Resistor-Transistor Logic (RTL)</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Componentes/">Componentes Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Aritmetica-Binaria/">Aritmética Binária</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Aritmetica-Binaria-HW/">Aritmética Binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-ULA/">ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Logica-Sequencial/">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Sequencial-Componentes/">Componentes Síncronos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Z01/">Z01</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Assembly/">ASM - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Z01-mapadeMemoria/">ASM - Mapa de memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-nasm-jump/">ASM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Linguagem-de-Maquina/">Linguagem de máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Assembler/">Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Assembler-SymbolTable/">Tabela de Símbolos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-vm/">VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-vm-segmentos/">VM - Segmentos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-vm-jump/">VM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-vm-funcoes/">VM - Funções</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-vm-memoria/">VM - Memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Util-Video-Aulas.md">commum-content/teoria/Vídeo Aulas (Luciano)</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">MyHDL</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../teoria/myhdl-1/">MyHDL Básico</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Z01</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Resumo-Assembly/">Resumo Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Cheat-Sheet/">Z01.1 Cheat Sheet</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-InstructionSet/">Instruction Set</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Resumo-VM/">Resumo VM</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item opened">
+    <span class="ah-togglable-handle">Exercícios</span>
+    <ul>
+      
+        
+  
+    <li class="active ah-togglable-item opened">
+      <span class="ah-togglable-handle">Álgebra Booleana - 1</span>
+      <ul>
+        
+          <li class="ah-toc-item">
+            <a href="#algebra-booleana-1">Álgebra Booleana - 1</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#tabela-verdade">Tabela verdade</a>
+          </li>
+          
+        
+      </ul>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Exercicio-Algebra-Booleana-2/">Álgebra Booleana - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://docs.google.com/spreadsheets/d/1rN_zQqYaVI8PjAhKqEBCmY-_06I0X9dD0RddcI-miJs/edit?usp=sharing">Dados Digitais - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Exercicio-Dados-2/">Dados Digitais - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Exercicio-Aritmetica-Booleana.pdf">Aritmética binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://forms.gle/XMsFCDMYsmz1qUP86">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Linguagem_de_maquina.pdf">Linguagem de Máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Exercicio-CPU-1/">Exercicio CPU - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Exercicio-CPU-2/">Exercicio CPU - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Linguagem_de_maquina.pdf"">linguagem de máquina</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Útil</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../util/Util-Comecando-novo-projeto/">Começando novo projeto</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/Util-vixi-sou-scrum/">Vixi! Sou desenvolvedor</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/Util-vixi-sou-dev/">Vixi! Sou scrum master</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../util/util-infra/">Infra</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  
+    <li>
+      <a href="../../../Avaliacoes/">Avaliações</a>
+    </li>
+  
+
+            
+          </ul>
+        </div>
+      </nav>
+      <main class="ah-content ah-typeset">
+        
+          <div class="ah-title-box">
+            <ul class="ah-breadcrumbs">
+              
+                
+                  
+                    <li>Exercícios</li>
+                  
+                
+                <li>Álgebra Booleana - 1</li>
+            </ul>
+            
+            
+          </div>
+          
+            <section class="progress-section show">
+<h1 id="algebra-booleana-1">Álgebra Booleana - 1</h1>
+<div class="admonition tip">
+<p><a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Exercicio-Algebra-Booleana-1-resolucao.pdf"><img alt="📝" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/svg/1f4dd.svg" title=":pencil:" /> Resolução</a></p>
+</div>
+<div class="admonition exercise text short tag-short-text tag-text-exercise editable" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/short_1" id="short_1_0">
+<p class="admonition-title">Exercise 1<button class="editable-button"></button></p>
+<form class="exercise-form">
+<p>Indique o nome dos elementos lógicos a seguir:</p>
+<p><img alt="" src="../figs/AlgebraBooleana-componentes.png" /></p>
+<div class="form-elements">
+<input type="text" value="" name="data"/>
+
+<input class="ah-button ah-button--primary" type="submit" value="Submit"/>
+</div>
+</form>
+<div class="admonition answer no-indent">
+<p class="admonition-title">Answer</p>
+<p>and, nand, or, nor, xor, not</p>
+</div>
+</div>
+<hr />
+<h3 id="tabela-verdade">Tabela verdade</h3>
+<div class="admonition exercise text short tag-short-text tag-text-exercise editable" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/short_2" id="short_2_0">
+<p class="admonition-title">Exercise 2<button class="editable-button"></button></p>
+<form class="exercise-form">
+<p>A tabela verdade a seguir representa qual porta lógica?</p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>OUT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<div class="form-elements">
+<input type="text" value="" name="data"/>
+
+<input class="ah-button ah-button--primary" type="submit" value="Submit"/>
+</div>
+</form>
+<div class="admonition answer no-indent">
+<p class="admonition-title">Answer</p>
+<p>xor</p>
+</div>
+</div>
+<div class="admonition exercise text short tag-short-text tag-text-exercise editable" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/short_3" id="short_3_0">
+<p class="admonition-title">Exercise 3<button class="editable-button"></button></p>
+<form class="exercise-form">
+<p>A tabela verdade a seguir representa qual porta lógica?</p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>OUT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<div class="form-elements">
+<input type="text" value="" name="data"/>
+
+<input class="ah-button ah-button--primary" type="submit" value="Submit"/>
+</div>
+</form>
+<div class="admonition answer no-indent">
+<p class="admonition-title">Answer</p>
+<p>nand</p>
+</div>
+</div>
+<hr />
+<div class="admonition exercise choice tag-choice-exercise" data-answer-idx="3" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/choice_1" id="choice_1_0">
+<p class="admonition-title">Pergunta 4</p>
+<form class="exercise-form">
+<p>Aplicando a lei da Distributividade na expressão <span class="arithmatex">\(A(B+\bar{C}+D)\)</span> se tem:</p>
+<div class="form-elements">
+<div class="alternative-set">
+  
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="1" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(A . B . C . D\)</span>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="0" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(A . B + A . C + A . D\)</span>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="3" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(A B + A\bar{C} + A . D\)</span>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="2" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(A + B + C + D\)</span>
+  </div>
+</label>
+
+</div>
+<input class="ah-button ah-button--primary" type="submit" name="sendButton" value="Submit" disabled />
+</div>
+</form>
+<div class="admonition answer no-indent">
+<p class="admonition-title">Answer</p>
+<p><span class="arithmatex">\(A B + A\bar{C} + A . D\)</span></p>
+</div>
+</div>
+<hr />
+<div class="admonition exercise choice tag-choice-exercise" data-answer-idx="0" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/choice_2" id="choice_2_0">
+<p class="admonition-title">Pergunta 5</p>
+<form class="exercise-form">
+<p>Aplicando o teorema de DeMorgan na expressão <span class="arithmatex">\(\overline{ABC}\)</span>, obtem:</p>
+<div class="form-elements">
+<div class="alternative-set">
+  
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="0" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(\bar{A}+\bar{B}+\bar{C}\)</span>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="3" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(A . (B+C)\)</span>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="2" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(A + \bar{B} + C \bar{C}\)</span>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="1" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(\overline{A+B+C}\)</span>
+  </div>
+</label>
+
+</div>
+<input class="ah-button ah-button--primary" type="submit" name="sendButton" value="Submit" disabled />
+</div>
+</form>
+<div class="admonition answer no-indent">
+<p class="admonition-title">Answer</p>
+<p><span class="arithmatex">\(\bar{A}+\bar{B}+\bar{C}\)</span></p>
+</div>
+</div>
+<hr />
+<div class="admonition exercise choice tag-choice-exercise" data-answer-idx="2" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/choice_3" id="choice_3_0">
+<p class="admonition-title">Pergunta 6</p>
+<form class="exercise-form">
+<p>Qual simplificação está incorreta:</p>
+<div class="form-elements">
+<div class="alternative-set">
+  
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="0" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(\overline{(\bar{x}+\bar{y})} = \bar{\bar{x}}*\bar{y} = x * \bar{y}\)</span> 
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="3" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(\bar{x} . \bar{y} . z + \bar{x} . y . z + x . \bar{y} = \bar{x} . z (\bar{y} + y) + x . \bar{y} = \bar{x} . z + x . \bar{y}\)</span>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="1" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(x ( \bar{x} + y ) = x . \bar{x} + x . y = 0 + x . y = x . y\)</span>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="2" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(x . y + x ( y + z ) = x . y + x . y + z = x . y + z\)</span>
+  </div>
+</label>
+
+</div>
+<input class="ah-button ah-button--primary" type="submit" name="sendButton" value="Submit" disabled />
+</div>
+</form>
+<div class="admonition answer no-indent">
+<p class="admonition-title">Answer</p>
+<p><span class="arithmatex">\(\overline{(\bar{x}+\bar{y})} = \bar{\bar{x}}*\bar{y} = x * \bar{y}\)</span> e <span class="arithmatex">\(x . y + x ( y + z ) = x . y + x . y + z = x . y + z\)</span></p>
+</div>
+</div>
+<hr />
+<div class="admonition exercise choice tag-choice-exercise" data-answer-idx="3" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/choice_4" id="choice_4_0">
+<p class="admonition-title">Pergunta 7</p>
+<form class="exercise-form">
+<p>Qual forma canônica está correta?</p>
+<table>
+<thead>
+<tr>
+<th><strong>A</strong></th>
+<th><strong>B</strong></th>
+<th><strong>Q</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<div class="form-elements">
+<div class="alternative-set">
+  
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="3" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(Q = \bar{A} . \bar{B} + A . B\)</span>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="1" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(Q = A+B * \bar{A} \bar{B}\)</span>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="0" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(Q = A \bar{B} + A \bar{B}\)</span>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="2" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(Q = A . B\)</span>
+  </div>
+</label>
+
+</div>
+<input class="ah-button ah-button--primary" type="submit" name="sendButton" value="Submit" disabled />
+</div>
+</form>
+<div class="admonition answer no-indent">
+<p class="admonition-title">Answer</p>
+<p><span class="arithmatex">\(Q = \bar{A} . \bar{B} + A . B\)</span></p>
+</div>
+</div>
+<hr />
+<div class="admonition exercise self-progress" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/exercise_1" id="exercise_1_0">
+<p class="admonition-title">Exercise 8</p>
+<form class="exercise-form">
+<p>Dado a seguinte tabela verdade (entradas A, B e C, e a saída Q):</p>
+<table>
+<thead>
+<tr>
+<th><strong>A</strong></th>
+<th><strong>B</strong></th>
+<th><strong>C</strong></th>
+<th><strong>Q</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Crie uma fórmula em álgebra booleana que represente a tabela via SoP e PoS.<blockquote>
+<p>SoP: Soma dos Produtos / PoS: Produto das Somas</p>
+</blockquote>
+</li>
+<li>Simplifique SoP (interprete o resultado!)</li>
+<li>Desenhe um circuito usando os símbolos da álgebra booleana. </li>
+</ol>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<hr />
+<div class="admonition exercise text short tag-short-text tag-text-exercise editable" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/short_4" id="short_4_0">
+<p class="admonition-title">Exercise 9<button class="editable-button"></button></p>
+<form class="exercise-form">
+<p>Quantas saídas com 1 existem na tabela verdade que resulta na seguinte fórmula de soma de produtos:</p>
+<p><span class="arithmatex">\(A \bar{B} \bar{C} + \bar{A} B C + \bar{A} B \bar{C} + A \bar{B} \bar{C} + A B C\)</span></p>
+<div class="form-elements">
+<input type="text" value="" name="data"/>
+
+<input class="ah-button ah-button--primary" type="submit" value="Submit"/>
+</div>
+</form>
+<div class="admonition answer no-indent">
+<p class="admonition-title">Answer</p>
+<p>4</p>
+</div>
+</div>
+<hr />
+<div class="admonition exercise text short tag-short-text tag-text-exercise editable" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/short_5" id="short_5_0">
+<p class="admonition-title">Exercise 10<button class="editable-button"></button></p>
+<form class="exercise-form">
+<p>Qual é a expressão em álgebra booleana do seguinte circuito:</p>
+<p><img alt="" src="../figs/Algebra-Booleana-1.png" /></p>
+<div class="form-elements">
+<input type="text" value="" name="data"/>
+
+<input class="ah-button ah-button--primary" type="submit" value="Submit"/>
+</div>
+</form>
+<div class="admonition answer no-indent">
+<p class="admonition-title">Answer</p>
+<p><span class="arithmatex">\(G = (A+B) C D E\)</span></p>
+</div>
+</div>
+<hr />
+<div class="admonition exercise self-progress" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/exercise_2" id="exercise_2_0">
+<p class="admonition-title">Exercise 11</p>
+<form class="exercise-form">
+<p>Gere a Tabela Verdade das equações a seguir:</p>
+<ol>
+<li><span class="arithmatex">\(A . B + \overline{B + A}\)</span></li>
+<li><span class="arithmatex">\(A \oplus B\)</span></li>
+<li><span class="arithmatex">\((A \, and \, B) \, or \, C\)</span></li>
+</ol>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<hr />
+<div class="admonition exercise self-progress" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/exercise_3" id="exercise_3_0">
+<p class="admonition-title">Exercise 12</p>
+<form class="exercise-form">
+<p>Converta a seguinte expressão em Soma de Produtos para Produto de Somas:</p>
+<p><span class="arithmatex">\(A . B . C + A \bar{B} \bar{C} + A . \bar{B} C + A . B . \bar{C} + \bar{A} . \bar{B} . C\)</span></p>
+<ol>
+<li>Faça a tabela verdade</li>
+<li>Encontre o PoS</li>
+</ol>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<hr />
+<div class="admonition exercise text short tag-short-text tag-text-exercise editable" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/short_6" id="short_6_0">
+<p class="admonition-title">Exercise 13<button class="editable-button"></button></p>
+<form class="exercise-form">
+<p>Determine os valores de A, B, C e D que fazem a fórmula a seguir ser igual a zero (Z = 0).</p>
+<p><span class="arithmatex">\(Z = \bar{A} + B + \bar{C} + D\)</span></p>
+<div class="form-elements">
+<input type="text" value="" name="data"/>
+
+<input class="ah-button ah-button--primary" type="submit" value="Submit"/>
+</div>
+</form>
+<div class="admonition answer no-indent">
+<p class="admonition-title">Answer</p>
+<p>"1010"</p>
+</div>
+</div>
+<hr />
+<div class="admonition exercise choice tag-choice-exercise" data-answer-idx="1" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/choice_5" id="choice_5_0">
+<p class="admonition-title">Pergunta 14</p>
+<form class="exercise-form">
+<p>Qual das seguintes propriedades da álgebra booleana é falsa:</p>
+<div class="form-elements">
+<div class="alternative-set">
+  
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="3" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(A . A = A\)</span>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="2" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(A + \bar{A} = 1\)</span>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="1" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(A + (\bar{A} . B) = A\)</span>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="0" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <span class="arithmatex">\(A . (\bar{A} + B)= A . B\)</span>
+  </div>
+</label>
+
+</div>
+<input class="ah-button ah-button--primary" type="submit" name="sendButton" value="Submit" disabled />
+</div>
+</form>
+<div class="admonition answer no-indent">
+<p class="admonition-title">Answer</p>
+<p><span class="arithmatex">\(A + (\bar{A} . B) = A\)</span></p>
+</div>
+</div>
+<hr />
+<div class="admonition exercise text short tag-short-text tag-text-exercise editable" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/short_7" id="short_7_0">
+<p class="admonition-title">Exercise 15<button class="editable-button"></button></p>
+<form class="exercise-form">
+<p>Simplifique a seguinte expressão:</p>
+<p><span class="arithmatex">\(\bar{A} \bar{B} \bar{C} + \bar{A} B C + \bar{A} B \bar{C} + A \bar{B} \bar{C} + A B \bar{C}\)</span></p>
+<div class="form-elements">
+<input type="text" value="" name="data"/>
+
+<input class="ah-button ah-button--primary" type="submit" value="Submit"/>
+</div>
+</form>
+<div class="admonition answer no-indent">
+<p class="admonition-title">Answer</p>
+<p><span class="arithmatex">\(\bar{C} + \bar{A} B C\)</span></p>
+</div>
+</div>
+<hr />
+<div class="admonition exercise self-progress" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/exercise_4" id="exercise_4_0">
+<p class="admonition-title">Exercise 16</p>
+<form class="exercise-form">
+<p>Encontre as equações para os mapas de Karnaugh a seguir:</p>
+<p><img alt="" src="../figs/AlgebraBooleana-MK-1.png" /></p>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<hr />
+<div class="admonition exercise self-progress" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/exercise_5" id="exercise_5_0">
+<p class="admonition-title">Exercise 17</p>
+<form class="exercise-form">
+<p>Crie o mapa de Karnaugh e encontre a equação da tabela verdade a seguir.</p>
+<table>
+<thead>
+<tr>
+<th><strong>A</strong></th>
+<th><strong>B</strong></th>
+<th><strong>C</strong></th>
+<th><strong>OUT</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<hr />
+<div class="admonition exercise self-progress" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/exercise_6" id="exercise_6_0">
+<p class="admonition-title">Exercise 18</p>
+<form class="exercise-form">
+<p>Crie o mapa de Karnaugh da tabela verdade de quatro entradas.</p>
+<table>
+<thead>
+<tr>
+<th><strong>A</strong></th>
+<th><strong>B</strong></th>
+<th><strong>C</strong></th>
+<th><strong>D</strong></th>
+<th><strong>OUT</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<hr />
+<div class="admonition exercise self-progress" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/exercise_7" id="exercise_7_0">
+<p class="admonition-title">Exercise 19</p>
+<form class="exercise-form">
+<p>Crie o mapa de Karnaugh para a expressão a seguir e simplifique:</p>
+<p><span class="arithmatex">\(ABC\bar{D} + \bar{A}\bar{B}CD + A \bar{B}\bar{C}D + \bar{A} + \bar{B} + \bar{C} + \bar{D}\)</span>       </p>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<hr />
+<div class="admonition exercise self-progress" data-slug="commum-content/exercicios/Exercicio-Algebra-Booleana-1/exercise_8" id="exercise_8_0">
+<p class="admonition-title">Exercise 20</p>
+<form class="exercise-form">
+<p>A seguinte expressão foi resultado da forma canônica do produto de somas de uma tabela verdade para a produção de um circuito lógico. O objetivo é simplificar a álgebra booleana dessa lógica para o menor número possível de portas, porém visivelmente quem fez essa fórmula não percebeu que se tivesse feito a soma de produtos já partiria com um número menor de termos. Converta essa fórmula para a soma de produtos e minimize-a.</p>
+<p><span class="arithmatex">\((A+B+C)(A+B+\bar{C})(A+\bar{B}+C)(\bar{A}+B+C)(\bar{A}+\bar{B}+C)\)</span></p>
+<blockquote>
+<p>dica: Equação -&gt; tabela verdade -&gt; soma dos produtos</p>
+</blockquote>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<hr />
+<p>Acabou? Os exercícios não param por aqui, tem a <a href="/Z01.1/Exercicio-Algebra-Booleana-2">parte 2!</a></p>
+
+
+</section>
+          
+        
+      </main>
+      <footer class="ah-footer ah-typeset">
+        <div class="ah-footer-nav">
+          
+            <a href="../../z01/z01-Resumo-VM/"
+               class="ah-prev"
+               title="Resumo VM">
+              <span class="nav-label">Previous</span>
+              <span class="nav-title">Resumo VM</span>
+            </a>
+          
+          
+            <a href="../Exercicio-Algebra-Booleana-2/"
+               class="ah-next"
+               title="Álgebra Booleana - 2">
+              <span class="nav-label">Next</span>
+              <span class="nav-title">Álgebra Booleana - 2</span>
+            </a>
+          
+        </div>
+      </footer>
+    </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+  </body>
+</html>

@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      
+        <title>Lab 11: (nasm) Assembly - Bits e Processadores</title>
+      
+    
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:700|Oxygen+Mono|Source+Sans+Pro:700|Source+Serif+Pro&amp;display=swap">
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <script>
+      // SETUP GLOBAL CONSTANTS
+      var base_url = '../..';
+      
+      var telemetryEnabled = true;
+      var backendUrl = "https://devlife-api.insper-comp.com.br/";
+      var courseSlug = "22b bits";
+      
+      
+      var dashboardEnabled = false;
+      var tagTree = {};
+      
+
+      // SETUP PLUGIN
+      window.initialized = false;
+      if (!window.initializers) window.initializers = [];
+      window.registerInitializer = (initialize) => {
+        if (window.initialized) initialize();
+        else window.initializers.push(initialize);
+      };
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://unpkg.com/hyperscript.org"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="../../assets/js/main.js"></script>
+    
+    
+  </head>
+  <body>
+    <div class="ah-main-container">
+      <header class="ah-header">
+        <button class="ah-menu-btn ah-button ah-button--borderless"
+                aria-label="toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
+</svg>
+        </button>
+        <a href="../.."
+           title="Bits e Processadores"
+           class="ah-logo"
+           aria-label="Bits e Processadores">
+          Bits e Processadores
+        </a>
+        <div class="ah-header--right">
+          
+          
+          
+          <button id="resetHandoutButton">
+            <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+</svg></span>
+          </button>
+          
+
+          
+          <div id="user-menu" hx-get="https://devlife-api.insper-comp.com.br/user-menu" hx-trigger="load"> </div>
+          
+        </div>
+      </header>
+      <nav class="ah-navigation preload">
+        <div class="ah-nav-container">
+          <button class="ah-menu-btn ah-button ah-button--borderless close-menu"
+                  aria-label="close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
+</svg>
+          </button>
+          <ul class="ah-nav-body">
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Home</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../Sobre.md">index</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Sobre-Criterios-de-Avaliacao/">Critérios de Avaliação</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Sobre-Rubricas/">Rubricas individuais</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Projetos</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../intro-proj/">A - Ambiente de desenvolvimento</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../comb-proj/">B - Lógica Combinacional</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-proj/">C - ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../seq-proj/">D - Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-proj/">E - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../assembler-proj/">G - Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../vmtranslator-proj/">H - VM translator</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../x-proj/">Mundo Real</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item opened">
+    <span class="ah-togglable-handle">Labs</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../intro-benchmark-lab/">Lab 1: Visão geral</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../intro-lab-1/">Lab 2: Configurando Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../intro-lab-2/">Lab 3: Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../transistores-lab-1/">Lab 4: Transistores / CI</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../comb-lab-1/">Lab 5: MyHDL</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-1/">Lab 6: Adders</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-2/">Lab 7: Hardware types</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-4/">Lab 8: ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-3/">Lab 9: Depurando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../seq-lab-1/">Lab 10: Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li class="active ah-togglable-item opened">
+      <span class="ah-togglable-handle">Lab 11: (nasm) Assembly</span>
+      <ul>
+        
+          <li class="ah-toc-item">
+            <a href="#lab-11-nasm-assembly">Lab 11: (nasm) Assembly</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#simulador">Simulador</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#interface-do-simulador">Interface do Simulador</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#treinando">Treinando</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#script-automatico-de-testes">Script automático de testes</a>
+          </li>
+          
+        
+      </ul>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-2/">Lab 11: (nasm) Periféricos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-3/">Lab 13: (nasm) Saltos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-4/">Lab 14: (nasm) Praticando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../assembler-lab-1/">Lab 15: Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../vm-lab-1/">Lab 16: VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../vmtranslator-lab-1/">Lab 7 - VM translator</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Teoria</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Dados/">Dados Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Algebra-Booleana/">Álgebra Booleana</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-RTL/">Resistor-Transistor Logic (RTL)</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Componentes/">Componentes Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Aritmetica-Binaria/">Aritmética Binária</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Aritmetica-Binaria-HW/">Aritmética Binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-ULA/">ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Logica-Sequencial/">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Sequencial-Componentes/">Componentes Síncronos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Z01/">Z01</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembly/">ASM - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Z01-mapadeMemoria/">ASM - Mapa de memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-nasm-jump/">ASM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Linguagem-de-Maquina/">Linguagem de máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembler/">Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembler-SymbolTable/">Tabela de Símbolos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm/">VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-segmentos/">VM - Segmentos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-jump/">VM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-funcoes/">VM - Funções</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-memoria/">VM - Memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Util-Video-Aulas.md">commum-content/teoria/Vídeo Aulas (Luciano)</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">MyHDL</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../teoria/myhdl-1/">MyHDL Básico</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Z01</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Resumo-Assembly/">Resumo Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Cheat-Sheet/">Z01.1 Cheat Sheet</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-InstructionSet/">Instruction Set</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Resumo-VM/">Resumo VM</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Exercícios</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Algebra-Booleana-1/">Álgebra Booleana - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Algebra-Booleana-2/">Álgebra Booleana - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://docs.google.com/spreadsheets/d/1rN_zQqYaVI8PjAhKqEBCmY-_06I0X9dD0RddcI-miJs/edit?usp=sharing">Dados Digitais - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Dados-2/">Dados Digitais - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Exercicio-Aritmetica-Booleana.pdf">Aritmética binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://forms.gle/XMsFCDMYsmz1qUP86">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Linguagem_de_maquina.pdf">Linguagem de Máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-CPU-1/">Exercicio CPU - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-CPU-2/">Exercicio CPU - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Linguagem_de_maquina.pdf"">linguagem de máquina</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Útil</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-Comecando-novo-projeto/">Começando novo projeto</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-vixi-sou-scrum/">Vixi! Sou desenvolvedor</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-vixi-sou-dev/">Vixi! Sou scrum master</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/util-infra/">Infra</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  
+    <li>
+      <a href="../../Avaliacoes/">Avaliações</a>
+    </li>
+  
+
+            
+          </ul>
+        </div>
+      </nav>
+      <main class="ah-content ah-typeset">
+        
+          <div class="ah-title-box">
+            <ul class="ah-breadcrumbs">
+              
+                
+                  
+                    <li>Labs</li>
+                  
+                
+                <li>Lab 11: (nasm) Assembly</li>
+            </ul>
+            
+            
+          </div>
+          
+            <section class="progress-section show">
+<h1 id="lab-11-nasm-assembly">Lab 11: (nasm) Assembly</h1>
+<div class="admonition info">
+<p class="admonition-title">💰 Laboratório com pontos</p>
+<p>Algumas tarefas deste laboratório fornecem pontos de nota individual (hardware ou software), os exercícios marcados com 💰 são os que fornecem os pontos. Os pontos apenas são validados quando contabilizados pelo CI do github. Fiquem atentos para o deadline da entrega.</p>
+<p>Neste laboratório você pode receber até: <strong>(0 HW / 2 SW)</strong>.</p>
+</div>
+<p>Ao final desse lab você deve ser capaz de:</p>
+<ol>
+<li>Usar o simulador gráfico </li>
+<li>Fazer pequenas modificações em um código assembly</li>
+<li>Executar script de teste do assembly</li>
+</ol>
+<div class="admonition exercise self-progress" data-slug="class/asm-lab-1/exercise_1" id="exercise_1_0">
+<p class="admonition-title">Exercise 1</p>
+<form class="exercise-form">
+<p>Para executar qualquer laboratório você deve seguir os passos a seguir:</p>
+<ol>
+<li>Acesse o lab pelo link <a href="https://classroom.github.com/a/rS4zT505">https://classroom.github.com/a/rS4zT505</a> </li>
+<li>Clone o repositório criado </li>
+<li>Crie o ambiente virtual python (<code>python3 -m venv env</code>)</li>
+<li>Ative o ambiente virtual (<code>. env/bin/activate</code>)</li>
+<li>Instale as dependências (<code>pip3 install -r requirements.txt</code>)</li>
+</ol>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Sempre que for abrir um terminal novo e acessar a pasta, será necessário ativar o ambiente virtual:</p>
+<div class="highlight"><pre><span></span><code>. env/bin/activate
+</code></pre></div>
+</div>
+<h2 id="simulador">Simulador</h2>
+<p>Nosso código assembly pode ser executado em hardware de verdade (FPGA) porém nesse primeiro momento iremos trabalhar em um ambiente simulado que nos dará maior facilidade de programação e depuração.</p>
+<p>Um pouco de contexto: O livro texto (The Elements Of Computer System) disponibiliza um simulador da CPU original todo escrito em java, esse código é fechado e não permite nenhuma customização. Em 2017 o Prof. Luciano Pereira iniciou a criação de um simulador Z0 (versão anterior) também em Java, onde teríamos controle total do software.</p>
+<p>Percebemos alguns pontos negativos de utilizar um simulador em Java sendo o principal: Qualquer alteração no Hardware iria demandar uma alteração no simulador, sendo necessário mantermos dois projetos independentes e sincronizados.</p>
+<p>Nesta versão do curso iremos utilizar um simulador que utiliza uma implementacão em MyHDL como descrição da CPU (e de tudo envolvido), uma alteração no hardware irá automaticamente alterar o simulador e o comportamento do computador.</p>
+<p>O simulador possui como entradas (para cada simulação): a arquitetura do computador (hardware); o conteúdo da memória RAM o conteúdo da memória ROM e um tempo de execução.</p>
+<p>Após o término da simulação é exportado diversos sinais internos da CPU, o estado final da memória RAM e ROM. Esses sinais são então lidos pela interface gráfica e exibida de uma forma amigável, ou usados nos testes.</p>
+<h2 id="interface-do-simulador">Interface do Simulador</h2>
+<p>O simulador possui a interface a seguir, onde a coluna da esquerda é referente a memória ROM (programa), a coluna da direita referente a memória RAM (dados). </p>
+<p><img alt="Simulador GUI" src="../figs/F-Assembly/gui.png" /></p>
+<p>Toda vez que houver uma alteração em algum dos parâmetros do simulador (RAM/ROM/Instruções,...) o programa será novamente executado no simulador para obtermos um resultado atualizado. Isso pode dar a sensação de "lerdeza" mas lembre da complexidade do sistema: estamos executando um programa em um hardware inteiramente simulado no computador de vocês.</p>
+<p><img alt="tool" src="../figs/F-Assembly/gui-tool.svg" /></p>
+<p>Para abrir o simulador digite no terminal:</p>
+<div class="highlight"><pre><span></span><code><span class="n">bits</span> <span class="n">gui</span> <span class="n">nasm</span>
+</code></pre></div>
+<h3 id="praticando">Praticando</h3>
+<p>Abra o simulador e insira o seguinte código <code>nasm</code> (na parte referente a ROM), uma instrução por linha:</p>
+<div class="highlight"><pre><span></span><code><span class="w"> </span><span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">1</span><span class="p">,</span><span class="o">%</span><span class="nv">A</span><span class="w">         </span><span class="c1">; carrega a constant 1 em %A</span>
+<span class="w"> </span><span class="nf">movw</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">),</span><span class="o">%</span><span class="nv">D</span><span class="w">       </span><span class="c1">; move o valor da RAM[%A] para %D </span>
+<span class="w"> </span><span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">0</span><span class="p">,</span><span class="o">%</span><span class="nv">A</span><span class="w">         </span><span class="c1">; carrega a constant 0 em %A</span>
+<span class="w"> </span><span class="nf">addw</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">),</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="w">  </span><span class="c1">; faz RAM[%A] + %D e salva em %D</span>
+<span class="w"> </span><span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span><span class="w">        </span><span class="c1">; carrega a constant 2 em %A</span>
+<span class="w"> </span><span class="nf">movw</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">)</span><span class="w">      </span><span class="c1">; copia o valor de %D para RAM[%A]</span>
+</code></pre></div>
+<p>Esse código soma o valor que está salvo na memória RAM endereço 0 com o valor da memória RAM endereço 1 e salva no endereço RAM[2]:</p>
+<div class="highlight"><pre><span></span><code>RAM[2] = RAM[0] + RAM[1]
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">mov 1</p>
+<p>A operação de <code>movw</code> não 'move' o dado de um lugar para outro, ela copia. O valor no destino não é apagado, por exemplo:</p>
+<div class="highlight"><pre><span></span><code><span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span>
+<span class="nf">movw</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span>
+</code></pre></div>
+<p>Ao final dessas operações os registradores <code>%A</code> e <code>%D</code> possui o valor 10.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">labels 2</p>
+<p><strong>R0, R1, .., R15</strong>, ... são nomes pré definidos de endereços de memória. O <strong>R0</strong> indica o endereço de memória 0, <strong>R1</strong> o endereço de memória 1 e assim por diante até o <strong>R15</strong>. O mesmo código pode ser escrito como:</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="nb">R1</span><span class="p">,</span><span class="o">%</span><span class="nv">A</span><span class="w">            </span>
+<span class="w">  </span><span class="nf">movw</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">),</span><span class="o">%</span><span class="nv">D</span>
+<span class="w">  </span><span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="nb">R0</span><span class="p">,</span><span class="o">%</span><span class="nv">A</span>
+<span class="w">  </span><span class="nf">addw</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">),</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span>
+<span class="w">  </span><span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="nb">R2</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span>
+<span class="w">  </span><span class="nf">movw</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<p>Para testarmos esse código será necessário colocarmos valores iniciais na memória RAM para validarmos o nosso código, para isso altere a memória RAM como demonstrado a seguir:</p>
+<ul>
+<li>Endereço 0 = 5</li>
+<li>Endereço 1 = 8</li>
+</ul>
+<p><img alt="Alterando a memória RAM" src="../figs/F-Assembly/exe1.png" /></p>
+<div class="admonition example">
+<p class="admonition-title">Executando</p>
+<ol>
+<li>Com a memória alterada você pode agora executar a simulação</li>
+<li>Verifique se o valor da memória 2 é a soma dos endereços 0 e 1.</li>
+<li>Brinque com esses valores...</li>
+</ol>
+<p><img alt="" src="../figs/F-Assembly/exe1-tutorial.gif" /></p>
+</div>
+<h2 id="treinando">Treinando</h2>
+<p>Vamos praticar um pouco agora programar em assembly, no começo parece bem difícil, mas com a prática as coisas vão ficando mais fáceis.</p>
+<p>Use o resumo das instruções: <a href="https://insper.github.io/Z01.1/Util-Resumo-Assembly">AssemblyZ1</a> para saber as instruções disponíveis.</p>
+<div class="admonition exercise self-progress" data-slug="class/asm-lab-1/exercise_2" id="exercise_2_0">
+<p class="admonition-title">Exercise 2</p>
+<form class="exercise-form">
+<p>Altere o código para armazenar o resultado no endereço RAM[5]</p>
+<details class="tip">
+<summary>Solução</summary>
+<div class="highlight"><pre><span></span><code><span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">1</span><span class="p">,</span><span class="o">%</span><span class="nv">A</span>
+<span class="nf">movw</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">),</span><span class="o">%</span><span class="nv">D</span>
+<span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">0</span><span class="p">,</span><span class="o">%</span><span class="nv">A</span>
+<span class="nf">addw</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">),</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span>
+<span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span><span class="w">        </span><span class="c1">; &lt;- alterado essa linha para 5!</span>
+<span class="nf">movw</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<div class="admonition exercise self-progress" data-slug="class/asm-lab-1/exercise_3" id="exercise_3_0">
+<p class="admonition-title">Exercise 3</p>
+<form class="exercise-form">
+<p>Altere o código para armazenar o negativo da operação entre RAM[0] + RAM[1] no endereço RAM[5] (dica: tem uma operação de <code>NEG</code>).</p>
+<details class="tip">
+<summary>solução</summary>
+<div class="highlight"><pre><span></span><code><span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">1</span><span class="p">,</span><span class="o">%</span><span class="nv">A</span>
+<span class="nf">movw</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">),</span><span class="o">%</span><span class="nv">D</span>
+<span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">0</span><span class="p">,</span><span class="o">%</span><span class="nv">A</span>
+<span class="nf">addw</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">),</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span>
+<span class="nf">negw</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="w">              </span><span class="c1">; aqui eu faço %D = - %D</span>
+<span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span><span class="w">        </span>
+<span class="nf">movw</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<h2 id="script-automatico-de-testes">Script automático de testes</h2>
+<p>Além da interface gráfica do simulador, possuímos um script de teste automatizado (similar ao do MyHDL) que utiliza o pytest para executar testes no assembly. Esse script: <code>test_nasm.py</code> faz o seguinte:</p>
+<ol>
+<li>Inicializa a memória RAM com valores pré estabelecidos </li>
+<li>Converte o <code>nasm</code> para <code>hack</code> e inicializa a memória ROM</li>
+<li>Executa o Hardware por um tempo</li>
+<li>Compara a memória RAM após a simulação com um padrão de testes.</li>
+</ol>
+<p>Exemplo de teste:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_add</span><span class="p">():</span>
+    <span class="n">ram</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">42</span><span class="p">}</span>
+    <span class="n">tst</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="p">:</span> <span class="mi">44</span><span class="p">}</span>
+    <span class="k">assert</span> <span class="n">nasm_test</span><span class="p">(</span><span class="s2">&quot;add.nasm&quot;</span><span class="p">,</span> <span class="n">ram</span><span class="p">,</span> <span class="n">tst</span><span class="p">)</span>
+
+    <span class="n">ram</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+    <span class="n">tst</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+    <span class="k">assert</span> <span class="n">nasm_test</span><span class="p">(</span><span class="s2">&quot;add.nasm&quot;</span><span class="p">,</span> <span class="n">ram</span><span class="p">,</span> <span class="n">tst</span><span class="p">)</span>
+
+    <span class="n">ram</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+    <span class="n">tst</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+    <span class="k">assert</span> <span class="n">nasm_test</span><span class="p">(</span><span class="s2">&quot;add.nasm&quot;</span><span class="p">,</span> <span class="n">ram</span><span class="p">,</span> <span class="n">tst</span><span class="p">)</span>
+</code></pre></div>
+<p>Onde:</p>
+<ul>
+<li><code>ram</code>: É a memória RAM inicial da aplicação</li>
+<li><code>tst</code>: É o teste que será executado na memória RAM ao final do processamento</li>
+</ul>
+<h3 id="praticando_1">💰 Praticando</h3>
+<p>Vamos implementar alguns códigos assembly, a descrição do que eles devem fazer estão no próprio arquivo <code>.nasm</code>.</p>
+<div class="admonition exercise self-progress" data-slug="class/asm-lab-1/exercise_4" id="exercise_4_0">
+<p class="admonition-title">Exercise 4</p>
+<form class="exercise-form">
+<ul>
+<li>File: <code>add.nasm</code></li>
+<li>Test: <code>pytest -k add</code></li>
+</ul>
+<p>Tarefa: Leia o cabeçalho do arquivo e implemente o programa nasm que executa o que está descrito, teste com o <code>pytest</code></p>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<div class="admonition exercise self-progress" data-slug="class/asm-lab-1/exercise_5" id="exercise_5_0">
+<p class="admonition-title">Exercise 5</p>
+<form class="exercise-form">
+<ul>
+<li>File: <code>sub.nasm</code></li>
+<li>Test: <code>pytest -k sub</code></li>
+</ul>
+<p>Tarefa: Leia o cabeçalho do arquivo e implemente o programa nasm que executa o que está descrito, teste com o <code>pytest</code></p>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<div class="admonition exercise self-progress" data-slug="class/asm-lab-1/exercise_6" id="exercise_6_0">
+<p class="admonition-title">💰 (0 HW / 2 SW) 6</p>
+<form class="exercise-form">
+<ul>
+<li>File: <code>mov.nasm</code></li>
+<li>Test: <code>pytest -k mov</code></li>
+</ul>
+<p>Tarefa: Leia o cabeçalho do arquivo e implemente o programa nasm que executa o que está descrito, teste com o <code>pytest</code></p>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+
+
+</section>
+          
+        
+      </main>
+      <footer class="ah-footer ah-typeset">
+        <div class="ah-footer-nav">
+          
+            <a href="../seq-lab-1/"
+               class="ah-prev"
+               title="Lab 10: Lógica Sequencial">
+              <span class="nav-label">Previous</span>
+              <span class="nav-title">Lab 10: Lógica Sequencial</span>
+            </a>
+          
+          
+            <a href="../asm-lab-2/"
+               class="ah-next"
+               title="Lab 11: (nasm) Periféricos">
+              <span class="nav-label">Next</span>
+              <span class="nav-title">Lab 11: (nasm) Periféricos</span>
+            </a>
+          
+        </div>
+      </footer>
+    </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+  </body>
+</html>

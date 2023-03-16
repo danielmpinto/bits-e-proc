@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      
+        <title>Aritmética Binária - Bits e Processadores</title>
+      
+    
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:700|Oxygen+Mono|Source+Sans+Pro:700|Source+Serif+Pro&amp;display=swap">
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <script>
+      // SETUP GLOBAL CONSTANTS
+      var base_url = '../../..';
+      
+      var telemetryEnabled = true;
+      var backendUrl = "https://devlife-api.insper-comp.com.br/";
+      var courseSlug = "22b bits";
+      
+      
+      var dashboardEnabled = false;
+      var tagTree = {};
+      
+
+      // SETUP PLUGIN
+      window.initialized = false;
+      if (!window.initializers) window.initializers = [];
+      window.registerInitializer = (initialize) => {
+        if (window.initialized) initialize();
+        else window.initializers.push(initialize);
+      };
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://unpkg.com/hyperscript.org"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="../../../assets/js/main.js"></script>
+    
+    
+  </head>
+  <body>
+    <div class="ah-main-container">
+      <header class="ah-header">
+        <button class="ah-menu-btn ah-button ah-button--borderless"
+                aria-label="toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
+</svg>
+        </button>
+        <a href="../../.."
+           title="Bits e Processadores"
+           class="ah-logo"
+           aria-label="Bits e Processadores">
+          Bits e Processadores
+        </a>
+        <div class="ah-header--right">
+          
+          
+          
+          <button id="resetHandoutButton">
+            <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+</svg></span>
+          </button>
+          
+
+          
+          <div id="user-menu" hx-get="https://devlife-api.insper-comp.com.br/user-menu" hx-trigger="load"> </div>
+          
+        </div>
+      </header>
+      <nav class="ah-navigation preload">
+        <div class="ah-nav-container">
+          <button class="ah-menu-btn ah-button ah-button--borderless close-menu"
+                  aria-label="close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
+</svg>
+          </button>
+          <ul class="ah-nav-body">
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Home</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../Sobre.md">index</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Sobre-Criterios-de-Avaliacao/">Critérios de Avaliação</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Sobre-Rubricas/">Rubricas individuais</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Projetos</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-proj/">A - Ambiente de desenvolvimento</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/comb-proj/">B - Lógica Combinacional</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-proj/">C - ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/seq-proj/">D - Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-proj/">E - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/assembler-proj/">G - Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vmtranslator-proj/">H - VM translator</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/x-proj/">Mundo Real</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Labs</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-benchmark-lab/">Lab 1: Visão geral</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-lab-1/">Lab 2: Configurando Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-lab-2/">Lab 3: Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/transistores-lab-1/">Lab 4: Transistores / CI</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/comb-lab-1/">Lab 5: MyHDL</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-1/">Lab 6: Adders</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-2/">Lab 7: Hardware types</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-4/">Lab 8: ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-3/">Lab 9: Depurando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/seq-lab-1/">Lab 10: Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-1/">Lab 11: (nasm) Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-2/">Lab 11: (nasm) Periféricos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-3/">Lab 13: (nasm) Saltos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-4/">Lab 14: (nasm) Praticando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/assembler-lab-1/">Lab 15: Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vm-lab-1/">Lab 16: VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vmtranslator-lab-1/">Lab 7 - VM translator</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item opened">
+    <span class="ah-togglable-handle">Teoria</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../Teoria-Dados/">Dados Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Algebra-Booleana/">Álgebra Booleana</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-RTL/">Resistor-Transistor Logic (RTL)</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Componentes/">Componentes Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li class="active ah-togglable-item opened">
+      <span class="ah-togglable-handle">Aritmética Binária</span>
+      <ul>
+        
+          <li class="ah-toc-item">
+            <a href="#aritmetica-binaria">Aritmética Binária</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#soma-binaria">Soma binária</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#complemento-de-um">Complemento de um</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#complemento-de-2">Complemento de 2</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#multiplicacao-divisao-por-multiplo-de-2">Multiplicação/ Divisão por múltiplo de 2</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#ponto-fixo">Ponto fixo</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#ponto-flutuante">Ponto flutuante</a>
+          </li>
+          
+        
+      </ul>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Aritmetica-Binaria-HW/">Aritmética Binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-ULA/">ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Logica-Sequencial/">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Sequencial-Componentes/">Componentes Síncronos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Z01/">Z01</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Assembly/">ASM - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Z01-mapadeMemoria/">ASM - Mapa de memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-nasm-jump/">ASM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Linguagem-de-Maquina/">Linguagem de máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Assembler/">Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Assembler-SymbolTable/">Tabela de Símbolos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm/">VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm-segmentos/">VM - Segmentos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm-jump/">VM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm-funcoes/">VM - Funções</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm-memoria/">VM - Memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Util-Video-Aulas.md">commum-content/teoria/Vídeo Aulas (Luciano)</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">MyHDL</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../teoria/myhdl-1/">MyHDL Básico</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Z01</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Resumo-Assembly/">Resumo Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Cheat-Sheet/">Z01.1 Cheat Sheet</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-InstructionSet/">Instruction Set</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Resumo-VM/">Resumo VM</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Exercícios</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-Algebra-Booleana-1/">Álgebra Booleana - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-Algebra-Booleana-2/">Álgebra Booleana - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://docs.google.com/spreadsheets/d/1rN_zQqYaVI8PjAhKqEBCmY-_06I0X9dD0RddcI-miJs/edit?usp=sharing">Dados Digitais - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-Dados-2/">Dados Digitais - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Exercicio-Aritmetica-Booleana.pdf">Aritmética binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://forms.gle/XMsFCDMYsmz1qUP86">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Linguagem_de_maquina.pdf">Linguagem de Máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-CPU-1/">Exercicio CPU - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-CPU-2/">Exercicio CPU - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Linguagem_de_maquina.pdf"">linguagem de máquina</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Útil</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../util/Util-Comecando-novo-projeto/">Começando novo projeto</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/Util-vixi-sou-scrum/">Vixi! Sou desenvolvedor</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/Util-vixi-sou-dev/">Vixi! Sou scrum master</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../util/util-infra/">Infra</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  
+    <li>
+      <a href="../../../Avaliacoes/">Avaliações</a>
+    </li>
+  
+
+            
+          </ul>
+        </div>
+      </nav>
+      <main class="ah-content ah-typeset">
+        
+          <div class="ah-title-box">
+            <ul class="ah-breadcrumbs">
+              
+                
+                  
+                    <li>Teoria</li>
+                  
+                
+                <li>Aritmética Binária</li>
+            </ul>
+            
+            
+          </div>
+          
+            <section class="progress-section show">
+<h1 id="aritmetica-binaria">Aritmética Binária</h1>
+<ul>
+<li>Conteúdo: Complemento de um/ Complemento de dois/ Ponto fixo/ Soma binária/ </li>
+</ul>
+<div>
+<iframe height="500" src="https://www.youtube.com/embed/dVixMB1uSYA?autoplay=0" type="text/html" width="100%"></iframe>
+</div>
+<p>Podemos utilizar números binários para codificar qualquer tipo de dado, como vimos na teoria de dados digitais. Mas ainda não sabemos como utilizar números binários para representar: números inteiros que possam ser negativos e números reais fracionados (exemplo: <code>-15</code>;  <code>1,032</code>; <code>-0,0001</code>; <code>10001231231</code>).</p>
+<p>Essa teoria irá tratar desses temas e também da parte referente a operações com números binários (soma e subtração).</p>
+<h2 id="soma-binaria">Soma binária</h2>
+<div>
+<iframe height="500" src="https://www.youtube.com/embed/NFTG-VGkik8?autoplay=0" type="text/html" width="100%"></iframe>
+</div>
+<p>A soma binária é realizada de maneira similar a soma de decimais, só que precisamos <mark>reforçar</mark> que <code>1+1</code> em binário (<strong>esse + é de soma não de OR</strong>), resulta em <code>10</code>, o <code>1</code> do estouro e que passa para a próxima casa é chamado de <code>carry</code>. Esse <code>carry</code> é similar ao <code>vai um</code> em uma soma decimal, por exemplo: quando somamos em decimal <code>9</code> + <code>3</code> o resultado é <code>12</code> (10 + 2).</p>
+<div class="admonition note">
+<p class="admonition-title">Exemplos a seguir consideram</p>
+<ul>
+<li>Palavras binárias com 8 bits</li>
+<li>Números inteiros positivos </li>
+</ul>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip 1</p>
+<ul>
+<li><code>01</code> + <code>01</code> = <code>10</code></li>
+<li><code>01</code> + <code>01</code> + <code>01</code> = <code>11</code></li>
+<li><code>10</code> + <code>10</code>= <code>100</code></li>
+</ul>
+</div>
+<ul>
+<li>0xAA + 0x55 = 0xFF</li>
+</ul>
+<div class="highlight"><pre><span></span><code>                          : Carry
+     1 0 1 0 1 0 1 0      : A 
+     0 1 0 1 0 1 0 1 +    : B
+     ---------------  
+     1 1 1 1 1 1 1 1      : Resultado (A+B)
+</code></pre></div>
+<ul>
+<li>0xAA + 0x55 = 0xFF</li>
+</ul>
+<div class="highlight"><pre><span></span><code>                          : Carry
+     1 0 1 0 1 0 1 0      : A 
+     0 1 0 1 0 1 0 1 +    : B
+     ---------------  
+     1 1 1 1 1 1 1 1      : Resultado (A+B)
+</code></pre></div>
+<ul>
+<li>0x2B + 0x57 = 0xFF</li>
+</ul>
+<div class="highlight"><pre><span></span><code>     1 1 1 1 1 1 1        : Carry
+     0 0 1 0 1 0 1 1      : A 
+     0 1 0 1 0 1 1 1 +    : B
+     ---------------  
+     1 0 0 0 0 0 1 0      : Resultado (A+B)
+</code></pre></div>
+<p><strong>Precisamos entender que cada bit deve ser armazenado em hardware! Um sistema com <code>8</code> bits não consegue armazenar <code>9</code> bits, e se houver um estouro no último bit essa informação será perdida.</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Os bits são armazenados na memória, as memórias armazenam vetores de bits. 
+Computadores reais não possuem memória infinita e nem largura de bits infinita.</p>
+</div>
+<ul>
+<li>0x80 + 0x80 = 0x100, mas resulta em <strong>0x00</strong> por conta do somador ser 8 bits:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>carry é perdido
+   x
+    \
+     1 0 0 0 0 0 0 0 
+     1 0 0 0 0 0 0 0 +
+     ---------------
+     0 0 0 0 0 0 0 0
+</code></pre></div>
+<ul>
+<li>0x03 + 0x81 = 0x84</li>
+</ul>
+<div class="highlight"><pre><span></span><code>               1 1        : carry (vai um)
+                  \       
+     0 0 0 0 0 0 1 1 
+     1 0 0 0 0 0 0 1 +
+     ---------------
+     1 0 0 0 0 1 0 0    
+</code></pre></div>
+<h2 id="complemento-de-um">Complemento de um</h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Forma <strong>errada/ não usual</strong> de armazenar números sinalizados (+, -)</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Exemplos a seguir consideram</p>
+<ul>
+<li>Palavras binárias com 8 bits</li>
+<li>Números inteiros positivos </li>
+</ul>
+</div>
+<p>No <strong>complemento de um</strong>, utilizamos a casa/bit mais significativa de um vetor de bits para representar se o número é positivo (<code>0</code>) ou negativo (<code>1</code>). Exemplo (utilizando 8 bits):</p>
+<ul>
+<li>Valor <strong>+1</strong> em binário, com complemento de 1</li>
+</ul>
+<div class="highlight"><pre><span></span><code>    00000001
+    ^
+    | indica que o valor é positivo
+</code></pre></div>
+<ul>
+<li>Valor <strong>-1</strong> em binário, com complemento de 1</li>
+</ul>
+<div class="highlight"><pre><span></span><code>    10000001 
+    ^
+    | indica que o valor é negativo
+</code></pre></div>
+<p>O problema do complemento de 1 é que:</p>
+<ul>
+<li>Possuímos duas representações para o valor 0: <code>00000000</code> e <code>10000000</code></li>
+<li>
+<p>Operações de soma não funcionam corretamente entre os dois números codificados em complemento de um.</p>
+</li>
+<li>
+<p>Exemplo: 1 - 1 = -2 e não 0</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code>                 1        : carry (vai um)
+                  \       
+     0 0 0 0 0 0 0 1      : +1
+     1 0 0 0 0 0 0 1 +    : -1
+     ---------------
+     1 0 0 0 0 0 1 0      : -2 e não 0 
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Tabela com 3 bits</p>
+<table>
+<thead>
+<tr>
+<th>Decimal</th>
+<th>Binário em complemento de 1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3</td>
+<td><code>011</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>010</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>001</code></td>
+</tr>
+<tr>
+<td>0</td>
+<td><code>000</code> / <code>100</code></td>
+</tr>
+<tr>
+<td>-1</td>
+<td><code>101</code></td>
+</tr>
+<tr>
+<td>-2</td>
+<td><code>110</code></td>
+</tr>
+<tr>
+<td>-3</td>
+<td><code>111</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="complemento-de-2">Complemento de 2</h2>
+<div>
+<iframe height="500" src="https://www.youtube.com/embed/NED9IIpteXA?autoplay=0" type="text/html" width="100%"></iframe>
+</div>
+<p>O complemento de dois é uma outra maneira de representar números sinalizados com bits, essa técnica possui alguams vantagens:</p>
+<ul>
+<li>Uma única representação para o valor 0: <code>0000</code></li>
+<li>A operação de soma/ subtração funciona corretamente! </li>
+<li>O bit mais significativo indica se a palavra é positiva (<code>0</code>) ou negativa (<code>1</code>).</li>
+</ul>
+<p>Para obter um número positivo &harr; negativo nessa notação é necessário seguir os seguintes passos:</p>
+<ol>
+<li>Escreva o valor em binário (positivo)</li>
+<li>Inverter todos os bits (not bit a bit) da palavra original </li>
+<li>
+<p>Somar o valor <code>1</code> a palavra invertida.</p>
+</li>
+<li>
+<p>Exemplo: <code>-3</code> = <code>11111101</code></p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code>     0 0 0 0 0 0 1 1      : 3
+    -----------------------
+     1 1 1 1 1 1 0 0      : not bit a bit da palavra original
+     0 0 0 0     + 1      : Soma um a palavra invertida
+    -----------------------
+     1 1 1 1 1 1 0 1  &lt;-- -3 em complemento de 2       
+</code></pre></div>
+<ul>
+<li>Exemplo: <code>-5</code> = <code>111111011</code></li>
+</ul>
+<div class="highlight"><pre><span></span><code>    0 0 0 0 0 1 0 1      : 5
+    -----------------------
+    1 1 1 1 1 0 1 0      : not bit a bit da palavra original
+    0 0 0 0 0 0 0 1 +    : Soma um a palavra invertida
+    -----------------------
+    1 1 1 1 1 0 1 1  &lt;-- -5 em complemento de 2
+</code></pre></div>
+<ul>
+<li><mark>Exemplo (com 4 bits para simplificar): -9 (não funciona porque não cabe)</mark></li>
+</ul>
+<div class="highlight"><pre><span></span><code>(exemplo com 4 bits!)
+
+     1 0 0 1      : 9
+     0 1 1 0      : not bit a bit da palavra original
+         + 1      : Soma um a palavra invertida
+     0 1 1 1    &lt;-- 7 !! (não funcionou)
+     ^
+     | não funcionou =(
+</code></pre></div>
+<p>O exemplo anterior não funciona pois faltam bits para representar o valor <code>-9</code>, para isso seria necessário <code>5</code> bits e não <code>4</code> como no exemplo.</p>
+<div class="admonition note">
+<p class="admonition-title">Tabela com 3 bits</p>
+<table>
+<thead>
+<tr>
+<th>Decimal</th>
+<th>Binário em complemento de dois</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3</td>
+<td><code>011</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>010</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>001</code></td>
+</tr>
+<tr>
+<td>0</td>
+<td><code>000</code></td>
+</tr>
+<tr>
+<td>-1</td>
+<td><code>111</code></td>
+</tr>
+<tr>
+<td>-2</td>
+<td><code>110</code></td>
+</tr>
+<tr>
+<td>-3</td>
+<td><code>101</code></td>
+</tr>
+<tr>
+<td>-4</td>
+<td><code>100</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="multiplicacao-divisao-por-multiplo-de-2">Multiplicação/ Divisão por múltiplo de 2</h2>
+<div class="admonition note">
+<p class="admonition-title">Assumindo</p>
+<ul>
+<li>Um número positivo</li>
+</ul>
+</div>
+<p>Em binário, para multiplicar uma palavra (positiva) por 2 basta rotacionar todos os bits uma casa para esquerda. Para dividir por 2 basta rotacionar todos os bits uma vez para direita (sempre colocando 0 no bit que entra e desaparecendo com o bit que sai). </p>
+<p>Exemplos a seguir:</p>
+<ul>
+<li>2 x 1 (<code>00000001</code>) = 2 <code>00000010</code></li>
+</ul>
+<div class="highlight"><pre><span></span><code>      &lt;-- 1x 
+    00000001 =&gt; 00000010
+</code></pre></div>
+<ul>
+<li>2 x 4 (<code>00000100</code>) = 8 <code>00001000</code></li>
+</ul>
+<div class="highlight"><pre><span></span><code>      &lt;-- 1x 
+    00000100 =&gt; 00001000
+</code></pre></div>
+<ul>
+<li>9 (<code>00001001</code>) / 2  = 4 <code>00000100</code></li>
+</ul>
+<div class="highlight"><pre><span></span><code>1x --&gt; 
+    00001001 =&gt; 00000100
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A divisão de 9/2 retorna um número inteiro. Isso se dá devido a técnica só funcionar com números inteiros.</p>
+</div>
+<p>Essa técnica de rotacionar vale para múltiplos de 2, se deseja multiplicar/dividir por <code>M</code>, onde M é um múltiplo de 2 (<code>M=Nx2</code>), é necessário rotacionar o vetor de bits N vezes: </p>
+<ul>
+<li>exemplo: 4 x 1 (<code>00000001</code>) = <code>00000100</code></li>
+</ul>
+<div class="highlight"><pre><span></span><code>      &lt;-- 2x 
+    00000001 =&gt; 00000100
+</code></pre></div>
+<h2 id="ponto-fixo">Ponto fixo</h2>
+<p><a href="https://ufsj.edu.br/portal2-repositorio/File/nepomuceno/compieee.pdf">Ponto fixo</a> é uma das técnicas de representação de números fracionados em binário, nessa notação fixasse quantos bits serão utilizados para a parte inteira e quantos serão utilizados para a fração. É aplicado o mesmo conceito dos números decimais, as casas a direita do ponto possuem peso na ordem <code>2^-n</code>.</p>
+<p>Vamos pegar como exemplo o valor <code>26.5</code>, e assumindo que estamos trabalhando com uma palavra de <code>8</code> bits onde o ponto está localizado no bit <code>3</code>: <code>XXXXX.YYY</code>.</p>
+<p>Nesse caso, cada casa binária possui o peso a seguir:</p>
+<table>
+<thead>
+<tr>
+<th>2^5</th>
+<th>2^4</th>
+<th>2^3</th>
+<th>2^2</th>
+<th>2^1</th>
+<th>2^0</th>
+<th><strong>2^-1</strong></th>
+<th><strong>2^-2</strong></th>
+<th><strong>2^-3</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>32</td>
+<td>16</td>
+<td>8</td>
+<td>4</td>
+<td>2</td>
+<td>1</td>
+<td><strong>0.5</strong></td>
+<td><strong>0.25</strong></td>
+<td><strong>0.125</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Para construirmos o valor <code>26.5</code> basta selecionarmos os bits que somados dão esse valor:</p>
+<p><code>011010100</code> : 0*32 + 1*16 + 1*8 + 0*4 + 1*2 + 0*1 + 1*0.5 + 0*0.025 + 0*0.125 = 26.5</p>
+<p>A questão dessa notação é que uma vez escolhido onde o ponto vai estar localizado (projeto de hardware) não da para mudar depois, se o número a ser armazenado é apenas fração, perdemos muitos bits sem uso com a parte inteira, o que faz possuirmos menor resolução.</p>
+<p>A solução para isso é a notação de <a href="https://pt.wikipedia.org/wiki/IEEE_754">ponto flutuante - IEEE 754</a> vocês vão ver isso na disciplina de Sistemas Hardware Software do 5s).</p>
+<h2 id="ponto-flutuante">Ponto flutuante</h2>
+<p><a href="https://en.wikipedia.org/wiki/Floating-point_arithmetic">Ponto flutuante</a> é uma outra notação na qual é possível representar números racionais digitalmente (binário), nessa técnica a vírgula não é fixa, e a notação
+pode se adequar para armazenar números muito trandes ou muito pequenos. No entanto, existe um custo computacional mais elevado envolvido nisso. </p>
+<p>Processadores modernos possuem um hardware (ULA) dedicada a realizar operações em
+ponto flutuante, normalmente usando o padrão <a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754</a>.</p>
+
+
+</section>
+          
+        
+      </main>
+      <footer class="ah-footer ah-typeset">
+        <div class="ah-footer-nav">
+          
+            <a href="../Teoria-Componentes/"
+               class="ah-prev"
+               title="Componentes Digitais">
+              <span class="nav-label">Previous</span>
+              <span class="nav-title">Componentes Digitais</span>
+            </a>
+          
+          
+            <a href="../Teoria-Aritmetica-Binaria-HW/"
+               class="ah-next"
+               title="Aritmética Binária - HW">
+              <span class="nav-label">Next</span>
+              <span class="nav-title">Aritmética Binária - HW</span>
+            </a>
+          
+        </div>
+      </footer>
+    </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+  </body>
+</html>

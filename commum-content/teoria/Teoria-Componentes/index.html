@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      
+        <title>Componentes Digitais - Bits e Processadores</title>
+      
+    
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:700|Oxygen+Mono|Source+Sans+Pro:700|Source+Serif+Pro&amp;display=swap">
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <script>
+      // SETUP GLOBAL CONSTANTS
+      var base_url = '../../..';
+      
+      var telemetryEnabled = true;
+      var backendUrl = "https://devlife-api.insper-comp.com.br/";
+      var courseSlug = "22b bits";
+      
+      
+      var dashboardEnabled = false;
+      var tagTree = {};
+      
+
+      // SETUP PLUGIN
+      window.initialized = false;
+      if (!window.initializers) window.initializers = [];
+      window.registerInitializer = (initialize) => {
+        if (window.initialized) initialize();
+        else window.initializers.push(initialize);
+      };
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://unpkg.com/hyperscript.org"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="../../../assets/js/main.js"></script>
+    
+    
+  </head>
+  <body>
+    <div class="ah-main-container">
+      <header class="ah-header">
+        <button class="ah-menu-btn ah-button ah-button--borderless"
+                aria-label="toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
+</svg>
+        </button>
+        <a href="../../.."
+           title="Bits e Processadores"
+           class="ah-logo"
+           aria-label="Bits e Processadores">
+          Bits e Processadores
+        </a>
+        <div class="ah-header--right">
+          
+          
+          
+          <button id="resetHandoutButton">
+            <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+</svg></span>
+          </button>
+          
+
+          
+          <div id="user-menu" hx-get="https://devlife-api.insper-comp.com.br/user-menu" hx-trigger="load"> </div>
+          
+        </div>
+      </header>
+      <nav class="ah-navigation preload">
+        <div class="ah-nav-container">
+          <button class="ah-menu-btn ah-button ah-button--borderless close-menu"
+                  aria-label="close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
+</svg>
+          </button>
+          <ul class="ah-nav-body">
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Home</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../Sobre.md">index</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Sobre-Criterios-de-Avaliacao/">Critérios de Avaliação</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Sobre-Rubricas/">Rubricas individuais</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Projetos</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-proj/">A - Ambiente de desenvolvimento</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/comb-proj/">B - Lógica Combinacional</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-proj/">C - ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/seq-proj/">D - Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-proj/">E - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/assembler-proj/">G - Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vmtranslator-proj/">H - VM translator</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/x-proj/">Mundo Real</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Labs</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-benchmark-lab/">Lab 1: Visão geral</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-lab-1/">Lab 2: Configurando Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-lab-2/">Lab 3: Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/transistores-lab-1/">Lab 4: Transistores / CI</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/comb-lab-1/">Lab 5: MyHDL</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-1/">Lab 6: Adders</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-2/">Lab 7: Hardware types</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-4/">Lab 8: ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-3/">Lab 9: Depurando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/seq-lab-1/">Lab 10: Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-1/">Lab 11: (nasm) Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-2/">Lab 11: (nasm) Periféricos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-3/">Lab 13: (nasm) Saltos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-4/">Lab 14: (nasm) Praticando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/assembler-lab-1/">Lab 15: Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vm-lab-1/">Lab 16: VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vmtranslator-lab-1/">Lab 7 - VM translator</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item opened">
+    <span class="ah-togglable-handle">Teoria</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../Teoria-Dados/">Dados Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Algebra-Booleana/">Álgebra Booleana</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-RTL/">Resistor-Transistor Logic (RTL)</a>
+    </li>
+  
+
+      
+        
+  
+    <li class="active ah-togglable-item opened">
+      <span class="ah-togglable-handle">Componentes Digitais</span>
+      <ul>
+        
+          <li class="ah-toc-item">
+            <a href="#componentes-digitais">Componentes Digitais</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#portas-logicas">portas lógicas</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#multiplexado-mux">Multiplexado (mux)</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#demutiplexador-demux">Demutiplexador (demux)</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#enconders">Enconders</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#comparador">Comparador</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#somadores">Somadores</a>
+          </li>
+          
+        
+      </ul>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Aritmetica-Binaria/">Aritmética Binária</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Aritmetica-Binaria-HW/">Aritmética Binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-ULA/">ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Logica-Sequencial/">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Sequencial-Componentes/">Componentes Síncronos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Z01/">Z01</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Assembly/">ASM - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Z01-mapadeMemoria/">ASM - Mapa de memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-nasm-jump/">ASM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Linguagem-de-Maquina/">Linguagem de máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Assembler/">Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Assembler-SymbolTable/">Tabela de Símbolos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm/">VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm-segmentos/">VM - Segmentos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm-jump/">VM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm-funcoes/">VM - Funções</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm-memoria/">VM - Memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Util-Video-Aulas.md">commum-content/teoria/Vídeo Aulas (Luciano)</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">MyHDL</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../teoria/myhdl-1/">MyHDL Básico</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Z01</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Resumo-Assembly/">Resumo Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Cheat-Sheet/">Z01.1 Cheat Sheet</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-InstructionSet/">Instruction Set</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Resumo-VM/">Resumo VM</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Exercícios</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-Algebra-Booleana-1/">Álgebra Booleana - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-Algebra-Booleana-2/">Álgebra Booleana - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://docs.google.com/spreadsheets/d/1rN_zQqYaVI8PjAhKqEBCmY-_06I0X9dD0RddcI-miJs/edit?usp=sharing">Dados Digitais - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-Dados-2/">Dados Digitais - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Exercicio-Aritmetica-Booleana.pdf">Aritmética binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://forms.gle/XMsFCDMYsmz1qUP86">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Linguagem_de_maquina.pdf">Linguagem de Máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-CPU-1/">Exercicio CPU - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-CPU-2/">Exercicio CPU - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Linguagem_de_maquina.pdf"">linguagem de máquina</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Útil</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../util/Util-Comecando-novo-projeto/">Começando novo projeto</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/Util-vixi-sou-scrum/">Vixi! Sou desenvolvedor</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/Util-vixi-sou-dev/">Vixi! Sou scrum master</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../util/util-infra/">Infra</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  
+    <li>
+      <a href="../../../Avaliacoes/">Avaliações</a>
+    </li>
+  
+
+            
+          </ul>
+        </div>
+      </nav>
+      <main class="ah-content ah-typeset">
+        
+          <div class="ah-title-box">
+            <ul class="ah-breadcrumbs">
+              
+                
+                  
+                    <li>Teoria</li>
+                  
+                
+                <li>Componentes Digitais</li>
+            </ul>
+            
+            
+          </div>
+          
+            <section class="progress-section show">
+<h1 id="componentes-digitais">Componentes Digitais</h1>
+<p>Aqui iremos alguns dos inúmeros componentes combinacionais
+(não precisam de clock) que são utilizados no desenvolvimento de circuitos digitais e que serão usados na disciplina.</p>
+<h2 id="portas-logicas">portas lógicas</h2>
+<p><img alt="" src="./figs/Exercicios/AlgebraBooleana-componentes.png" /></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">VHDL</label><label for="__tabbed_1_2">MyHDL</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">S</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">B</span><span class="p">;</span>
+<span class="n">S</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="k">nand</span><span class="w"> </span><span class="n">B</span><span class="p">;</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
+<span class="n">S</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">B</span><span class="p">;</span>
+<span class="n">S</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="k">nor</span><span class="w"> </span><span class="n">B</span><span class="p">;</span><span class="w">  </span><span class="n">S</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">B</span><span class="p">);</span>
+<span class="n">S</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="k">xor</span><span class="w"> </span><span class="n">B</span><span class="p">;</span>
+<span class="n">S</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">(</span><span class="k">not</span><span class="w"> </span><span class="n">A</span><span class="p">);</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">S</span> <span class="o">=</span> <span class="n">A</span> <span class="ow">and</span> <span class="n">B</span>
+<span class="n">S</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="n">A</span> <span class="ow">and</span> <span class="n">B</span><span class="p">)</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">A</span> <span class="ow">or</span> <span class="n">B</span>
+<span class="n">S</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="n">A</span> <span class="ow">or</span> <span class="n">B</span><span class="p">)</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">A</span> <span class="o">^</span> <span class="n">B</span>
+<span class="n">S</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">B</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="multiplexado-mux">Multiplexado (mux)</h2>
+<p><img alt="" src="https://upload.wikimedia.org/wikipedia/commons/b/b2/Multiplexer2.png" /></p>
+<blockquote>
+<p><a href="https://en.wikipedia.org/wiki/Multiplexer">fonte wikipedia</a>: Schematic of a 2-to-1 Multiplexer. It can be equated to a controlled switch.</p>
+</blockquote>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">VHDL</label><label for="__tabbed_2_2">MyHDL</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">entity</span><span class="w"> </span><span class="nc">mux</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">port</span><span class="p">(</span>
+<span class="w">    </span><span class="n">in0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">in</span><span class="w">  </span><span class="kt">std_logic</span><span class="p">;</span>
+<span class="w">    </span><span class="n">in1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">in</span><span class="w">  </span><span class="kt">std_logic</span><span class="p">;</span>
+<span class="w">    </span><span class="n">sel</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">in</span><span class="w">  </span><span class="kt">std_logic</span><span class="p">;</span>
+<span class="w">    </span><span class="n">o</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">std_logic</span><span class="p">);</span>
+<span class="k">end</span><span class="w"> </span><span class="k">entity</span><span class="p">;</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nd">@block</span>
+<span class="k">def</span> <span class="nf">mux2Way</span><span class="p">(</span><span class="n">in0</span><span class="p">,</span> <span class="n">in1</span><span class="p">,</span> <span class="n">sel</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+    <span class="nd">@always_comb</span>
+    <span class="k">def</span> <span class="nf">comb</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">sel</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">in0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">in1</span>
+    <span class="k">return</span> <span class="n">comb</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>O mux como é chamado o <a href="https://www.electronics-tutorials.ws/combination/comb_2.html">Multiplexador</a> é um componente que possui <code>n</code> entradas e uma saída <code>q</code>, um sinal chamado de seletor <code>sel</code> seleciona qual entrada irá ser copiada para a saída.</p>
+<p>As entradas <code>n</code> e a saída <code>q</code> podem ser binárias ou vetor de tamanho <code>m</code>.</p>
+<p>A seguir uma tabela verdade para um <code>mux</code> de 2 entradas:</p>
+<table>
+<thead>
+<tr>
+<th>in 0</th>
+<th>in 1</th>
+<th>Sel</th>
+<th>out</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>X</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>X</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>X</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>X</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A   tabela verdade do mux de 2 entradas possuir 2^3 linhas (o seletor conta como entrada), totalizando 8 linhas. Porém para simplificar, utilizamos o <code>X</code> que significa tanto faz (<code>0</code> ou <code>1</code>), logo cada linha que possui <code>X</code> seria expandida para duas linhas.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip 1</p>
+<p>O tamanho do seletor deve ser um numero inteiro: <span class="arithmatex">\(log2(size(n))\)</span>.</p>
+<pre><code>| Quantidade de entras | Tamanho do seletor |
+|  ------------------- | ------------------ |
+|                    2 |                  1 |
+|                    3 |                  2 |
+|                    4 |                  2 |
+|                    5 |                  3 |
+|                    8 |                  3 |
+</code></pre>
+</div>
+<h2 id="demutiplexador-demux">Demutiplexador (demux)</h2>
+<p>É similar com o mux só que possui uma entrada <code>in</code> e <code>n</code> saídas <code>q</code>, o demux conecta a entrada a alguma das saídas, sendo controlado pelo seletor.</p>
+<p><img alt="" src="https://upload.wikimedia.org/wikipedia/commons/4/48/Demultiplexer.png" /></p>
+<blockquote>
+<p><a href="https://en.wikipedia.org/wiki/Multiplexer">fonte wikipedia</a>: Schematic of a 1-to-2 Demultiplexer. Like a multiplexer, it can be equated to a controlled switch.</p>
+</blockquote>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">VHDL</label><label for="__tabbed_3_2">MyHDL</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">entity</span><span class="w"> </span><span class="nc">demux</span><span class="w"> </span><span class="k">is</span>
+<span class="k">port</span><span class="p">(</span>
+<span class="w">        </span><span class="n">in0</span><span class="w">   </span><span class="o">:</span><span class="w"> </span><span class="k">in</span><span class="w">  </span><span class="kt">std_logic</span><span class="p">;</span>
+<span class="w">        </span><span class="n">sel</span><span class="w">   </span><span class="o">:</span><span class="w"> </span><span class="k">in</span><span class="w">  </span><span class="kt">std_logic</span><span class="p">;</span>
+<span class="w">        </span><span class="n">out0</span><span class="w">  </span><span class="o">:</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">std_logic</span><span class="p">;</span>
+<span class="w">        </span><span class="n">out1</span><span class="w">  </span><span class="o">:</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">std_logic</span>
+<span class="p">);</span>
+<span class="k">end</span><span class="w"> </span><span class="k">entity</span><span class="p">;</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nd">@block</span>
+<span class="k">def</span> <span class="nf">deMux2Way</span><span class="p">(</span><span class="n">in0</span><span class="p">,</span> <span class="n">sel</span><span class="p">,</span> <span class="n">out0</span><span class="p">,</span> <span class="n">out1</span><span class="p">):</span>
+    <span class="nd">@always_comb</span>
+    <span class="k">def</span> <span class="nf">comb</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">sel</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">out0</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">a</span>
+            <span class="n">out1</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out0</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">out1</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">a</span>
+    <span class="k">return</span> <span class="n">comb</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>A entrada <code>in</code> e a saída <code>q</code> podem ser binárias ou de vetorer de tamanho <code>m</code>.</p>
+<p>A seguir uma tabela verdade para um <code>demux</code> de 2 saídas:</p>
+<table>
+<thead>
+<tr>
+<th>in</th>
+<th>Sel</th>
+<th>out 0</th>
+<th>out 1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="enconders">Enconders</h2>
+<p>Enconders são componentes que codificam uma entrada em uma saída de outro formato, algum exemplos são:</p>
+<ul>
+<li>BCD</li>
+<li>Gray code</li>
+<li>SevenSeg</li>
+<li><a href="https://en.wikipedia.org/wiki/Priority_encoder">Priority Encoder</a></li>
+</ul>
+<h3 id="bcd">BCD</h3>
+<p><a href="https://en.wikipedia.org/wiki/Binary-coded_decimal"><code>Binary-coded decimal</code></a> (BCD) é uma forma de codificação de números inteiros em binário na qual utiliza-se para cada dígito de um número inteiro, 4 bits em binário.</p>
+<table>
+<thead>
+<tr>
+<th>Decimal Number</th>
+<th>BCD 8421 Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0000 0000</td>
+</tr>
+<tr>
+<td>01</td>
+<td>0000 0001</td>
+</tr>
+<tr>
+<td>02</td>
+<td>0000 0010</td>
+</tr>
+<tr>
+<td>03</td>
+<td>0000 0011</td>
+</tr>
+<tr>
+<td>04</td>
+<td>0000 0100</td>
+</tr>
+<tr>
+<td>05</td>
+<td>0000 0101</td>
+</tr>
+<tr>
+<td>06</td>
+<td>0000 0110</td>
+</tr>
+<tr>
+<td>07</td>
+<td>0000 0111</td>
+</tr>
+<tr>
+<td>08</td>
+<td>0000 1000</td>
+</tr>
+<tr>
+<td>09</td>
+<td>0000 1001</td>
+</tr>
+<tr>
+<td>10 (1+0)</td>
+<td>0001 0000</td>
+</tr>
+<tr>
+<td>11 (1+1)</td>
+<td>0001 0001</td>
+</tr>
+<tr>
+<td>12 (1+2)</td>
+<td>0001 0010</td>
+</tr>
+<tr>
+<td>continua</td>
+<td>em blocos de 4</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code>             |-----------|
+             |           |  out1[3..0]
+   x[n..0]   |  Binary   |-----/--------&gt;
+ ----/------&gt;|    to     |  ....
+             |   BCD     |  outm[3..0]
+             |           |-----/--------&gt;
+             |-----------|
+</code></pre></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">VHDL</label><label for="__tabbed_4_2">MyHDL</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">entity</span><span class="w"> </span><span class="nc">binaryToBCD</span><span class="w"> </span><span class="k">is</span>
+<span class="k">port</span><span class="p">(</span>
+<span class="w">        </span><span class="n">x</span><span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="k">in</span><span class="w">  </span><span class="kt">std_logic</span><span class="p">(</span><span class="mi">4</span><span class="w"> </span><span class="k">downto</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="n">out0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">std_logic_vector</span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="k">downto</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="c1">-- Unidade</span>
+<span class="w">        </span><span class="n">out1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">std_logic_vector</span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="k">downto</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">  </span><span class="c1">-- Dezena</span>
+<span class="p">);</span>
+<span class="k">end</span><span class="w"> </span><span class="k">entity</span><span class="p">;</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nd">@block</span>
+<span class="k">def</span> <span class="nf">binaryToBCD</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">out0</span><span class="p">,</span> <span class="n">out1</span><span class="p">):</span>
+    <span class="nd">@always_comb</span>
+    <span class="k">def</span> <span class="nf">comb</span><span class="p">():</span>
+        <span class="o">...</span>
+    <span class="k">return</span> <span class="n">comb</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip 2</p>
+<p>O maior valor que um bloco de 4 bits do BCD assume é o <code>1001</code> que é referente ao número inteiro 9.</p>
+</div>
+<p>O BCD é bastante utilizado para o controle de displays de 7 segmentos, como demonstrado na figura a seguir que usa o chip</p>
+<p><img alt="" src="https://www.electronics-tutorials.ws/wp-content/uploads/2016/01/bin10.gif?fit=408%2C211" /></p>
+<blockquote>
+<p><a href="https://www.electronics-tutorials.ws/binary/binary-coded-decimal.html">fonte electronics-tutorials</a></p>
+</blockquote>
+<h3 id="codigo-gray">Código Gray</h3>
+<p>O <a href="https://pt.wikipedia.org/wiki/C%C3%B3digo_de_Gray">código gray</a> é uma forma de codificar números binários, nessa codificação apenas um bit muda por vez.</p>
+<table>
+<thead>
+<tr>
+<th>Código decimal</th>
+<th>Código Binário</th>
+<th>Código Gray</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0000</td>
+<td>0000</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0001</td>
+<td>0001</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0010</td>
+<td>0011</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0011</td>
+<td>0010</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0100</td>
+<td>0110</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0101</td>
+<td>0111</td>
+</tr>
+<tr>
+<td>6</td>
+<td>0110</td>
+<td>0101</td>
+</tr>
+<tr>
+<td>7</td>
+<td>0111</td>
+<td>0100</td>
+</tr>
+<tr>
+<td>8</td>
+<td>1000</td>
+<td>1100</td>
+</tr>
+<tr>
+<td>9</td>
+<td>1001</td>
+<td>1101</td>
+</tr>
+<tr>
+<td>10</td>
+<td>1010</td>
+<td>1111</td>
+</tr>
+<tr>
+<td>11</td>
+<td>1011</td>
+<td>1110</td>
+</tr>
+<tr>
+<td>12</td>
+<td>1100</td>
+<td>1010</td>
+</tr>
+<tr>
+<td>13</td>
+<td>1101</td>
+<td>1011</td>
+</tr>
+<tr>
+<td>14</td>
+<td>1110</td>
+<td>1001</td>
+</tr>
+<tr>
+<td>15</td>
+<td>1111</td>
+<td>1000</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Esse sistema era muito utilizado antigamente quando relés eram utilizados no lugar de transistor, em um contador binário comum ocorre de muitos bits mudarem de uma única vez (0111 -&gt; 1000) isso gerava um pico de corrente elétrica e muito ruído.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip 3</p>
+<p>Utilizamos o código Gray para montar o Mapa de Karnaugh</p>
+</div>
+<h2 id="comparador">Comparador</h2>
+<p>Comparadores são componentes que podem possuir diversos atributos, tais como comparar:</p>
+<ul>
+<li>se duas entradas são iguais</li>
+<li>se a entrada A é maior que entrada B</li>
+<li>se entrada A é igual a zero</li>
+<li>...</li>
+</ul>
+<p>A seguir um exemplo de um comparador que possui apenas uma entrada <code>x[1..0]</code> e compara se essa entrada é <strong>igual</strong> a zero (<code>x == 0</code>), ou <strong>maior que</strong> zero (<code>x &gt; 0</code>).</p>
+<table>
+<thead>
+<tr>
+<th>x (inteiro)</th>
+<th>x binário</th>
+<th>eq</th>
+<th>gt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>00</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>01</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>-1</td>
+<td>11</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>-2</td>
+<td>10</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code>             |-----------|
+             |           |  eq
+  x[1..0]    |           |----------&gt;
+ ----/------&gt;| comparador|
+             |           |  gt
+             |           |----------&gt;
+             |-----------|
+</code></pre></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">VHDL</label><label for="__tabbed_5_2">MyHDL</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">entity</span><span class="w"> </span><span class="nc">COMPARADOR</span><span class="w"> </span><span class="k">is</span>
+<span class="k">port</span><span class="p">(</span>
+<span class="w">        </span><span class="n">x</span><span class="w">  </span><span class="o">:</span><span class="w"> </span><span class="k">in</span><span class="w">  </span><span class="kt">std_logic_vector</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="k">downto</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="n">eq</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">std_logic</span><span class="p">;</span>
+<span class="w">        </span><span class="n">gt</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">std_logic</span>
+<span class="p">);</span>
+<span class="k">end</span><span class="w"> </span><span class="k">entity</span><span class="p">;</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nd">@block</span>
+<span class="k">def</span> <span class="nf">binaryToBCD</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">eq</span><span class="p">,</span> <span class="n">gt</span><span class="p">):</span>
+    <span class="nd">@always_comb</span>
+    <span class="k">def</span> <span class="nf">comb</span><span class="p">():</span>
+        <span class="n">gt</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span>  <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">eq</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">comb</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="somadores">Somadores</h2>
+<p>Os somadores são componentes que realizam a soma de dois números binários, eles podem ser construídos de diversas maneiras.</p>
+<div class="highlight"><pre><span></span><code> in0[1..0]   |-----------|
+ ----/------&gt;|           |
+             |           |  out[2..0]
+             |  ADDER    |-----/-----&gt;
+ in1[1..0]   |           |
+ ----/------&gt;|           |
+             |-----------|
+</code></pre></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">VHDL</label><label for="__tabbed_6_2">MyHDL</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">entity</span><span class="w"> </span><span class="nc">ADDER</span><span class="w"> </span><span class="k">is</span>
+<span class="w">    </span><span class="k">port</span><span class="p">(</span>
+<span class="w">            </span><span class="n">in0</span><span class="w">   </span><span class="o">:</span><span class="w"> </span><span class="k">in</span><span class="w">  </span><span class="kt">std_logic</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="k">downto</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">            </span><span class="n">in1</span><span class="w">   </span><span class="o">:</span><span class="w"> </span><span class="k">in</span><span class="w">  </span><span class="kt">std_logic</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="k">downto</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">            </span><span class="n">o</span><span class="w">     </span><span class="o">:</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">std_logic_vector</span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="k">downto</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">    </span><span class="k">end</span><span class="w"> </span><span class="k">entity</span><span class="p">;</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nd">@block</span>
+<span class="k">def</span> <span class="nf">adder</span><span class="p">(</span><span class="n">in1</span><span class="p">,</span> <span class="n">in2</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+    <span class="nd">@always_comb</span>
+    <span class="k">def</span> <span class="nf">comb</span><span class="p">():</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">in1</span> <span class="o">+</span> <span class="n">in2</span>
+    <span class="k">return</span> <span class="n">comb</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Um somador de dois vetores de dois bits cada possui o seguinte comportamento:</p>
+<table>
+<thead>
+<tr>
+<th>in0</th>
+<th>in1</th>
+<th>out</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>00</td>
+<td>00</td>
+<td>000</td>
+</tr>
+<tr>
+<td>00</td>
+<td>01</td>
+<td>001</td>
+</tr>
+<tr>
+<td>01</td>
+<td>01</td>
+<td>010</td>
+</tr>
+<tr>
+<td>10</td>
+<td>01</td>
+<td>011</td>
+</tr>
+<tr>
+<td>10</td>
+<td>11</td>
+<td>101</td>
+</tr>
+<tr>
+<td>11</td>
+<td>11</td>
+<td>110</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+          
+        
+      </main>
+      <footer class="ah-footer ah-typeset">
+        <div class="ah-footer-nav">
+          
+            <a href="../Teoria-RTL/"
+               class="ah-prev"
+               title="Resistor-Transistor Logic (RTL)">
+              <span class="nav-label">Previous</span>
+              <span class="nav-title">Resistor-Transistor Logic (RTL)</span>
+            </a>
+          
+          
+            <a href="../Teoria-Aritmetica-Binaria/"
+               class="ah-next"
+               title="Aritmética Binária">
+              <span class="nav-label">Next</span>
+              <span class="nav-title">Aritmética Binária</span>
+            </a>
+          
+        </div>
+      </footer>
+    </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+  </body>
+</html>

@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      
+        <title>D - Lógica Sequencial - Bits e Processadores</title>
+      
+    
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:700|Oxygen+Mono|Source+Sans+Pro:700|Source+Serif+Pro&amp;display=swap">
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <script>
+      // SETUP GLOBAL CONSTANTS
+      var base_url = '../..';
+      
+      var telemetryEnabled = true;
+      var backendUrl = "https://devlife-api.insper-comp.com.br/";
+      var courseSlug = "22b bits";
+      
+      
+      var dashboardEnabled = false;
+      var tagTree = {};
+      
+
+      // SETUP PLUGIN
+      window.initialized = false;
+      if (!window.initializers) window.initializers = [];
+      window.registerInitializer = (initialize) => {
+        if (window.initialized) initialize();
+        else window.initializers.push(initialize);
+      };
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://unpkg.com/hyperscript.org"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="../../assets/js/main.js"></script>
+    
+    
+  </head>
+  <body>
+    <div class="ah-main-container">
+      <header class="ah-header">
+        <button class="ah-menu-btn ah-button ah-button--borderless"
+                aria-label="toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
+</svg>
+        </button>
+        <a href="../.."
+           title="Bits e Processadores"
+           class="ah-logo"
+           aria-label="Bits e Processadores">
+          Bits e Processadores
+        </a>
+        <div class="ah-header--right">
+          
+          
+          
+          <button id="resetHandoutButton">
+            <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+</svg></span>
+          </button>
+          
+
+          
+          <div id="user-menu" hx-get="https://devlife-api.insper-comp.com.br/user-menu" hx-trigger="load"> </div>
+          
+        </div>
+      </header>
+      <nav class="ah-navigation preload">
+        <div class="ah-nav-container">
+          <button class="ah-menu-btn ah-button ah-button--borderless close-menu"
+                  aria-label="close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
+</svg>
+          </button>
+          <ul class="ah-nav-body">
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Home</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../Sobre.md">index</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Sobre-Criterios-de-Avaliacao/">Critérios de Avaliação</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Sobre-Rubricas/">Rubricas individuais</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item opened">
+    <span class="ah-togglable-handle">Projetos</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../intro-proj/">A - Ambiente de desenvolvimento</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../comb-proj/">B - Lógica Combinacional</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-proj/">C - ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li class="active ah-togglable-item opened">
+      <span class="ah-togglable-handle">D - Lógica Sequencial</span>
+      <ul>
+        
+          <li class="ah-toc-item">
+            <a href="#d-logica-sequencial">D - Lógica Sequencial</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#instrucoes">Instruções</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#instrucoes_1">Instruções</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#projeto">Projeto</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#a">A</a>
+          </li>
+          
+        
+      </ul>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-proj/">E - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../assembler-proj/">G - Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../vmtranslator-proj/">H - VM translator</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../x-proj/">Mundo Real</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Labs</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../intro-benchmark-lab/">Lab 1: Visão geral</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../intro-lab-1/">Lab 2: Configurando Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../intro-lab-2/">Lab 3: Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../transistores-lab-1/">Lab 4: Transistores / CI</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../comb-lab-1/">Lab 5: MyHDL</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-1/">Lab 6: Adders</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-2/">Lab 7: Hardware types</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-4/">Lab 8: ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-3/">Lab 9: Depurando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../seq-lab-1/">Lab 10: Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-1/">Lab 11: (nasm) Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-2/">Lab 11: (nasm) Periféricos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-3/">Lab 13: (nasm) Saltos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-4/">Lab 14: (nasm) Praticando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../assembler-lab-1/">Lab 15: Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../vm-lab-1/">Lab 16: VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../vmtranslator-lab-1/">Lab 7 - VM translator</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Teoria</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Dados/">Dados Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Algebra-Booleana/">Álgebra Booleana</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-RTL/">Resistor-Transistor Logic (RTL)</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Componentes/">Componentes Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Aritmetica-Binaria/">Aritmética Binária</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Aritmetica-Binaria-HW/">Aritmética Binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-ULA/">ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Logica-Sequencial/">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Sequencial-Componentes/">Componentes Síncronos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Z01/">Z01</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembly/">ASM - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Z01-mapadeMemoria/">ASM - Mapa de memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-nasm-jump/">ASM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Linguagem-de-Maquina/">Linguagem de máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembler/">Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembler-SymbolTable/">Tabela de Símbolos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm/">VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-segmentos/">VM - Segmentos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-jump/">VM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-funcoes/">VM - Funções</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-memoria/">VM - Memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Util-Video-Aulas.md">commum-content/teoria/Vídeo Aulas (Luciano)</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">MyHDL</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../teoria/myhdl-1/">MyHDL Básico</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Z01</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Resumo-Assembly/">Resumo Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Cheat-Sheet/">Z01.1 Cheat Sheet</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-InstructionSet/">Instruction Set</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Resumo-VM/">Resumo VM</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Exercícios</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Algebra-Booleana-1/">Álgebra Booleana - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Algebra-Booleana-2/">Álgebra Booleana - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://docs.google.com/spreadsheets/d/1rN_zQqYaVI8PjAhKqEBCmY-_06I0X9dD0RddcI-miJs/edit?usp=sharing">Dados Digitais - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Dados-2/">Dados Digitais - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Exercicio-Aritmetica-Booleana.pdf">Aritmética binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://forms.gle/XMsFCDMYsmz1qUP86">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Linguagem_de_maquina.pdf">Linguagem de Máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-CPU-1/">Exercicio CPU - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-CPU-2/">Exercicio CPU - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Linguagem_de_maquina.pdf"">linguagem de máquina</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Útil</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-Comecando-novo-projeto/">Começando novo projeto</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-vixi-sou-scrum/">Vixi! Sou desenvolvedor</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-vixi-sou-dev/">Vixi! Sou scrum master</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/util-infra/">Infra</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  
+    <li>
+      <a href="../../Avaliacoes/">Avaliações</a>
+    </li>
+  
+
+            
+          </ul>
+        </div>
+      </nav>
+      <main class="ah-content ah-typeset">
+        
+          <div class="ah-title-box">
+            <ul class="ah-breadcrumbs">
+              
+                
+                  
+                    <li>Projetos</li>
+                  
+                
+                <li>D - Lógica Sequencial</li>
+            </ul>
+            
+            
+          </div>
+          
+            <section class="progress-section show">
+<h1 id="d-logica-sequencial">D - Lógica Sequencial</h1>
+<table>
+<thead>
+<tr>
+<th>Entrega</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>27/9 - Terça</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="" src="../figs/E-LogSeq/sistema-seq.png" /></p>
+<p>Neste projeto você terá que desenvolver os componentes síncronos que serão utilizados na construção do nosso computador Z01.</p>
+<h2 id="instrucoes">Instruções</h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>O grupo deve eleger um novo scrum master para essa entrega (diferente do projeto B, C).</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Antes de começar 1</p>
+<p>Siga os passos em:</p>
+<ul>
+<li><a href="https://insper.github.io/bits-e-proc/commum-content/util/Util-Comecando-novo-projeto/">https://insper.github.io/bits-e-proc/commum-content/util/Util-Comecando-novo-projeto/</a></li>
+</ul>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Vixi Sou scrum master 2</p>
+<p>Você é o scrum do projeto? Leia:</p>
+<ul>
+<li><a href="https://insper.github.io/bits-e-proc/commum-content/util/Util-vixi-sou-scrum/">https://insper.github.io/bits-e-proc/commum-content/util/Util-vixi-sou-scrum/</a></li>
+</ul>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Vixi! Sou desenvolvedor 3</p>
+<p>Seu papel é o de desenvolvedor? Leia:</p>
+<ul>
+<li><a href="https://insper.github.io/bits-e-proc/commum-content/util/Util-vixi-sou-dev/">https://insper.github.io/bits-e-proc/commum-content/util/Util-vixi-sou-dev/</a></li>
+</ul>
+</div>
+<h2 id="instrucoes_1">Instruções</h2>
+<p>Os arquivos referentes ao projeto são:</p>
+<ul>
+<li><code>hw/seq.py</code>: Script python com os módulos a serem implementados</li>
+<li><code>hw/test_seq.py</code>: Script de teste </li>
+</ul>
+<h3 id="executando-o-script-de-teste">Executando o Script de Teste</h3>
+<p>Abra o terminal na pasta <code>hw</code> execute o pytest</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$pytest</span><span class="w"> </span>test_seq.py
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Tip 4</p>
+<p>Você pode usar o <code>-k MODULO</code> para executar apenas o teste o do módulo que deseja, exemplo (para testar o PC):</p>
+<div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>test_seq.py<span class="w"> </span>-k<span class="w"> </span>pc
+</code></pre></div>
+</div>
+<h2 id="projeto">Projeto</h2>
+<p>O projeto consistem em:</p>
+<ul>
+<li>Implementar os módulos descritos a seguir.</li>
+<li>Para cada módulo vocês devem gerar uma forma de onda <code>gtkview</code> e salvar na pasta <code>hw/waveform</code></li>
+</ul>
+<h3 id="modulos">Módulos</h3>
+<p>Os modulos a serem desenvolvidos na entrega estão detalhados no livro base do curso: <a href="https://docs.wixstatic.com/ugd/44046b_862828b3a3464a809cda6f44d9ad2ec9.pdf"><strong>Capítulo 3 - The Elements of Computing Systems</strong></a></p>
+<ul>
+<li><code>dff(q, d, clear, presset, clk, rst)</code></li>
+<li><code>binaryDigit(i, load, output, clk, rst)</code></li>
+<li><code>register8(i, load, output, clk, rst)</code></li>
+<li><code>registerN(i, load, output, width, clk, rst)</code></li>
+<li><code>pc(increment, load, i, output, width, clk, rst)</code></li>
+<li><code>ram(dout, din, addr, we, clk, rst, width, depth)</code></li>
+</ul>
+<hr />
+<ul>
+<li>Flip-flop</li>
+<li><strong>Módulo:</strong> <code>dff(q, d, clear, presset, clk, rst)</code></li>
+<li><strong>Dependência</strong>:</li>
+<li><strong>Test:</strong> <code>pytest test_seq.py -k dff</code></li>
+<li>Módulo já implementado.</li>
+</ul>
+<p><img alt="FlipFlop D" src="../figs/E-LogSeq/ffd.png" /></p>
+<hr />
+<ul>
+<li>Binary Digit<ul>
+<li><strong>Módulo</strong>: <code>binaryDigit(i, load, output, clk, rst)</code></li>
+<li><strong>Dependência</strong>: <code>dff</code> </li>
+<li><strong>Descrição</strong> : É um registrador feito para armazenar um único bit de informação (0 ou 1). A interface do módulo consiste em uma entrada (d) para o bit a ser armazenado, um sinal de <strong>load</strong> para indicar quando o bit de entrada deve ser armazenado um sinal de <em>clock</em> e a saída <em>output*</em> que é o bit armazenado:</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Binary Digit" src="../figs/E-LogSeq/binarydigit_v2.svg" width="500" /></p>
+<hr />
+<ul>
+<li>Register 8<ul>
+<li><strong>Módulo</strong>   : <code>register8(i, load, output, clk, rst)</code></li>
+<li><strong>Dependência</strong> : <code>binaryDigit</code></li>
+<li><strong>Descrição</strong> : É um registrador de 8 bits criado a partir do <code>binaryDigit</code> porém agora para armazenar um vetor de entrada de 8 bits de tamanho.</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Register 8" src="../figs/E-LogSeq/register8.png" /></p>
+<hr />
+<ul>
+<li>Register N<ul>
+<li><strong>Módulo</strong>   : <code>registerN(i, load, output, width, clk, rst)</code></li>
+<li><strong>Dependência</strong> : <code>binaryDigit</code> (ou register8)</li>
+<li><strong>Descrição</strong> : É um registrador de N bits criado a partir do <code>binaryDigit</code> porém agora para armazenar um vetor de entrada de N bits de tamanho.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<ul>
+<li>Program Counter<ul>
+<li><strong>Módulo</strong>   : <code>pc(increment, load, i, output, width, clk, rst)</code></li>
+<li><strong>Dependência</strong> : <code>registerN</code> (pode usar <code>inc16</code>, <code>mux</code>)</li>
+<li><strong>Descrição</strong> : O program counter será o nosso endereçador de memória da CPU, ele será responsável por apontar para a próxima instrução a ser executada. Como normalmente um código segue um fluxo sequencial (uma linha na sequência da outra) o PC possui a habilidade de se auto incrementar a cada clock (apontando assim para  a próxima instrução), mas ele tem que suportar <strong>condições</strong> (if, while, ...) rompendo com esse fluxo contínuo.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Para maiores detalhes consulte o livro texto do curso.   </p>
+</blockquote>
+<hr />
+<ul>
+<li>
+<p>ram</p>
+<ul>
+<li><strong>Módulo</strong>   : <code>ram(dout, din, addr, we, clk, rst, width, depth)</code></li>
+<li><strong>Dependência</strong> : <code>RegisterN</code> (pode depender de <code>mux</code>, <code>demux8</code>)</li>
+<li>
+<p><strong>Descrição</strong> : É uma memória de 8 endereços com 16 bits de largura. O componente possui como entrada o vetor input de 16 bits, o endereço a ser armazenado (address) o sinal <strong>load</strong> que indica quando é para ser armazenado e o clock. Como saída temos o valor lido no endereço especificado quando load for igual a 0.
+ Note que sinal LOAD tem como função similar o do READ/WRITE, quando zero, indica que queremos ler o valor armazenado, quando 1 indica que queremos escrever (write) nessa posição.</p>
+</li>
+<li>
+<p><code>width</code>: É a largura dos dados da memória RAM</p>
+</li>
+<li><code>depth</code>: É a quantidade de endereços que a memória possui</li>
+</ul>
+</li>
+</ul>
+<p><img alt="RAM" src="../figs/E-LogSeq/ram.png" /></p>
+<div class="admonition tip">
+<p class="admonition-title">Tip 5</p>
+<p>Todos esses módulos estão bem documentados no livro The Elements of Computer System. Cap 3.</p>
+</div>
+<h3 id="forma-de-onda">Forma de onda</h3>
+<p>Para cada teste realizado, deve-se carregar o <code>gtkview</code> e tirar um <strong>print</strong> da forma de onda do módulo com os testes aplicados a ele. Essa imagem deve ser salva na mesma pasta <code>hw/waveform/</code> e com o mesmo nome dos módulos. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Não basta só gerar a imagem, você precisa analisar e entender. Isso será cobrado nas avaliações.</p>
+</div>
+<h3 id="projeto_1">Projeto</h3>
+<table>
+<thead>
+<tr>
+<th>Conceito</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>(a1) Vídeo explicando os módulos</td>
+</tr>
+<tr>
+<td>B</td>
+<td>(b2) Usou sempre que possível outros módulos para criar um novo (hierarquia)</td>
+</tr>
+<tr>
+<td></td>
+<td>(b1) Exemplo: usou o <code>inc16</code>, <code>mux</code> e <code>reg</code> para criar PC</td>
+</tr>
+<tr>
+<td>C</td>
+<td>(c3) Todos os módulos básicos testados no github actions</td>
+</tr>
+<tr>
+<td></td>
+<td>(c2) Todos os módulos básicos passam nos testes</td>
+</tr>
+<tr>
+<td></td>
+<td>(c1) Possui a forma de onda (.png)</td>
+</tr>
+<tr>
+<td>D</td>
+<td>(d1) Ao menos um módulo não foi implementando ou não passa no testes.</td>
+</tr>
+<tr>
+<td>I</td>
+<td>(i1) Menos da metade dos módulos funcionando</td>
+</tr>
+</tbody>
+</table>
+<h2 id="a">A</h2>
+<p>Para o conceito A o grupo (todos os integrantes) devem gravar um vídeo que contém (na sequência) e para cada módulo realizado uma explicaćão de:</p>
+<ol>
+<li>O diagrama (<code>hardware</code>) do módulo </li>
+<li>O <code>MyHDL</code> que descreve o módulo</li>
+<li>A forma de onda da simulacão (<code>gtkwave</code>) explicada</li>
+</ol>
+
+
+</section>
+          
+        
+      </main>
+      <footer class="ah-footer ah-typeset">
+        <div class="ah-footer-nav">
+          
+            <a href="../ula-proj/"
+               class="ah-prev"
+               title="C - ULA">
+              <span class="nav-label">Previous</span>
+              <span class="nav-title">C - ULA</span>
+            </a>
+          
+          
+            <a href="../asm-proj/"
+               class="ah-next"
+               title="E - Assembly">
+              <span class="nav-label">Next</span>
+              <span class="nav-title">E - Assembly</span>
+            </a>
+          
+        </div>
+      </footer>
+    </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+  </body>
+</html>

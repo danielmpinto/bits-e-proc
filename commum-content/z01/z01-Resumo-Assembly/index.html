@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      
+        <title>Resumo Assembly - Bits e Processadores</title>
+      
+    
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:700|Oxygen+Mono|Source+Sans+Pro:700|Source+Serif+Pro&amp;display=swap">
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <script>
+      // SETUP GLOBAL CONSTANTS
+      var base_url = '../../..';
+      
+      var telemetryEnabled = true;
+      var backendUrl = "https://devlife-api.insper-comp.com.br/";
+      var courseSlug = "22b bits";
+      
+      
+      var dashboardEnabled = false;
+      var tagTree = {};
+      
+
+      // SETUP PLUGIN
+      window.initialized = false;
+      if (!window.initializers) window.initializers = [];
+      window.registerInitializer = (initialize) => {
+        if (window.initialized) initialize();
+        else window.initializers.push(initialize);
+      };
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://unpkg.com/hyperscript.org"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="../../../assets/js/main.js"></script>
+    
+    
+  </head>
+  <body>
+    <div class="ah-main-container">
+      <header class="ah-header">
+        <button class="ah-menu-btn ah-button ah-button--borderless"
+                aria-label="toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
+</svg>
+        </button>
+        <a href="../../.."
+           title="Bits e Processadores"
+           class="ah-logo"
+           aria-label="Bits e Processadores">
+          Bits e Processadores
+        </a>
+        <div class="ah-header--right">
+          
+          
+          
+          <button id="resetHandoutButton">
+            <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+</svg></span>
+          </button>
+          
+
+          
+          <div id="user-menu" hx-get="https://devlife-api.insper-comp.com.br/user-menu" hx-trigger="load"> </div>
+          
+        </div>
+      </header>
+      <nav class="ah-navigation preload">
+        <div class="ah-nav-container">
+          <button class="ah-menu-btn ah-button ah-button--borderless close-menu"
+                  aria-label="close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
+</svg>
+          </button>
+          <ul class="ah-nav-body">
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Home</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../Sobre.md">index</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Sobre-Criterios-de-Avaliacao/">Critérios de Avaliação</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Sobre-Rubricas/">Rubricas individuais</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Projetos</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-proj/">A - Ambiente de desenvolvimento</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/comb-proj/">B - Lógica Combinacional</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-proj/">C - ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/seq-proj/">D - Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-proj/">E - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/assembler-proj/">G - Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vmtranslator-proj/">H - VM translator</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/x-proj/">Mundo Real</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Labs</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-benchmark-lab/">Lab 1: Visão geral</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-lab-1/">Lab 2: Configurando Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-lab-2/">Lab 3: Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/transistores-lab-1/">Lab 4: Transistores / CI</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/comb-lab-1/">Lab 5: MyHDL</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-1/">Lab 6: Adders</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-2/">Lab 7: Hardware types</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-4/">Lab 8: ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-3/">Lab 9: Depurando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/seq-lab-1/">Lab 10: Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-1/">Lab 11: (nasm) Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-2/">Lab 11: (nasm) Periféricos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-3/">Lab 13: (nasm) Saltos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-4/">Lab 14: (nasm) Praticando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/assembler-lab-1/">Lab 15: Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vm-lab-1/">Lab 16: VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vmtranslator-lab-1/">Lab 7 - VM translator</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Teoria</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Dados/">Dados Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Algebra-Booleana/">Álgebra Booleana</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-RTL/">Resistor-Transistor Logic (RTL)</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Componentes/">Componentes Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Aritmetica-Binaria/">Aritmética Binária</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Aritmetica-Binaria-HW/">Aritmética Binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-ULA/">ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Logica-Sequencial/">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Sequencial-Componentes/">Componentes Síncronos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Z01/">Z01</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Assembly/">ASM - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Z01-mapadeMemoria/">ASM - Mapa de memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-nasm-jump/">ASM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Linguagem-de-Maquina/">Linguagem de máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Assembler/">Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-Assembler-SymbolTable/">Tabela de Símbolos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-vm/">VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-vm-segmentos/">VM - Segmentos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-vm-jump/">VM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-vm-funcoes/">VM - Funções</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../teoria/Teoria-vm-memoria/">VM - Memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Util-Video-Aulas.md">commum-content/teoria/Vídeo Aulas (Luciano)</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">MyHDL</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../teoria/myhdl-1/">MyHDL Básico</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item opened">
+    <span class="ah-togglable-handle">Z01</span>
+    <ul>
+      
+        
+  
+    <li class="active ah-togglable-item opened">
+      <span class="ah-togglable-handle">Resumo Assembly</span>
+      <ul>
+        
+          <li class="ah-toc-item">
+            <a href="#z01-resumo-assembly">Z01 - Resumo Assembly</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#instrucoes">Instruções</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#descricao-detalhada">Descrição Detalhada</a>
+          </li>
+          
+        
+      </ul>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../z01-Cheat-Sheet/">Z01.1 Cheat Sheet</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../z01-InstructionSet/">Instruction Set</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../z01-Resumo-VM/">Resumo VM</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Exercícios</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-Algebra-Booleana-1/">Álgebra Booleana - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-Algebra-Booleana-2/">Álgebra Booleana - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://docs.google.com/spreadsheets/d/1rN_zQqYaVI8PjAhKqEBCmY-_06I0X9dD0RddcI-miJs/edit?usp=sharing">Dados Digitais - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-Dados-2/">Dados Digitais - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Exercicio-Aritmetica-Booleana.pdf">Aritmética binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://forms.gle/XMsFCDMYsmz1qUP86">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Linguagem_de_maquina.pdf">Linguagem de Máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-CPU-1/">Exercicio CPU - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-CPU-2/">Exercicio CPU - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Linguagem_de_maquina.pdf"">linguagem de máquina</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Útil</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../util/Util-Comecando-novo-projeto/">Começando novo projeto</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/Util-vixi-sou-scrum/">Vixi! Sou desenvolvedor</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/Util-vixi-sou-dev/">Vixi! Sou scrum master</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../util/util-infra/">Infra</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  
+    <li>
+      <a href="../../../Avaliacoes/">Avaliações</a>
+    </li>
+  
+
+            
+          </ul>
+        </div>
+      </nav>
+      <main class="ah-content ah-typeset">
+        
+          <div class="ah-title-box">
+            <ul class="ah-breadcrumbs">
+              
+                
+                  
+                    <li>Z01</li>
+                  
+                
+                <li>Resumo Assembly</li>
+            </ul>
+            
+            
+          </div>
+          
+            <section class="progress-section show">
+<h1 id="z01-resumo-assembly">Z01 - Resumo Assembly</h1>
+<div class="admonition tip">
+<p class="admonition-title">Notação 1</p>
+<ul>
+<li><strong>reg</strong> : Registrador (<code>%A</code>, <code>%D</code>)</li>
+<li><strong>mem</strong> : Acesso a memória (%A)</li>
+<li><strong>im</strong>: Imediato, pode ser: (<code>$1</code>, <code>$0</code>, <code>$-1</code>)</li>
+<li><strong>const</strong>: Constante positiva (<code>$0</code>, <code>$9</code>, ....)</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Arquivos: extensões</p>
+<ul>
+<li><code>.nasm</code>: Arquivo assembly</li>
+<li><code>.hack</code>: Linguagem de máquina (arquivo com zeros e uns)</li>
+<li><code>.mif</code>: Arquivo .hack que pode ser salvo na memória da FPGA</li>
+<li><code>.lst</code>: saída do simulador com os estados da CPU</li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Nosso hardware não suporta operações que realizam escrita e leitura na memória RAM ao mesmo tempo. Operações como:</p>
+<ul>
+<li><code>incw (%A)</code></li>
+<li><code>decw (%A)</code></li>
+<li><code>addw (%A), %D, (%A)</code></li>
+<li><code>subw %D, (%A), (%A)</code></li>
+<li>...</li>
+</ul>
+<p>Vão ser aceitas pelo assembler, mas vão executar erradas no HW.</p>
+</div>
+<h2 id="instrucoes">Instruções</h2>
+<h4 id="lea-carregamento-efetivo-do-endereco-valor">LEA - Carregamento Efetivo do Endereço (Valor)</h4>
+<div class="admonition note">
+<p><strong>leaw</strong> const, reg</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Restrição</p>
+<p>A operação de <strong>leaw</strong> só aceita o registrador <code>%A</code></p>
+</div>
+<p>A instrução <em>leaw</em> armazena o valor passado (<code>const</code>) no
+registrador especificado </p>
+<div class="highlight"><pre><span></span><code><span class="c1">; Exemplo: %A = 15</span>
+<span class="nf">leaw</span><span class="w"> </span><span class="kc">$</span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span>
+</code></pre></div>
+<hr />
+<h4 id="mov-copia-valores">MOV - Copia Valores</h4>
+<div class="admonition note">
+<p><strong>movw</strong> im*/reg/mem, reg/mem {, reg/mem, reg/mem}</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Dica 2</p>
+<p>A operação de mov faz na verde uma cópia, deixando a origem com o 
+dado original.</p>
+</div>
+<p>A instrução <em>mov,</em> copia o valor da primeira posição para
+a segunda posição (terceira e quarta opcional).</p>
+<div class="highlight"><pre><span></span><code><span class="c1">; Exemplo: D = RAM[A]</span>
+<span class="nf">movw</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">),</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span>
+</code></pre></div>
+<hr />
+<h4 id="add-adicao-de-inteiros">ADD - Adição de Inteiros</h4>
+<div class="admonition note">
+<p><strong>addw</strong> reg/mem, reg/mem/im*, reg/mem {, reg/mem, reg/mem}</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Dica 3</p>
+<p>A operação permite salvar o resultado em mais de um destino.</p>
+</div>
+<p>instrução add, soma o primeiro valor ao segundo
+valor e armazena o resultado no terceiro parâmetro (quarto e quinto
+opcional).</p>
+<div class="highlight"><pre><span></span><code><span class="c1">; Exemplo: D = RAM[A]+D </span>
+<span class="nf">addw</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">),</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span>
+</code></pre></div>
+<hr />
+<h4 id="sub-subtracao-de-inteiros">SUB - Subtração de Inteiros</h4>
+<div class="admonition note">
+<p><strong>subw</strong> reg/mem, rem/mem/im*, reg/mem {, reg/mem, reg/mem}</p>
+</div>
+<p>A instrução sub, subtrai o segundo valor do primeiro
+valor e armazena o resultado no terceiro parâmetro (quarto e quinto
+opcional).</p>
+<div class="highlight"><pre><span></span><code><span class="c1">; Exemplo: A = D - RAM[A] </span>
+<span class="nf">subw</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">),</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span>
+</code></pre></div>
+<hr />
+<h4 id="rsub-subtracao-de-inteiros-reversa">RSUB - Subtração de Inteiros Reversa</h4>
+<div class="admonition note">
+<p><strong>rsubw</strong> reg/mem/im*, rem/mem, reg {, reg, reg}</p>
+</div>
+<p>A instrução rsub, subtrai o segundo valor do primeiro
+valor e armazena o resultado no terceiro parâmetro (quarto e quinto
+opcional).</p>
+<div class="highlight"><pre><span></span><code><span class="c1">; Exemplo: A = RAM[A] - D</span>
+<span class="nf">rsubw</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">),</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span>
+</code></pre></div>
+<hr />
+<h4 id="inc-incrementa-inteiro">INC - Incrementa Inteiro</h4>
+<div class="admonition note">
+<p><strong>incw</strong> reg</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Restrição</p>
+<p>O destino é o próprio registrador! A operação não permite
+salvar em um registrador diferente.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Dica 4</p>
+<p>Se quiser fazer a operação de <strong>inc</strong> e salvar em outro 
+registrador, pode utilizar a operação de <strong>addw</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">; D = A + 1</span>
+<span class="nf">addw</span><span class="w"> </span><span class="kc">$</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="w"> </span>
+</code></pre></div>
+</div>
+<p>A instrução <em>inc,</em> adiciona um (1) ao valor do
+registrador ou memória.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">; Exemplo: D = D + 1</span>
+<span class="nf">incw</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span>
+</code></pre></div>
+<hr />
+<h4 id="dec-decrementa-inteiro">DEC - Decrementa Inteiro</h4>
+<div class="admonition note">
+<p><strong>decw</strong> reg</p>
+</div>
+<p>A instrução <em>dec,</em> subtrai um (1) do valor do registrador
+ou memória.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">; Exemplo: A = A-1</span>
+<span class="nf">decw</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span>
+</code></pre></div>
+<hr />
+<h4 id="not-negacao-por-complemento-de-um">NOT - Negação por Complemento de Um</h4>
+<div class="admonition note">
+<p><strong>notw</strong> reg</p>
+</div>
+<p>A instrução <em>not,</em> inverte o valor de cada bit do reg origem, ou seja,
+se um bit tem valor 0 fica com 1 e vice-versa.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">; Exemplo:  D = !D</span>
+<span class="nf">notw</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span>
+</code></pre></div>
+<hr />
+<h4 id="neg-negacao-por-complemento-de-dois">NEG - Negação por Complemento de dois</h4>
+<div class="admonition note">
+<p>negw reg</p>
+</div>
+<p>A instrução <em>neg,</em> faz o valor ficar negativo, ou seja,
+um valor de x é modificado para -x.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">; Exemplo: A = -A</span>
+<span class="w"> </span><span class="nf">negw</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span>
+</code></pre></div>
+<hr />
+<h4 id="and-operador-e-and">AND - Operador E (and)</h4>
+<div class="admonition note">
+<p>andw reg/mem, rem/mem</p>
+</div>
+<p>A instrução <em>and</em> executa o operador lógico E (and).</p>
+<div class="highlight"><pre><span></span><code><span class="c1">; Exemplo: D = A&amp;D</span>
+<span class="nf">andw</span><span class="w"> </span><span class="o">%</span><span class="nv">A</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span>
+</code></pre></div>
+<hr />
+<h4 id="or-operador-ou-or">OR - Operador OU (or)</h4>
+<div class="admonition note">
+<p>orw reg/mem, rem/mem</p>
+</div>
+<p>A instrução <em>or</em> executa o operador lógico Ou (or).</p>
+<div class="highlight"><pre><span></span><code><span class="c1">; Exemplo: D = RAM[A] | D</span>
+<span class="nf">orw</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="nv">A</span><span class="p">),</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span>
+</code></pre></div>
+<hr />
+<h4 id="jmp-jump">JMP - Jump</h4>
+<div class="admonition note">
+<p>jmp</p>
+</div>
+<p>A instrução <em>jmp</em> executa um desvio, no fluxo de
+execução, para o endereço armazenado em %A.</p>
+<div class="highlight"><pre><span></span><code><span class="nf">jmp</span>
+</code></pre></div>
+<hr />
+<h4 id="je-desvia-execucao-se-igual-a-zero">JE - Desvia Execução se Igual a Zero</h4>
+<div class="admonition note">
+<p>je reg</p>
+</div>
+<p>A instrução <em>je</em> faz um desvio, no fluxo de execução,
+para o endereço armazenado em %A, somente se o valor do reg. for igual a
+zero.</p>
+<div class="highlight"><pre><span></span><code><span class="nf">je</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span>
+</code></pre></div>
+<hr />
+<h4 id="jne-desvia-execucao-se-diferente-de-zero">JNE - Desvia Execução se Diferente de Zero</h4>
+<div class="admonition note">
+<p>jne reg</p>
+</div>
+<p>A instrução <em>jne</em> faz um desvio, no fluxo de execução,
+para o endereço armazenado em %A, somente se o valor do reg. for
+diferente de zero.</p>
+<div class="highlight"><pre><span></span><code><span class="nf">jne</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span>
+</code></pre></div>
+<hr />
+<h4 id="jg-desvia-execucao-se-maior-que-zero">JG - Desvia Execução se Maior que Zero</h4>
+<div class="admonition note">
+<p>jg reg</p>
+</div>
+<p>A instrução <em>jg</em> desvia, o fluxo de execução, para o
+endereço armazenado em %A, somente se o valor do reg. for maior que
+zero.</p>
+<div class="highlight"><pre><span></span><code><span class="nf">jg</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span>
+</code></pre></div>
+<hr />
+<h4 id="jge-desvia-execucao-se-maior-igual-a-zero">JGE - Desvia Execução se Maior Igual a Zero</h4>
+<div class="admonition note">
+<p>jge reg</p>
+</div>
+<p>A instrução <em>jge</em> faz um desvio, no fluxo de execução,
+para o endereço armazenado em %A, somente se o valor do reg. for maior
+ou igual a zero.</p>
+<div class="highlight"><pre><span></span><code><span class="nf">jge</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span>
+</code></pre></div>
+<hr />
+<h4 id="jl-desvia-execucao-se-menor-que-zero">JL - Desvia Execução se Menor que Zero</h4>
+<div class="admonition note">
+<p>jl reg</p>
+</div>
+<p>A instrução <em>jl</em> faz desvio, no fluxo de execução, para o
+endereço armazenado em %A, somente se o valor do reg. for menor que
+zero.</p>
+<div class="highlight"><pre><span></span><code><span class="nf">jl</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span>
+</code></pre></div>
+<hr />
+<h4 id="jle-desvia-execucao-se-menor-igual-a-zero">JLE - Desvia Execução se Menor Igual a Zero</h4>
+<div class="admonition note">
+<p>jle reg</p>
+</div>
+<p>A instrução <em>jle</em> faz um desvio, no fluxo de execução,
+para o endereço armazenado em %A, somente se o valor do reg. for menor
+ou igual a zero.</p>
+<div class="highlight"><pre><span></span><code><span class="nf">jle</span><span class="w"> </span><span class="o">%</span><span class="nv">D</span>
+</code></pre></div>
+<hr />
+<h4 id="nop-nao-faz-nada-no-operation">NOP - Não faz nada (No Operation)</h4>
+<div class="admonition note">
+<p>nop</p>
+</div>
+<p>A instrução <em>nop</em> não faz nada, usado para pular um ciclo
+de execução.</p>
+<div class="highlight"><pre><span></span><code><span class="nf">nop</span>
+</code></pre></div>
+<hr />
+<h2 id="descricao-detalhada">Descrição Detalhada</h2>
+<p><strong>Formato das Instruções</strong></p>
+<p>Em Assembly, codificamos uma instrução por linha e ela é construída a
+partir do mnemônico da operação e seus argumentos. Além disso, temos
+marcadores de posição (endereço usado em desvios), constantes e
+possíveis variáveis. O formato das instruções na sintaxe AT&amp;T segue o
+seguinte formato:</p>
+<p>mnemônico origem, destino</p>
+<p><strong>Registradores</strong></p>
+<p>Todos os registradores devem ter como prefixo o sinal de porcentagem
+'%\', por exemplo: %A ou %D.</p>
+<p><strong>Valores Literais</strong></p>
+<p>Todos os valores literais devem ter como prefixo o sinal de cifrão
+'$\', por exemplo: $55, $376, sendo o maior valor 2047 (15 bits).</p>
+<p><strong>Endereçamento de Memória</strong></p>
+<p>Na sintaxe AT&amp;T, a memória é referenciada com parêntese em volta do
+registrador que armazena o endereço: por exemplo (%A).</p>
+<p><strong>Tamanho dos operadores</strong></p>
+<p>Algumas instruções podem trabalhar com diferentes tamanhos de dados,
+assim as instruções podem ter um sufixo, informando o tamanho do dado
+que irá manipular, sendo b (8 bits), w (16 bits) e l (32 bits). Por
+exemplo:</p>
+<p>movw $2000, (%A)</p>
+<p><strong>Instruções de Transferência de Controle</strong></p>
+<p>As instruções de jump, fazem o fluxo do programa desviar de uma posição
+do programa para outra. Para marcar as posições no programa, são usados
+marcadores (labels) que sempre terminam com dois pontos (:). Por
+exemplo: loop:</p>
+<p><strong>Registradores virtuais</strong></p>
+<p>Os símbolos R0, ..., R15 são automaticamente predefinidos para se
+referir aos endereços de RAM 0, ..., 15</p>
+<p><strong>Ponteiros de I/O</strong></p>
+<p>Os símbolos SCREEN e KBD são automaticamente predefinidos para se
+referir aos endereços de RAM 16384 e 24576, respectivamente.</p>
+<p><strong>Ponteiros de controle da VM</strong></p>
+<p>Os símbolos SP, LCL, ARG, THIS, e THAT são automaticamente predefinidos
+para se referir aos endereços de RAM 0-4, respectivamente.</p>
+<p><strong>Notações:</strong></p>
+<p>im : valor imediato (somente os valores 1, 0 e -1).</p>
+<p>reg : registrador.</p>
+<p>mem: memória, ou seja (%A).</p>
+<p><strong>Limitações:</strong></p>
+<ul>
+<li>
+<p>A arquitetura não permite somar o valor da memória apontada por (%A)
+    com o valor de %A, ou de (%A) com (%A), tampouco %A com %A.</p>
+</li>
+<li>
+<p>Não é possível somar (ou subtrair, se é que isso faz sentido) o
+    registrador com o mesmo, por exemplo somar %D com %D.</p>
+</li>
+<li>
+<p>Não é possível ler e gravar a memória ao mesmo tempo. Por exemplo,
+    as instruções abaixo não funcionam no nosso computador:</p>
+<ul>
+<li>incw (%A);</li>
+<li>subw (%A),%D,(%A).</li>
+</ul>
+</li>
+</ul>
+<p><strong>Observação:</strong></p>
+<p>A linguagem Assembly apresentada é especifica para o processador
+produzido no curso. Embora muito similar a outras usadas em produtos de
+mercado, as instruções possuem limitações inerentes a cada hardware.</p>
+
+
+</section>
+          
+        
+      </main>
+      <footer class="ah-footer ah-typeset">
+        <div class="ah-footer-nav">
+          
+            <a href="../../../teoria/myhdl-1/"
+               class="ah-prev"
+               title="MyHDL Básico">
+              <span class="nav-label">Previous</span>
+              <span class="nav-title">MyHDL Básico</span>
+            </a>
+          
+          
+            <a href="../z01-Cheat-Sheet/"
+               class="ah-next"
+               title="Z01.1 Cheat Sheet">
+              <span class="nav-label">Next</span>
+              <span class="nav-title">Z01.1 Cheat Sheet</span>
+            </a>
+          
+        </div>
+      </footer>
+    </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+  </body>
+</html>

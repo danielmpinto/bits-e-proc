@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      
+        <title>MyHDL Básico - Bits e Processadores</title>
+      
+    
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:700|Oxygen+Mono|Source+Sans+Pro:700|Source+Serif+Pro&amp;display=swap">
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <script>
+      // SETUP GLOBAL CONSTANTS
+      var base_url = '../..';
+      
+      var telemetryEnabled = true;
+      var backendUrl = "https://devlife-api.insper-comp.com.br/";
+      var courseSlug = "22b bits";
+      
+      
+      var dashboardEnabled = false;
+      var tagTree = {};
+      
+
+      // SETUP PLUGIN
+      window.initialized = false;
+      if (!window.initializers) window.initializers = [];
+      window.registerInitializer = (initialize) => {
+        if (window.initialized) initialize();
+        else window.initializers.push(initialize);
+      };
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://unpkg.com/hyperscript.org"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="../../assets/js/main.js"></script>
+    
+    
+  </head>
+  <body>
+    <div class="ah-main-container">
+      <header class="ah-header">
+        <button class="ah-menu-btn ah-button ah-button--borderless"
+                aria-label="toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
+</svg>
+        </button>
+        <a href="../.."
+           title="Bits e Processadores"
+           class="ah-logo"
+           aria-label="Bits e Processadores">
+          Bits e Processadores
+        </a>
+        <div class="ah-header--right">
+          
+          
+          
+          <button id="resetHandoutButton">
+            <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+</svg></span>
+          </button>
+          
+
+          
+          <div id="user-menu" hx-get="https://devlife-api.insper-comp.com.br/user-menu" hx-trigger="load"> </div>
+          
+        </div>
+      </header>
+      <nav class="ah-navigation preload">
+        <div class="ah-nav-container">
+          <button class="ah-menu-btn ah-button ah-button--borderless close-menu"
+                  aria-label="close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
+</svg>
+          </button>
+          <ul class="ah-nav-body">
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Home</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../Sobre.md">index</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Sobre-Criterios-de-Avaliacao/">Critérios de Avaliação</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Sobre-Rubricas/">Rubricas individuais</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Projetos</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../class/intro-proj/">A - Ambiente de desenvolvimento</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/comb-proj/">B - Lógica Combinacional</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/ula-proj/">C - ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/seq-proj/">D - Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/asm-proj/">E - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/assembler-proj/">G - Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/vmtranslator-proj/">H - VM translator</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/x-proj/">Mundo Real</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Labs</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../class/intro-benchmark-lab/">Lab 1: Visão geral</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/intro-lab-1/">Lab 2: Configurando Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/intro-lab-2/">Lab 3: Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/transistores-lab-1/">Lab 4: Transistores / CI</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/comb-lab-1/">Lab 5: MyHDL</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/ula-lab-1/">Lab 6: Adders</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/ula-lab-2/">Lab 7: Hardware types</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/ula-lab-4/">Lab 8: ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/ula-lab-3/">Lab 9: Depurando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/seq-lab-1/">Lab 10: Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/asm-lab-1/">Lab 11: (nasm) Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/asm-lab-2/">Lab 11: (nasm) Periféricos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/asm-lab-3/">Lab 13: (nasm) Saltos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/asm-lab-4/">Lab 14: (nasm) Praticando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/assembler-lab-1/">Lab 15: Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/vm-lab-1/">Lab 16: VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../class/vmtranslator-lab-1/">Lab 7 - VM translator</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Teoria</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Dados/">Dados Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Algebra-Booleana/">Álgebra Booleana</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-RTL/">Resistor-Transistor Logic (RTL)</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Componentes/">Componentes Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Aritmetica-Binaria/">Aritmética Binária</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Aritmetica-Binaria-HW/">Aritmética Binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-ULA/">ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Logica-Sequencial/">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Sequencial-Componentes/">Componentes Síncronos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Z01/">Z01</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembly/">ASM - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Z01-mapadeMemoria/">ASM - Mapa de memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-nasm-jump/">ASM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Linguagem-de-Maquina/">Linguagem de máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembler/">Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembler-SymbolTable/">Tabela de Símbolos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm/">VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-segmentos/">VM - Segmentos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-jump/">VM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-funcoes/">VM - Funções</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-memoria/">VM - Memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Util-Video-Aulas.md">commum-content/teoria/Vídeo Aulas (Luciano)</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item opened">
+    <span class="ah-togglable-handle">MyHDL</span>
+    <ul>
+      
+        
+  
+    <li class="active ah-togglable-item opened">
+      <span class="ah-togglable-handle">MyHDL Básico</span>
+      <ul>
+        
+          <li class="ah-toc-item">
+            <a href="#myhdl-basico">MyHDL Básico</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#conceitos-basicos-hardware">Conceitos básicos - Hardware</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#conceitos-basicos-myhdl">Conceitos básicos - MyHDL</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#o-que-ainda-falta-aprender-do-myhdl">O que ainda falta aprender do MyHDL</a>
+          </li>
+          
+        
+      </ul>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Z01</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Resumo-Assembly/">Resumo Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Cheat-Sheet/">Z01.1 Cheat Sheet</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-InstructionSet/">Instruction Set</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Resumo-VM/">Resumo VM</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Exercícios</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Algebra-Booleana-1/">Álgebra Booleana - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Algebra-Booleana-2/">Álgebra Booleana - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://docs.google.com/spreadsheets/d/1rN_zQqYaVI8PjAhKqEBCmY-_06I0X9dD0RddcI-miJs/edit?usp=sharing">Dados Digitais - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Dados-2/">Dados Digitais - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Exercicio-Aritmetica-Booleana.pdf">Aritmética binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://forms.gle/XMsFCDMYsmz1qUP86">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Linguagem_de_maquina.pdf">Linguagem de Máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-CPU-1/">Exercicio CPU - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-CPU-2/">Exercicio CPU - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Linguagem_de_maquina.pdf"">linguagem de máquina</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Útil</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-Comecando-novo-projeto/">Começando novo projeto</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-vixi-sou-scrum/">Vixi! Sou desenvolvedor</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-vixi-sou-dev/">Vixi! Sou scrum master</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/util-infra/">Infra</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  
+    <li>
+      <a href="../../Avaliacoes/">Avaliações</a>
+    </li>
+  
+
+            
+          </ul>
+        </div>
+      </nav>
+      <main class="ah-content ah-typeset">
+        
+          <div class="ah-title-box">
+            <ul class="ah-breadcrumbs">
+              
+                
+                  
+                    <li>MyHDL</li>
+                  
+                
+                <li>MyHDL Básico</li>
+            </ul>
+            
+            
+          </div>
+          
+            <section class="progress-section show">
+<h1 id="myhdl-basico">MyHDL Básico</h1>
+<p>O <a href="http://docs.myhdl.org/en/stable/manual/index.html">MyHDL</a> foi a linguagem escolhida para o desenvolvimento do hardware da disciplina Bits e Processadores, o MyHDL é um pacote python que permite descrevermos um hardware (note que não é <strong>programar um hardware</strong>) utilizando a linguagem Python. O importante é saber que descrever um hardware é diferente de escrevermos um programa:</p>
+<blockquote>
+<p>Um programa em Python/Java/C é como uma receita de bolo que será executada em uma cozinha que já está montada, essa cozinha é o sua CPU (processador), e não dá para mudar com código (software), o que você muda de um programa para outro é a receita. Uma cozinha é capaz de realizar diversas receitas diferentes ....</p>
+<p>No caso do MyHDL não temos essa 'cozinha' pronta, na verdade, podemos criar qualquer cozinha que quisermos. Com ele você será um arquiteto de cozinhas, capaz de criar praticamente qualquer hardware! E então realizar suas receitas na cozinha que criou.</p>
+</blockquote>
+<p>As linguagens de descrição de hardware são chamadas de <em>Hardware Description Language (HDL)</em> e são muito penosas de aprender (VHDL, VERILOG) pois são complexas e antigas (uma delas foi criada na guerra fria e não foi criada com o propósito que é utilizada atualmente), mas existe uma família de novos HDL que tem ganhado bastante evidência na comunidade, e uma delas é o MyHDL.</p>
+<p>O MyHDL serve apenas como uma camada de mais alto nível, ele não é capaz de criar um hardware funcional na FPGA (hardware que usamos para criarmos nossas <em>cozinhas</em>). Mas ele consegue gerar um arquivo <code>VHLD</code> que pode ser sintetizado na FPGA e virar um hardware real.</p>
+<div class="highlight"><pre><span></span><code>    IDEA                                |  
+    MIRABORANTE  ---&gt; MyHDL  --&gt; VHDL --|&gt; FPGA
+                                        |
+</code></pre></div>
+<h2 id="conceitos-basicos-hardware">Conceitos básicos - Hardware</h2>
+<!--  
+!!! info ""
+    inspirado no tutorial do MyHDL
+
+O MyHDL faz uso de duas ferramentas da linguagem python que vocês podem não estar acostumados: `generators` e `decorators`, vamos analisar cada uma delas a seguir.
+
+### Generators
+-->
+
+<p>Circuitos digitais podem ser descritos como combinações de circuitos combinacional e sequenciais, circuitos combinacionais são aqueles que a saída "reage" instantaneamente a mudança do valor da entrada (equações booleanas, mux, demux, decoders, ...) e os circuitos sequências são aqueles que depende de um clock, ou que a saída não é uma ação imediata da mudança da entrada.</p>
+<p>Primeiro iremos trabalhar apenas com os circuitos sequências e depois avançaremos para os síncronos (para criar a memória do nosso processador).</p>
+<p>Um conceito muito importante que vocês devem tomar cuidado é que quando criamos um hardware, somos capazes de realizar ações simultaneamente, diferente de um programa que executa "linha a linha", um hardware tende a executar tudo ao mesmo tempo (paralelismo). </p>
+<p>Hardwares são construídos através de pequenos módulos que formam um sistema mais complexo (hierárquico), os módulos podem ser visualizados como componentes eletrônicos que interligados em uma placa de circuito impresso (PCB) formam por exemplo um computador. O mesmo módulo pode ser usado mais de uma vez e em diferentes lugares do hardware.</p>
+<h2 id="conceitos-basicos-myhdl">Conceitos básicos - MyHDL</h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Lembre que estamos usando o python para descrever um hardware e não um programa!</p>
+</div>
+<p>No MyHDL definimos uma instância (componente de hardware) usando o <code>decorator</code>: <code>@block</code> na classe, isso define que a classe deve ser interpretada como um componente de hardware. Cada componente de hardware pode possuir internamente vários comportamentos (no caso aqui veremos apenas o combinacional) que são definidos pelos métodos da classe com o decorator (<code>always_comb</code>).</p>
+<p>Vamos ver um exemplo que implementa a seguinte equação lógica: <code>q = a or (b and c)</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">myhdl</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="nd">@block</span>
+<span class="k">def</span> <span class="nf">equacao</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+
+    <span class="nd">@always_comb</span>
+    <span class="k">def</span> <span class="nf">comb</span><span class="p">():</span>
+        <span class="n">q</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">a</span> <span class="ow">or</span> <span class="p">(</span><span class="n">b</span> <span class="ow">and</span> <span class="n">c</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">comb</span>
+</code></pre></div>
+<p>Parece bem ok né? Mas tem alguns segredos que vamos analisando aos poucos. No exemplo aparece os decorators: <code>@block</code> (para definir um hardware) e <code>@always_comb</code> (combinacional), o hardware possui apenas uma classe que é chamada de <code>comb</code>  onde a relação entre as entradas e saída do hardware é definida. Como ilustrado no diagrama a seguir:</p>
+<div class="highlight"><pre><span></span><code>     |------------|
+  a---&gt; ********  |         
+  b---&gt; * comb * ----&gt; q
+  c---&gt; ********  |     
+     |            |
+     |  equacao   |
+     |------------|
+</code></pre></div>
+<p>A implementação da equação é trivial e utiliza da sintax do python <code>a or (b and c)</code>, mas a saída <code>q</code> é acessada via o atributo <code>next</code>: <mark>q.next</mark>. Isso é feito porque o argumento <code>q</code> (e os demais) não são variáveis comuns do python e sim um tipo especial definido pelo MyHDL, chamada de <code>Signal</code>. </p>
+<p>Da documentaćão do MyHDL:</p>
+<blockquote>
+<p><code>next</code></p>
+<p>Read-write attribute that represents the next value of the signal.</p>
+</blockquote>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Mais para frente iremos entender melhor o <code>Signal</code> e como utilizamos essa variável. </p>
+</div>
+<h3 id="testando">Testando</h3>
+<p>Para testarmos o bloco de hardware crido anteriormente devemos de alguma forma instanciar o hardware e adicionar estímulos a entrada dele, este processo em projetos de hardware é chamado de <em>testbench</em>. Notem que isso é diferente de apenas fazermos a chamada de uma função (que alias vamos entender mais para frente no curso como é que funciona).</p>
+<p>Para os estímulos iremos devemos criar um método, que possui um novo decorator chamado <code>instance</code>, que indica que iremos realizar a instanciação de um componente de hardware (usar o componente), nesse método iremos criar os estímulos necessários para testarmos o nosso hardware. Temos que lembrar que quando estamos mexendo com hardware, esses estímulos acontecem no tempo, por isso temos o <code>yield delay(1)</code>, que indica para a simulação aguardar por 1 tick de tempo antes de realizar o próximo processamento.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@instance</span>
+<span class="k">def</span> <span class="nf">stimulus</span><span class="p">():</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">yield</span> <span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;q = </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">q</span><span class="p">)</span>
+</code></pre></div>
+<p>Gera o diagrama:</p>
+<div class="highlight"><pre><span></span><code>          : yield delay(1)
+          :
+a ---0----:----
+          :_____
+b --------/ 1   
+          :_____
+c --------/ 1    
+          :_____  
+q --------/      (q válido)
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Tip 1</p>
+<p>Importante verificar o uso do <mark>next</mark>, as variáveis são atualizadas todas no mesmo instante! Notem no diagrama que <code>a</code>, <code>b</code> e <code>c</code> e <code>q</code> mudam juntas! Diferente do que aconteceria em um programa python na qual a ordem da atribuição impacta em quem é alterado primeiro.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>O <code>yield delay(1)</code> faz com que as saídas <code>.next</code> sejam atualizadas.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">yield python</p>
+<p>Você sabe o que é o <code>yield</code>? Ele surgiu no python 2.2 e é utilizado pelo MyHDL, ele é similar ao <code>return</code> de uma função, mas quando a função é chamada novamente ela retorna do ponto que parou. Veja o exemplo a baixo:</p>
+<div class="highlight"><pre><span></span><code>def foo():
+    for i in range(3)
+        yield(i)
+
+bar = foo()
+bar.next()
+&gt;&gt;&gt; 1
+bar.next()
+&gt;&gt;&gt; 2
+bar.next()
+&gt;&gt;&gt; 3
+bar.next()
+&gt;&gt;&gt; Traceback (most recent call last):
+&gt;&gt;&gt; File &quot;&lt;stdin&gt;&quot;, line 1, in ?
+</code></pre></div>
+<p>A função <code>foo</code> ficou interativa!</p>
+</div>
+<p>Agora temos que juntar o hardware que desejamos testar com o estímulo criado:</p>
+<div class="highlight"><pre><span></span><code><span class="n">q</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">equacao_1</span> <span class="o">=</span> <span class="n">equacao</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+<span class="n">sim</span> <span class="o">=</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">equacao_1</span><span class="p">,</span> <span class="n">stimulus</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</code></pre></div>
+<p>Notem que criamos quatro variáveis do tipo <code>Signal(bool(0))</code>, isso indica para o MyHDL que as variáveis <code>q,a,b,c</code> são sinais (entradas e saídas do hardware) do tipo <code>bool</code> (binárias), ou seja, só podem assumir <code>1</code> ou <code>0</code>. Todas as variáveis são do tipo <code>bool</code> e inicializadas em <code>0</code>.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Poderíamos inicializar as variáveis no estado '1':  <code>q = Signal(bool(1))</code></p>
+</div>
+<p>Ao executar o projeto, obtém a seguinte saída:</p>
+<div class="highlight"><pre><span></span><code>&gt;&gt;&gt; 
+q = 1
+&lt;class &#39;myhdl.StopSimulation&#39;&gt;: No more events
+</code></pre></div>
+<p>O resultado obtido é o esperado: <code>1 = 0 or (1 and 1)</code>! Que bom né? </p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Realizamos apenas o teste de uma condicão no módulo, um teste mais correto deveria ser mais amplo. Depois vamos entender como fazer isso.</p>
+</div>
+<h2 id="o-que-ainda-falta-aprender-do-myhdl">O que ainda falta aprender do MyHDL</h2>
+<p>Ainda falta entender outros tipos de dados que não binário (<code>intbv</code>), como descrever hardwares sequenciais (dependem de um clock), como converter e executar o projeto em um hardware real!</p>
+
+
+</section>
+          
+        
+      </main>
+      <footer class="ah-footer ah-typeset">
+        <div class="ah-footer-nav">
+          
+            <a href="../../commum-content/teoria/Teoria-vm-memoria/"
+               class="ah-prev"
+               title="VM - Memória">
+              <span class="nav-label">Previous</span>
+              <span class="nav-title">VM - Memória</span>
+            </a>
+          
+          
+            <a href="../../commum-content/z01/z01-Resumo-Assembly/"
+               class="ah-next"
+               title="Resumo Assembly">
+              <span class="nav-label">Next</span>
+              <span class="nav-title">Resumo Assembly</span>
+            </a>
+          
+        </div>
+      </footer>
+    </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+  </body>
+</html>

@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      
+        <title>Lab 4: Transistores / CI - Bits e Processadores</title>
+      
+    
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:700|Oxygen+Mono|Source+Sans+Pro:700|Source+Serif+Pro&amp;display=swap">
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <script>
+      // SETUP GLOBAL CONSTANTS
+      var base_url = '../..';
+      
+      var telemetryEnabled = true;
+      var backendUrl = "https://devlife-api.insper-comp.com.br/";
+      var courseSlug = "22b bits";
+      
+      
+      var dashboardEnabled = false;
+      var tagTree = {};
+      
+
+      // SETUP PLUGIN
+      window.initialized = false;
+      if (!window.initializers) window.initializers = [];
+      window.registerInitializer = (initialize) => {
+        if (window.initialized) initialize();
+        else window.initializers.push(initialize);
+      };
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://unpkg.com/hyperscript.org"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="../../assets/js/main.js"></script>
+    
+    
+  </head>
+  <body>
+    <div class="ah-main-container">
+      <header class="ah-header">
+        <button class="ah-menu-btn ah-button ah-button--borderless"
+                aria-label="toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
+</svg>
+        </button>
+        <a href="../.."
+           title="Bits e Processadores"
+           class="ah-logo"
+           aria-label="Bits e Processadores">
+          Bits e Processadores
+        </a>
+        <div class="ah-header--right">
+          
+          
+          
+          <button id="resetHandoutButton">
+            <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+</svg></span>
+          </button>
+          
+
+          
+          <div id="user-menu" hx-get="https://devlife-api.insper-comp.com.br/user-menu" hx-trigger="load"> </div>
+          
+        </div>
+      </header>
+      <nav class="ah-navigation preload">
+        <div class="ah-nav-container">
+          <button class="ah-menu-btn ah-button ah-button--borderless close-menu"
+                  aria-label="close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
+</svg>
+          </button>
+          <ul class="ah-nav-body">
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Home</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../Sobre.md">index</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Sobre-Criterios-de-Avaliacao/">Critérios de Avaliação</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Sobre-Rubricas/">Rubricas individuais</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Projetos</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../intro-proj/">A - Ambiente de desenvolvimento</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../comb-proj/">B - Lógica Combinacional</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-proj/">C - ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../seq-proj/">D - Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-proj/">E - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../assembler-proj/">G - Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../vmtranslator-proj/">H - VM translator</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../x-proj/">Mundo Real</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item opened">
+    <span class="ah-togglable-handle">Labs</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../intro-benchmark-lab/">Lab 1: Visão geral</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../intro-lab-1/">Lab 2: Configurando Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../intro-lab-2/">Lab 3: Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li class="active ah-togglable-item opened">
+      <span class="ah-togglable-handle">Lab 4: Transistores / CI</span>
+      <ul>
+        
+          <li class="ah-toc-item">
+            <a href="#lab-4-transistores-ci">Lab 4: Transistores / CI</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#parte-1-circuito-misterioso">Parte 1 - Circuito misterioso</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#outro-circuito-misterioso">Outro circuito misterioso</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#parte-2-rtl">Parte 2 - RTL</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#circuitos-integrados-ci">Circuitos Integrados - CI</a>
+          </li>
+          
+        
+      </ul>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../comb-lab-1/">Lab 5: MyHDL</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-1/">Lab 6: Adders</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-2/">Lab 7: Hardware types</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-4/">Lab 8: ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-3/">Lab 9: Depurando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../seq-lab-1/">Lab 10: Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-1/">Lab 11: (nasm) Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-2/">Lab 11: (nasm) Periféricos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-3/">Lab 13: (nasm) Saltos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-4/">Lab 14: (nasm) Praticando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../assembler-lab-1/">Lab 15: Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../vm-lab-1/">Lab 16: VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../vmtranslator-lab-1/">Lab 7 - VM translator</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Teoria</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Dados/">Dados Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Algebra-Booleana/">Álgebra Booleana</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-RTL/">Resistor-Transistor Logic (RTL)</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Componentes/">Componentes Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Aritmetica-Binaria/">Aritmética Binária</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Aritmetica-Binaria-HW/">Aritmética Binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-ULA/">ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Logica-Sequencial/">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Sequencial-Componentes/">Componentes Síncronos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Z01/">Z01</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembly/">ASM - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Z01-mapadeMemoria/">ASM - Mapa de memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-nasm-jump/">ASM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Linguagem-de-Maquina/">Linguagem de máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembler/">Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembler-SymbolTable/">Tabela de Símbolos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm/">VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-segmentos/">VM - Segmentos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-jump/">VM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-funcoes/">VM - Funções</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-memoria/">VM - Memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Util-Video-Aulas.md">commum-content/teoria/Vídeo Aulas (Luciano)</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">MyHDL</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../teoria/myhdl-1/">MyHDL Básico</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Z01</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Resumo-Assembly/">Resumo Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Cheat-Sheet/">Z01.1 Cheat Sheet</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-InstructionSet/">Instruction Set</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Resumo-VM/">Resumo VM</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Exercícios</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Algebra-Booleana-1/">Álgebra Booleana - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Algebra-Booleana-2/">Álgebra Booleana - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://docs.google.com/spreadsheets/d/1rN_zQqYaVI8PjAhKqEBCmY-_06I0X9dD0RddcI-miJs/edit?usp=sharing">Dados Digitais - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Dados-2/">Dados Digitais - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Exercicio-Aritmetica-Booleana.pdf">Aritmética binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://forms.gle/XMsFCDMYsmz1qUP86">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Linguagem_de_maquina.pdf">Linguagem de Máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-CPU-1/">Exercicio CPU - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-CPU-2/">Exercicio CPU - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Linguagem_de_maquina.pdf"">linguagem de máquina</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Útil</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-Comecando-novo-projeto/">Começando novo projeto</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-vixi-sou-scrum/">Vixi! Sou desenvolvedor</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-vixi-sou-dev/">Vixi! Sou scrum master</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/util-infra/">Infra</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  
+    <li>
+      <a href="../../Avaliacoes/">Avaliações</a>
+    </li>
+  
+
+            
+          </ul>
+        </div>
+      </nav>
+      <main class="ah-content ah-typeset">
+        
+          <div class="ah-title-box">
+            <ul class="ah-breadcrumbs">
+              
+                
+                  
+                    <li>Labs</li>
+                  
+                
+                <li>Lab 4: Transistores / CI</li>
+            </ul>
+            
+            
+          </div>
+          
+            <section class="progress-section show">
+<h1 id="lab-4-transistores-ci">Lab 4: Transistores / CI</h1>
+<p>Esse laboratório tem como objetivo trabalhar com os conceitos básicos de portas lógicas do tipo RTL realizadas a base de transistores discretos do tipo BJT e também trabalhar com componentes integrados (CI) da família CMOS.</p>
+<p>Existem basicamente três níveis de simulação de componentes eletrônicos: a primeira, puramente lógica utiliza de portas lógicas "ideais" (<a href="https://simulator.io/board">https://simulator.io/board</a>). Um simulador mais preciso irá utilizar transistores para a implementação dessas portas lógicas porém não leva em consideração todos os fatores físicos-eletrônicos dos componentes (<a href="http://falstad.com/circuit/">http://falstad.com/circuit/</a>). Já um simulador que leva em consideração as propriedades dos componentes é chamado de SPICE e irá gerar uma simulação mais precisa em termos físicos do circuito original (<a href="http://circuitlab.com">http://circuitlab.com</a>).</p>
+<h2 id="parte-1-circuito-misterioso">Parte 1 - Circuito misterioso</h2>
+<p>Vamos usar o simulador do site falstad para implementar um circuito feito com transistores que implementa uma equação booleana. </p>
+<ol>
+<li>Abra o site: <a href="http://www.falstad.com/circuit/">http://www.falstad.com/circuit/</a></li>
+<li>
+<p><img alt="➡️" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/svg/27a1.svg" title=":arrow_right:" /> Arquivo <img alt="➡️" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/svg/27a1.svg" title=":arrow_right:" /> Importar Arquivo Texto <img alt="➡️" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/svg/27a1.svg" title=":arrow_right:" /> Copiar e colar o texto a seguir</p>
+</li>
+<li>
+<p><a href="../transistores-lab-1-exe1.txt">code.txt</a></p>
+</li>
+</ol>
+<p>Vocês devem obter o seguinte diagrama:</p>
+<p><img alt="" src="../figs/A-Transistores/simulacao.gif" width="400" /></p>
+<p>Com o circuito carreado no site, encontre:</p>
+<div class="admonition example">
+<p class="admonition-title">Tarefa</p>
+<ol>
+<li>Encontre a tabela verdade do circuito.<ul>
+<li>Faça todas as combinações possíveis de entradas (H/L) e verifique o valor da saída (H/L)</li>
+</ul>
+</li>
+<li>A partir da tabela verdade encontre a equação lógica.</li>
+<li>Desenhar o diagrama da equação (simplificado).</li>
+</ol>
+</div>
+<h2 id="outro-circuito-misterioso">Outro circuito misterioso</h2>
+<p>Implementar o outro circuito feito com transistores que implementa uma equação booleana no simulador do site falstad. </p>
+<ol>
+<li>Abra o site: <a href="http://www.falstad.com/circuit/">http://www.falstad.com/circuit/</a></li>
+<li><img alt="➡️" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/svg/27a1.svg" title=":arrow_right:" /> Arquivo <img alt="➡️" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/svg/27a1.svg" title=":arrow_right:" /> Importar Arquivo Texto <img alt="➡️" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/svg/27a1.svg" title=":arrow_right:" /> Copiar e colar o texto a seguir</li>
+</ol>
+<p><a href="../transistores-lab-1-exe1.txt">circuito</a></p>
+<div class="admonition exercise self-progress" data-slug="class/transistores-lab-1/exercise_1" id="exercise_1_0">
+<p class="admonition-title">Exercise 1</p>
+<form class="exercise-form">
+<ol>
+<li>Encontre a tabela verdade do circuito.<ul>
+<li>Faça todas as combinações possíveis de entradas (H/L) e verifique o valor da saída (H/L)</li>
+</ul>
+</li>
+<li>A partir da tabela verdade encontre a equação lógica.</li>
+<li>Desenhar o diagrama da equação (simplificado).</li>
+</ol>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<h2 id="parte-2-rtl">Parte 2 - RTL</h2>
+<p>Iremos implementar portas lógicas e equações booleanas com transistores BJT. Para isso vamos utilizar o <a href="https://www.tinkercad.com/">TinkerCad</a>, que irá permitir realizarmos uma montagem similar a que seria feito no laboratório.</p>
+<h3 id="material">Material</h3>
+<p>Cada grupo receberá:</p>
+<ul>
+<li>Duas protoboards</li>
+<li>Duas baterias 9V</li>
+<li>Jumpers macho-macho</li>
+<li>12 transistores <a href="https://www.onsemi.com/pub/Collateral/BC337-D.PDF">BJT-N BC337</a></li>
+<li>24 resistores de 2k</li>
+<li>6 LEDs coloridos (Vermelho, amarelo e verde)</li>
+</ul>
+<p><img alt="" src="../figs/A-Transistores/materiais.jpg" /></p>
+<h3 id="trabalhando">Trabalhando</h3>
+<p>O grupo deve se organizar e executar da melhor forma possível (com todos participando) os módulos a seguir, utilizando:</p>
+<ul>
+<li>Entradas: Utilizar como entrada do sistema (A,B,C,...) <strong>jumpers</strong> que estarão hora conectados em <strong>GND (0)</strong> ou <strong>VCC (1)</strong>. </li>
+<li>Saídas: A saída final do sistema deve ser representada com um LED, sendo aceso indicando lógica <code>1</code> e apagado lógica <code>0</code>.</li>
+<li>Validação: Uma tabela verdade do circuito deve ser apresentada e em aula demonstrado que o circuito representa a tabela.</li>
+</ul>
+<hr />
+<h3 id="a-not">a - NOT</h3>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+</div>
+<p><strong>Cada grupo deve realizar duas</strong> implementações do circuito a seguir que representa uma NOT:</p>
+<p>Iremos implementar uma porta lógica do tipo NOT usando transistores BJT. </p>
+<p><img alt="RTL Not" src="figs/A-Transistores/rtl-notNEW.png" width="500" /></p>
+<p>Para isso vocês deverão:</p>
+<ol>
+<li>Entrar no site <a href="https://www.tinkercad.com/">TinkerCad</a></li>
+<li>Logar (com google) e criar conta <strong>pessoal</strong></li>
+<li><strong>Circuis</strong> <img alt="➡️" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/svg/27a1.svg" title=":arrow_right:" /> <strong>Criar novo Circuito</strong></li>
+<li>Fazer a implementação a seguir</li>
+</ol>
+<p><img alt="Protoboard" src="../figs/A-Transistores/rtl-not-protoboard.png" /></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Se você perceber que algum transistor está aquecendo,
+desconecte a bateria e verifique novamente a montagem.
+Isso é um sinal que alguma coisa está errada.</p>
+</div>
+<div class="admonition exercise self-progress" data-slug="class/transistores-lab-1/exercise_2" id="exercise_2_0">
+<p class="admonition-title">Exercise 2</p>
+<form class="exercise-form">
+<p>Levante a tabela verdade do circuito recém montado e verifique se é mesmo uma NOT.</p>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip 1</p>
+<ul>
+<li>
+<p>Utilize o <a href="https://www.onsemi.com/pub/Collateral/BC337-D.PDF">datasheet</a> do transistor para entender a montagem</p>
+</li>
+<li>
+<p>Mexa na chave para aplicar <code>0</code> ou <code>1</code> na entrada do circuito.</p>
+</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Solução</p>
+<p><a href="https://www.tinkercad.com/things/bnWLvsuRvp6-neat-lappi-snicket/editel?sharecode=QlWtWTyxH18eCaVwphNPVTpzdXW9IlssdNUmgLUOtAU">https://www.tinkercad.com/things/bnWLvsuRvp6-neat-lappi-snicket/editel?sharecode=QlWtWTyxH18eCaVwphNPVTpzdXW9IlssdNUmgLUOtAU</a></p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip 2</p>
+<p>O fio 'rosa' da imagem anterior representa a entrada do seu circuito, você deve colocar ela em <code>GND</code> para simular uma entrada <code>0</code> e em <code>VCC</code> para simular uma entrada <code>1</code>.</p>
+</div>
+<h3 id="1b-not-not">1b - NOT NOT</h3>
+<p>Agora que as duas <code>NOT</code> foram implementadas, testadas e estão funcionado, conecte a saída de uma na entrada da outra. Isso vai fazer com que a saída siga o valor de referência da entrada.</p>
+<p><img alt="not not A" src="../figs/A-Transistores/notnot.png" width="300" /></p>
+<div class="admonition exercise self-progress" data-slug="class/transistores-lab-1/exercise_3" id="exercise_3_0">
+<p class="admonition-title">Exercise 3</p>
+<form class="exercise-form">
+<p>Levante a tabela verdade do circuito recém montado</p>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<div class="admonition exercise self-progress" data-slug="class/transistores-lab-1/exercise_4" id="exercise_4_0">
+<p class="admonition-title">Exercise 4</p>
+<form class="exercise-form">
+<ol>
+<li>Levante a tabela verdade do circuito recém montado.</li>
+<li>Qual porta lógica é essa?</li>
+</ol>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<hr />
+<h3 id="b-or">b - OR</h3>
+<div class="admonition exercise self-progress" data-slug="class/transistores-lab-1/exercise_5" id="exercise_5_0">
+<p class="admonition-title">Exercise 5</p>
+<form class="exercise-form">
+<p>Implemente uma porta lógica do tipo OR usando transistores BJT. Essa porta terá duas entradas e uma saída, cada entrada deve ser uma chave e a saída um LED.</p>
+<p>Utilize a página a seguir para ter ideias de como implementar as portas lógicas em RTL:</p>
+<ul>
+<li><a href="http://hyperphysics.phy-astr.gsu.edu/hbase/Electronic/trangate.html#c2">http://hyperphysics.phy-astr.gsu.edu/hbase/Electronic/trangate.html#c2</a></li>
+</ul>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<hr />
+<h3 id="c-equacao">c - Equação</h3>
+<div class="admonition exercise self-progress" data-slug="class/transistores-lab-1/exercise_6" id="exercise_6_0">
+<p class="admonition-title">Exercise 6</p>
+<form class="exercise-form">
+<p>Implemente a equação lógica a seguir em um circuito do tipo RTL, faca no simulador e se sobrar tempo implemente com transistores na protoboars. </p>
+<div class="highlight"><pre><span></span><code>Q = A.(A.(A+B)+A.C)
+</code></pre></div>
+<ol>
+<li>Implemente a equação no TinkerCad</li>
+<li>Para validar valide com tabela verdade do circuito <ul>
+<li><strong>As duas tabelas precisam ser idênticas!</strong> </li>
+</ul>
+</li>
+</ol>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<h2 id="circuitos-integrados-ci">Circuitos Integrados - CI</h2>
+<p>Circuitos integrados são componentes eletrônicos que possuem internamente dezenas a milhares de transistores que implementam circuitos eletrônicos, facilitando e possibilitando o desenvolvimento de projetos de hardware mais complexos.</p>
+<p>Existem várias 'famílias' de CI que implementam portas lógicas, iremos trabalhar com uma versão chamada de série <a href="https://pt.wikipedia.org/wiki/S%C3%A9rie_7400">TTL 7400</a>. Exemplos de componentes dessa famílias:</p>
+<ul>
+<li>7400: Quatro portas NAND de duas entradas</li>
+<li>7401: Quatro portas NAND de duas entradas com coletor aberto</li>
+<li>7402: Quatro portas NOR de duas entradas</li>
+<li>7403: Quatro portas NAND de duas entradas com coletor aberto</li>
+<li>7404: Seis inversores (porta NOT)</li>
+</ul>
+<blockquote>
+<p>Para a lista completa acesse: <a href="https://pt.wikipedia.org/wiki/Lista_dos_circuitos_integrados_da_s%C3%A9rie_7400">https://pt.wikipedia.org/wiki/Lista_dos_circuitos_integrados_da_s%C3%A9rie_7400</a></p>
+</blockquote>
+<p>Vamos continuar no <a href="https://www.tinkercad.com/">TinkerCad</a>.</p>
+<h3 id="a-not_1">a - NOT</h3>
+<p>Vamos usar o componente <a href="https://pt.wikipedia.org/wiki/TTL_7404">7404</a> que possui 6 NOTs para fazer a mesma coisa que fizemos com os transistor discreto:</p>
+<p><img alt="" src="../figs/A-Transistores/7404-pcb.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">7404</p>
+<p>Para mais informações, acesse:  <a href="https://pt.wikipedia.org/wiki/TTL_7404">https://pt.wikipedia.org/wiki/TTL_7404</a></p>
+<p><img alt="" src=".figs/A-Transistores/7404.png" /></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Solução</p>
+<ul>
+<li><a href="https://www.tinkercad.com/things/5didIR3U6qY-sizzling-jaban-jarv/editel?tenant=circuits?sharecode=2N6uVn_CZekje82phPIUcZu_24lOLu1_oeEenH-htT8">https://www.tinkercad.com/things/5didIR3U6qY-sizzling-jaban-jarv/editel?tenant=circuits?sharecode=2N6uVn_CZekje82phPIUcZu_24lOLu1_oeEenH-htT8</a></li>
+</ul>
+</div>
+<hr />
+<h3 id="b-equacao">b - Equação</h3>
+<p>Implemente a equação a seguir com CIs da família 74xx.</p>
+<div class="highlight"><pre><span></span><code>Q = (A xor B) or not(C)
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Tip 3</p>
+<ol>
+<li>Identifique os componentes</li>
+<li>Procure na <a href="https://pt.wikipedia.org/wiki/Lista_dos_circuitos_integrados_da_s%C3%A9rie_7400">lista</a> qual o seu nome</li>
+<li>Analise os pinos desse componente</li>
+<li>Faça a ligação e teste por parte</li>
+</ol>
+</div>
+
+
+</section>
+          
+        
+      </main>
+      <footer class="ah-footer ah-typeset">
+        <div class="ah-footer-nav">
+          
+            <a href="../intro-lab-2/"
+               class="ah-prev"
+               title="Lab 3: Github">
+              <span class="nav-label">Previous</span>
+              <span class="nav-title">Lab 3: Github</span>
+            </a>
+          
+          
+            <a href="../comb-lab-1/"
+               class="ah-next"
+               title="Lab 5: MyHDL">
+              <span class="nav-label">Next</span>
+              <span class="nav-title">Lab 5: MyHDL</span>
+            </a>
+          
+        </div>
+      </footer>
+    </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+  </body>
+</html>

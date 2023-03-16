@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      
+        <title>Lab 5: MyHDL - Bits e Processadores</title>
+      
+    
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:700|Oxygen+Mono|Source+Sans+Pro:700|Source+Serif+Pro&amp;display=swap">
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <script>
+      // SETUP GLOBAL CONSTANTS
+      var base_url = '../..';
+      
+      var telemetryEnabled = true;
+      var backendUrl = "https://devlife-api.insper-comp.com.br/";
+      var courseSlug = "22b bits";
+      
+      
+      var dashboardEnabled = false;
+      var tagTree = {};
+      
+
+      // SETUP PLUGIN
+      window.initialized = false;
+      if (!window.initializers) window.initializers = [];
+      window.registerInitializer = (initialize) => {
+        if (window.initialized) initialize();
+        else window.initializers.push(initialize);
+      };
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://unpkg.com/hyperscript.org"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="../../assets/js/main.js"></script>
+    
+    
+  </head>
+  <body>
+    <div class="ah-main-container">
+      <header class="ah-header">
+        <button class="ah-menu-btn ah-button ah-button--borderless"
+                aria-label="toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
+</svg>
+        </button>
+        <a href="../.."
+           title="Bits e Processadores"
+           class="ah-logo"
+           aria-label="Bits e Processadores">
+          Bits e Processadores
+        </a>
+        <div class="ah-header--right">
+          
+          
+          
+          <button id="resetHandoutButton">
+            <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+</svg></span>
+          </button>
+          
+
+          
+          <div id="user-menu" hx-get="https://devlife-api.insper-comp.com.br/user-menu" hx-trigger="load"> </div>
+          
+        </div>
+      </header>
+      <nav class="ah-navigation preload">
+        <div class="ah-nav-container">
+          <button class="ah-menu-btn ah-button ah-button--borderless close-menu"
+                  aria-label="close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
+</svg>
+          </button>
+          <ul class="ah-nav-body">
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Home</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../Sobre.md">index</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Sobre-Criterios-de-Avaliacao/">Critérios de Avaliação</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Sobre-Rubricas/">Rubricas individuais</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Projetos</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../intro-proj/">A - Ambiente de desenvolvimento</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../comb-proj/">B - Lógica Combinacional</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-proj/">C - ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../seq-proj/">D - Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-proj/">E - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../assembler-proj/">G - Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../vmtranslator-proj/">H - VM translator</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../x-proj/">Mundo Real</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item opened">
+    <span class="ah-togglable-handle">Labs</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../intro-benchmark-lab/">Lab 1: Visão geral</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../intro-lab-1/">Lab 2: Configurando Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../intro-lab-2/">Lab 3: Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../transistores-lab-1/">Lab 4: Transistores / CI</a>
+    </li>
+  
+
+      
+        
+  
+    <li class="active ah-togglable-item opened">
+      <span class="ah-togglable-handle">Lab 5: MyHDL</span>
+      <ul>
+        
+          <li class="ah-toc-item">
+            <a href="#lab-5-myhdl">Lab 5: MyHDL</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#configurando-telemetria">Configurando telemetria</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#pytest">pytest</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#praticando">Praticando</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#executando-na-fpga">Executando na FPGA</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#praticando-parte-2">Praticando - parte 2</a>
+          </li>
+          
+        
+      </ul>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-1/">Lab 6: Adders</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-2/">Lab 7: Hardware types</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-4/">Lab 8: ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../ula-lab-3/">Lab 9: Depurando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../seq-lab-1/">Lab 10: Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-1/">Lab 11: (nasm) Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-2/">Lab 11: (nasm) Periféricos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-3/">Lab 13: (nasm) Saltos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../asm-lab-4/">Lab 14: (nasm) Praticando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../assembler-lab-1/">Lab 15: Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../vm-lab-1/">Lab 16: VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../vmtranslator-lab-1/">Lab 7 - VM translator</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Teoria</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Dados/">Dados Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Algebra-Booleana/">Álgebra Booleana</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-RTL/">Resistor-Transistor Logic (RTL)</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Componentes/">Componentes Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Aritmetica-Binaria/">Aritmética Binária</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Aritmetica-Binaria-HW/">Aritmética Binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-ULA/">ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Logica-Sequencial/">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Sequencial-Componentes/">Componentes Síncronos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Z01/">Z01</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembly/">ASM - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Z01-mapadeMemoria/">ASM - Mapa de memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-nasm-jump/">ASM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Linguagem-de-Maquina/">Linguagem de máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembler/">Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-Assembler-SymbolTable/">Tabela de Símbolos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm/">VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-segmentos/">VM - Segmentos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-jump/">VM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-funcoes/">VM - Funções</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/teoria/Teoria-vm-memoria/">VM - Memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../Util-Video-Aulas.md">commum-content/teoria/Vídeo Aulas (Luciano)</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">MyHDL</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../teoria/myhdl-1/">MyHDL Básico</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Z01</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Resumo-Assembly/">Resumo Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Cheat-Sheet/">Z01.1 Cheat Sheet</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-InstructionSet/">Instruction Set</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/z01/z01-Resumo-VM/">Resumo VM</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Exercícios</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Algebra-Booleana-1/">Álgebra Booleana - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Algebra-Booleana-2/">Álgebra Booleana - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://docs.google.com/spreadsheets/d/1rN_zQqYaVI8PjAhKqEBCmY-_06I0X9dD0RddcI-miJs/edit?usp=sharing">Dados Digitais - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-Dados-2/">Dados Digitais - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Exercicio-Aritmetica-Booleana.pdf">Aritmética binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://forms.gle/XMsFCDMYsmz1qUP86">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Linguagem_de_maquina.pdf">Linguagem de Máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-CPU-1/">Exercicio CPU - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Exercicio-CPU-2/">Exercicio CPU - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/exercicios/Linguagem_de_maquina.pdf"">linguagem de máquina</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Útil</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-Comecando-novo-projeto/">Começando novo projeto</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-vixi-sou-scrum/">Vixi! Sou desenvolvedor</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../commum-content/util/Util-vixi-sou-dev/">Vixi! Sou scrum master</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/util-infra/">Infra</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  
+    <li>
+      <a href="../../Avaliacoes/">Avaliações</a>
+    </li>
+  
+
+            
+          </ul>
+        </div>
+      </nav>
+      <main class="ah-content ah-typeset">
+        
+          <div class="ah-title-box">
+            <ul class="ah-breadcrumbs">
+              
+                
+                  
+                    <li>Labs</li>
+                  
+                
+                <li>Lab 5: MyHDL</li>
+            </ul>
+            
+            
+          </div>
+          
+            <section class="progress-section show">
+<h1 id="lab-5-myhdl">Lab 5: MyHDL</h1>
+<div class="admonition info">
+<p class="admonition-title">💰 Laboratório com pontos</p>
+<p>Algumas tarefas deste laboratório fornecem pontos de nota individual (hardware ou software), os exercícios marcados com 💰 são os que fornecem os pontos. Os pontos apenas são validados quando contabilizados pelo CI do github. Fiquem atentos para o deadline da entrega.</p>
+<p>Neste laboratório você pode receber até: <strong>(2 HW / 1 SW)</strong>.</p>
+</div>
+<p>Leitura prévia necessária:</p>
+<ul>
+<li><code>MyHDL/MyHDL Básico</code></li>
+</ul>
+<p>Este laboratório é introdutório para o desenvolvimento do projeto (<a href="/bits-e-proc/class/logiComb-Projeto"><code>Lógica-Combinacional</code></a>), onde iremos criar componentes de hardware que serão os alicerces do nosso computador. Primeiro precisamos praticar um pouco de <code>MyHDL</code> e entender a ferramenta e o fluxo de compilação, teste e como conseguimos executar o hardware em uma FPGA.</p>
+<p><mark>Os laboratórios são individuais e possuem nota (atualizado para a nova versão do curso)</mark>, cada laboratório contribui com um pouco dos pontos da avaliação individual. Todos os laboratórios devem ser realizados localmente e finalizados até o término da aula.</p>
+<div class="admonition exercise self-progress" data-slug="class/comb-lab-1/exercise_1" id="exercise_1_0">
+<p class="admonition-title">Exercise 1</p>
+<form class="exercise-form">
+<p>Para executar qualquer laboratório você deve seguir os passos a seguir:</p>
+<ol>
+<li>Acesse o lab pelo link <a href="https://classroom.github.com/a/vL9MgUbs">https://classroom.github.com/a/vL9MgUbs</a> </li>
+<li>Clone o repositório criado </li>
+<li>Crie o ambiente virtual python (<code>python3 -m venv env</code>)</li>
+<li>Ative o ambiente virtual (<code>. env/bin/activate</code>)</li>
+<li>Instale as dependências (<code>pip3 install -r requirements.txt</code>)</li>
+</ol>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Sempre que for abrir um terminal novo e acessar a pasta, será necessário ativar o ambiente virtual:</p>
+<div class="highlight"><pre><span></span><code>. env/bin/activate
+</code></pre></div>
+</div>
+<h3 id="configurando-telemetria">Configurando telemetria</h3>
+<p>Para entender melhor o comportamento de vocês ao longo dos laboratórios e atividades da disciplina, nós coletamos alguns dados de telemetria. A ideia aqui não é utilizar os dados para avaliação, mas sim para melhorias futuras. Esta técnica é muito utilizado em disciplinas da ciência da computação (inclusive devlife).</p>
+<div class="admonition exercise self-progress" data-slug="class/comb-lab-1/exercise_2" id="exercise_2_0">
+<p class="admonition-title">Exercise 2</p>
+<form class="exercise-form">
+<p>Antes de trabalharmos no laboratório será que vocês se autentiquem no servidor:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Linux</label><label for="__tabbed_1_2">Mac</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>telemetry<span class="w"> </span>auth
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>telemetry<span class="w"> </span>auth
+</code></pre></div>
+</div>
+</div>
+</div>
+<ol>
+<li>Ele deve abrir uma página no navegador e pedir para vocês logarem no github</li>
+<li>Após logar você deve receber um token e colar o valor no terminal</li>
+</ol>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<h3 id="pytest">pytest</h3>
+<p>Bits e Processadores utiliza uma metodologia de desenvolvimento de projeto chamada de <strong>test driven development (TDD)</strong>, ou seja, para cada etapa do projeto teremos um teste associado a ele. Os testes podem ser do tipo unitário e de integraćão. Para realizarmos os testes em python utilizaremos o módulo <code>pytest</code> e o plugin de dev-life (para fazer o report do progresso de vocês para o servidor).</p>
+<p>Cada exercício possui um arquivo com o prefixo <code>test_</code> que excita o componente que vocês irão desenvolver e valida a saída esperada.</p>
+<p>A seguir um exemplo do teste falhando e então solucionado e testado novamente:</p>
+<script id="asciicast-DL3cuBQSgSgIyXdZK2LVBolgr" src="https://asciinema.org/a/DL3cuBQSgSgIyXdZK2LVBolgr.js" async></script>
+
+<div class="admonition exercise self-progress" data-slug="class/comb-lab-1/exercise_3" id="exercise_3_0">
+<p class="admonition-title">Exercise 3</p>
+<form class="exercise-form">
+<ol>
+<li>Navegue no terminal até a pasta <code>comb</code></li>
+<li>Execute no terminal <code>pytest -k exe1</code></li>
+</ol>
+<p>O teste deve falhar pois não foi implementado ainda.</p>
+<p>Edite o arquivo <code>comb_modules.py</code> com a lógica a seguir:</p>
+<div class="highlight"><pre><span></span><code><span class="w">def exe1():</span>
+<span class="gd">-    pass</span>
+<span class="gi">+    q.next = a or (not b)</span>
+</code></pre></div>
+<p>Execute o <code>pytest</code> novamente e note que o código passa no teste.</p>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Todo o teste executado no repositório será submetido ao servidor de dev-life para processamento futuro e acompanhamento individual da participacão de vocês nos projetos. Portanto, facam individualmente os laboratórios.</p>
+</div>
+<div>
+<div class="ah-progress-container"><button class="ah-button ah-button--primary progress" id="prog-0"> Progress </button></div>
+</div>
+</section>
+<section class="progress-section">
+<h2 id="praticando">Praticando</h2>
+<p>Agora é por sua conta, você deve descrever alguns circuitos lógicos combinacionais bem simples em MyHDL. </p>
+<div class="admonition exercise self-progress" data-slug="class/comb-lab-1/exercise_4" id="exercise_4_0">
+<p class="admonition-title">💰 (2 HW / 1 SW) 4</p>
+<form class="exercise-form">
+<p>Para cada exercício implemente a solução no arquivo <code>comb_modules.py</code> e teste com <code>pytest</code>. A descrição do exercício está no próprio módulo.</p>
+<ul>
+<li><code>def exe2()</code>: <code>pytest -k exe2</code></li>
+<li><code>def exe3()</code>: <code>pytest -k exe3</code></li>
+</ul>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<div>
+<div class="ah-progress-container"><button class="ah-button ah-button--primary progress" id="prog-1"> Progress </button></div>
+</div>
+</section>
+<section class="progress-section">
+<h2 id="executando-na-fpga">Executando na FPGA</h2>
+<p>Agora vamos entender como conseguimos usar o nosso hardware descrito em <code>MyHDL</code> em um hardware real (FPGA), para isso temos que primeiro converter o <code>MyHDL</code> para <code>VHDL</code> e então usar a ferramenta da Intel (Quartus) para <strong>sinterizar</strong> o nosso hardware. Depois disso temos que programar a FPGA, a seguir temos uma visão simplificada do fluxo:</p>
+<div class="highlight"><pre><span></span><code>   toplevel.py   ---&gt; toplevel.vhd ---&gt; Makefile ---&gt; .sof ---&gt; FPGA
+       ^                                   ^
+       |                                   |
+    componente.py                        Quartus
+</code></pre></div>
+<p>Notem que agora o nosso módulo precisa ler e acionar pinos (interface com o mundo externo), normalmente a última camada de um projeto de hardware (aquela que realmente acessa os pinos) é chamada de toplevel. Os pinos dessa camada possuem nomes fixos, por isso temos que mapear os pinos do HW para os sinais do nosso módulo. Nessa primeira etapa iremos utilizar os seguintes componentes da nossa placa:</p>
+<p><img alt="" src="../figs/logComb-new/toplevel.png" /></p>
+<p>Onde:</p>
+<ul>
+<li><code>LED</code>: 10 leds que acendem com lógica <code>1</code></li>
+<li><code>Push Buttons</code>: 4 botões que quando apertados fornecem lógica <code>0</code></li>
+<li><code>Slide Switchs</code>: 10 Slides que quando acionados forcem lógica <code>1</code></li>
+<li><code>HEX Displays</code>: 6 displays de 7 segmentos (anodo comum)</li>
+</ul>
+<h3 id="gerando-toplevelvhd">Gerando <code>toplevel.vhd</code></h3>
+<p>O programa <code>toplevel.py</code> faz o mapeamento do componente para os pinos da FPGA e gera o arquivo <code>toplevel.vhd</code> que será utilizado pelo Quartus para gerar o arquivo binário que irá ser programado na FPGA, a ideia desse módulo é mapear os sinais do componente para nomes e tamanhos fixos que serão utilizados pelo programa.</p>
+<div class="highlight"><span class="filename">toplevel.py</span><pre><span></span><code><span class="nd">@block</span>
+<span class="k">def</span> <span class="nf">toplevel</span><span class="p">(</span><span class="n">LEDR</span><span class="p">,</span> <span class="n">SW</span><span class="p">,</span> <span class="n">KEY</span><span class="p">,</span> <span class="n">HEX0</span><span class="p">,</span> <span class="n">HEX1</span><span class="p">,</span> <span class="n">HEX2</span><span class="p">,</span> <span class="n">HEX3</span><span class="p">,</span> <span class="n">HEX4</span><span class="p">,</span> <span class="n">HEX5</span><span class="p">,</span> <span class="n">CLOCK_50</span><span class="p">,</span> <span class="n">RESET_N</span><span class="p">):</span>
+    <span class="o">...</span>
+
+    <span class="n">ic1</span> <span class="o">=</span> <span class="n">exe4</span><span class="p">(</span><span class="n">ledr_s</span><span class="p">,</span> <span class="n">SW</span><span class="p">)</span>
+
+    <span class="o">...</span>
+
+<span class="c1"># pinos</span>
+<span class="n">LEDR</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">intbv</span><span class="p">(</span><span class="mi">0</span><span class="p">)[</span><span class="mi">10</span><span class="p">:])</span> <span class="c1"># (1)</span>
+<span class="n">SW</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">intbv</span><span class="p">(</span><span class="mi">0</span><span class="p">)[</span><span class="mi">10</span><span class="p">:])</span>
+<span class="n">KEY</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">intbv</span><span class="p">(</span><span class="mi">0</span><span class="p">)[</span><span class="mi">4</span><span class="p">:])</span>
+<span class="n">HEX0</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">intbv</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">7</span><span class="p">:])</span>
+<span class="n">HEX1</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">intbv</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">7</span><span class="p">:])</span>
+<span class="n">HEX2</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">intbv</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">7</span><span class="p">:])</span>
+<span class="n">HEX3</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">intbv</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">7</span><span class="p">:])</span>
+<span class="n">HEX4</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">intbv</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">7</span><span class="p">:])</span>
+<span class="n">HEX5</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">intbv</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">7</span><span class="p">:])</span>
+
+<span class="c1"># instance e generate vhd</span>
+<span class="n">top</span> <span class="o">=</span> <span class="n">toplevel</span><span class="p">(</span><span class="n">LEDR</span><span class="p">,</span> <span class="n">SW</span><span class="p">,</span> <span class="n">KEY</span><span class="p">,</span> <span class="n">HEX0</span><span class="p">,</span> <span class="n">HEX1</span><span class="p">,</span> <span class="n">HEX2</span><span class="p">,</span> <span class="n">HEX3</span><span class="p">,</span> <span class="n">HEX4</span><span class="p">,</span> <span class="n">HEX5</span><span class="p">)</span>
+<span class="n">top</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">hdl</span><span class="o">=</span><span class="s2">&quot;VHDL&quot;</span><span class="p">)</span> <span class="c1"># (2)</span>
+</code></pre></div>
+<ol>
+<li>Vetor de tamanho 10</li>
+<li>Aqui indicamos para o MyHDL gerar o vhdl a partir do componente <code>top</code></li>
+</ol>
+<p>Notem que os sinais criados são do tipo <code>Signal(intbv(0)[X:])</code>, isso indica que estamos manipulando um vetor de bits de tamanho <strong>X</strong>, no caso do LED, indicamos que o vetor é do tamanho 10, e no caso das KEY de tamanho 4. Com isso, podemos dentro do componente acessar individualmente cada um dos elementos do vetor:</p>
+<div class="highlight"><span class="filename">comb_modules.py</span><pre><span></span><code><span class="nd">@block</span>
+<span class="k">def</span> <span class="nf">exe4</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="n">sw</span><span class="p">):</span>
+   <span class="nd">@always_comb</span>
+   <span class="k">def</span> <span class="nf">comb</span><span class="p">():</span>
+       <span class="n">led</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">sw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">sw</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="k">return</span> <span class="n">instances</span><span class="p">()</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Notem que o <code>componente</code> recebe como argumentos os <code>ledr_s</code> e as chaves <code>SW</code> da FPGA e implementa a lógica <code>sw[0] and (not sw[1])</code>.</p>
+</div>
+<div class="admonition exercise self-progress" data-slug="class/comb-lab-1/exercise_5" id="exercise_5_0">
+<p class="admonition-title">Exercise 5</p>
+<form class="exercise-form">
+<ol>
+<li>Analise o arquivo <code>toplevel.py</code></li>
+<li>Execute o <code>toplevel.py</code> e note a geração do arquivo <code>toplevel.vhd</code></li>
+<li>Analise o arquivo <code>toplevel.vhd</code></li>
+</ol>
+<div class="highlight"><pre><span></span><code>./toplevel.py<span class="w"> </span>
+</code></pre></div>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<h3 id="gerando-sof">Gerando <code>.sof</code></h3>
+<p>O processo de gerar um hardware que posso ser executado na FPGA é complexo e até pouco tempo não existiam ferramentas opensource que fazem isso. Iremos utilizar um software da Intel chamado de Quartus que é capaz de sintetizar um hardware paras as FPGAs que a Intel possui, no nosso caso a Cyclone V. Para facilitar o desenvolvimento criamos um makefile que recebe como input a pasta do exercício e gera o <code>sof</code>. O projeto do quartus será o mesmo para todos os exercícios.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip 1</p>
+<p>O processo é demorado para quem está acostumado a apenas programar em python, a geracão do arquivo pode demorar alguns minutos.</p>
+</div>
+<div class="admonition exercise self-progress" data-slug="class/comb-lab-1/exercise_6" id="exercise_6_0">
+<p class="admonition-title">Exercise 6</p>
+<form class="exercise-form">
+<p>Na raiz do repositório execute:
+1. <code>make -C quartus clean</code>
+1. <code>make -C quartus all</code>
+1. Aguardem compilar
+1. Verifiquem que um novo arquivo <code>quartus/DE0_CV_Default.sof</code> foi gerado</p>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<h3 id="programando-fpga">Programando FPGA</h3>
+<p>Agora com a FPGA plugada no computador podemos programar, para isso usaremos o comando <code>make -C quartus program</code> que deve enviar para a ROM da FPGA o bitstream.</p>
+<div class="admonition exercise self-progress" data-slug="class/comb-lab-1/exercise_7" id="exercise_7_0">
+<p class="admonition-title">Exercise 7</p>
+<form class="exercise-form">
+<ol>
+<li>execute <code>make -C quartus program</code></li>
+<li>Mexa nas chaves 0 e 1 e notem o LED 0 obedece a equacao <code>sw0 and (not sw1)</code></li>
+</ol>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<h2 id="praticando-parte-2">Praticando - parte 2</h2>
+<p>Vamos praticar um pouco mais, agora usando a FPGA. Para cada um dos módulos a seguir, implemente o MyHDL e então execute na FPGA.</p>
+<div class="admonition exercise self-progress" data-slug="class/comb-lab-1/exercise_8" id="exercise_8_0">
+<p class="admonition-title">Exercise 8</p>
+<form class="exercise-form">
+<ul>
+<li>Modulo: <code>exe5</code></li>
+</ul>
+<p>Tarefa: </p>
+<ol>
+<li>Implementar o módulo</li>
+<li>Edite o <code>toplevel</code> para incluir o <code>exe5</code></li>
+<li>Gerar o <code>toplevel.vhd</code> rodando <code>toplevel.py</code></li>
+<li>Compile o vhdl<ul>
+<li><code>make -C quartus clean</code></li>
+<li><code>make -C quartus all</code>.</li>
+<li><code>make -C quartus program</code></li>
+</ul>
+</li>
+<li>Validar na FPGA </li>
+</ol>
+<p>Dica: </p>
+<p>Você não pode ler uma saída <code>led[1].next = not led[0]</code>, para isso criei uma variável auxiliar:</p>
+<div class="highlight"><pre><span></span><code><span class="n">led0</span> <span class="o">=</span> <span class="n">sw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">leds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">led0</span>
+<span class="n">leds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">led0</span>
+</code></pre></div>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<div class="admonition exercise self-progress" data-slug="class/comb-lab-1/exercise_9" id="exercise_9_0">
+<p class="admonition-title">Exercise 9</p>
+<form class="exercise-form">
+<ul>
+<li>Modulo: <code>sw2hex</code></li>
+</ul>
+<p>Modifique o <code>toplevel.py</code> adicionando o módulo novo para acionar o <code>HEX0</code> controlado pelo <code>sw2hex</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="w">ic1 = exe5(ledr_s, SW)</span>
+<span class="gi">+ic2 = sw2hex(HEX0, SW)</span>
+</code></pre></div>
+<p>Lembre de validar na FPGA.</p>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+<div class="admonition exercise self-progress" data-slug="class/comb-lab-1/exercise_10" id="exercise_10_0">
+<p class="admonition-title">Exercise 10</p>
+<form class="exercise-form">
+<ul>
+<li>Modulo: <code>bin2hex</code></li>
+</ul>
+<p>Modifique o <code>toplevel.py</code> adicionando o módulo novo para acionar o <code>HEX1</code> controlado pelo <code>bin2hex</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="w">ic1 = exe5(ledr_s, SW)</span>
+<span class="w">ic2 = sw2hex(HEX0, SW)</span>
+<span class="gi">+ic3 = bin2hex(HEX1, SW)</span>
+</code></pre></div>
+<p>Lembre de validar na FPGA.</p>
+<div class="form-elements">
+<input type="hidden" name="data" value="OK" />
+<input class="ah-button ah-button--primary" type="submit" name="Submit" value="Mark as done" />
+</div>
+</form>
+</div>
+
+
+</section>
+          
+        
+      </main>
+      <footer class="ah-footer ah-typeset">
+        <div class="ah-footer-nav">
+          
+            <a href="../transistores-lab-1/"
+               class="ah-prev"
+               title="Lab 4: Transistores / CI">
+              <span class="nav-label">Previous</span>
+              <span class="nav-title">Lab 4: Transistores / CI</span>
+            </a>
+          
+          
+            <a href="../ula-lab-1/"
+               class="ah-next"
+               title="Lab 6: Adders">
+              <span class="nav-label">Next</span>
+              <span class="nav-title">Lab 6: Adders</span>
+            </a>
+          
+        </div>
+      </footer>
+    </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+  </body>
+</html>

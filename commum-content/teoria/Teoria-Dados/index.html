@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      
+        <title>Dados Digitais - Bits e Processadores</title>
+      
+    
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:700|Oxygen+Mono|Source+Sans+Pro:700|Source+Serif+Pro&amp;display=swap">
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <script>
+      // SETUP GLOBAL CONSTANTS
+      var base_url = '../../..';
+      
+      var telemetryEnabled = true;
+      var backendUrl = "https://devlife-api.insper-comp.com.br/";
+      var courseSlug = "22b bits";
+      
+      
+      var dashboardEnabled = false;
+      var tagTree = {};
+      
+
+      // SETUP PLUGIN
+      window.initialized = false;
+      if (!window.initializers) window.initializers = [];
+      window.registerInitializer = (initialize) => {
+        if (window.initialized) initialize();
+        else window.initializers.push(initialize);
+      };
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://unpkg.com/hyperscript.org"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="../../../assets/js/main.js"></script>
+    
+    
+  </head>
+  <body>
+    <div class="ah-main-container">
+      <header class="ah-header">
+        <button class="ah-menu-btn ah-button ah-button--borderless"
+                aria-label="toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
+</svg>
+        </button>
+        <a href="../../.."
+           title="Bits e Processadores"
+           class="ah-logo"
+           aria-label="Bits e Processadores">
+          Bits e Processadores
+        </a>
+        <div class="ah-header--right">
+          
+          
+          
+          <button id="resetHandoutButton">
+            <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+</svg></span>
+          </button>
+          
+
+          
+          <div id="user-menu" hx-get="https://devlife-api.insper-comp.com.br/user-menu" hx-trigger="load"> </div>
+          
+        </div>
+      </header>
+      <nav class="ah-navigation preload">
+        <div class="ah-nav-container">
+          <button class="ah-menu-btn ah-button ah-button--borderless close-menu"
+                  aria-label="close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+  <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
+</svg>
+          </button>
+          <ul class="ah-nav-body">
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Home</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../Sobre.md">index</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Sobre-Criterios-de-Avaliacao/">Critérios de Avaliação</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Sobre-Rubricas/">Rubricas individuais</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Projetos</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-proj/">A - Ambiente de desenvolvimento</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/comb-proj/">B - Lógica Combinacional</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-proj/">C - ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/seq-proj/">D - Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-proj/">E - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/assembler-proj/">G - Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vmtranslator-proj/">H - VM translator</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/x-proj/">Mundo Real</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Labs</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-benchmark-lab/">Lab 1: Visão geral</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-lab-1/">Lab 2: Configurando Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/intro-lab-2/">Lab 3: Github</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/transistores-lab-1/">Lab 4: Transistores / CI</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/comb-lab-1/">Lab 5: MyHDL</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-1/">Lab 6: Adders</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-2/">Lab 7: Hardware types</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-4/">Lab 8: ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/ula-lab-3/">Lab 9: Depurando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/seq-lab-1/">Lab 10: Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-1/">Lab 11: (nasm) Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-2/">Lab 11: (nasm) Periféricos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-3/">Lab 13: (nasm) Saltos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/asm-lab-4/">Lab 14: (nasm) Praticando</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/assembler-lab-1/">Lab 15: Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vm-lab-1/">Lab 16: VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../class/vmtranslator-lab-1/">Lab 7 - VM translator</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item opened">
+    <span class="ah-togglable-handle">Teoria</span>
+    <ul>
+      
+        
+  
+    <li class="active ah-togglable-item opened">
+      <span class="ah-togglable-handle">Dados Digitais</span>
+      <ul>
+        
+          <li class="ah-toc-item">
+            <a href="#dados-digitais">Dados Digitais</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#base-2">Base 2</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#base-16">Base 16</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#base-8">Base 8</a>
+          </li>
+          
+          <li class="ah-toc-item">
+            <a href="#outros-sistemas">Outros sistemas</a>
+          </li>
+          
+        
+      </ul>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Algebra-Booleana/">Álgebra Booleana</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-RTL/">Resistor-Transistor Logic (RTL)</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Componentes/">Componentes Digitais</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Aritmetica-Binaria/">Aritmética Binária</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Aritmetica-Binaria-HW/">Aritmética Binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-ULA/">ULA</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Logica-Sequencial/">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Sequencial-Componentes/">Componentes Síncronos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Z01/">Z01</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Assembly/">ASM - Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Z01-mapadeMemoria/">ASM - Mapa de memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-nasm-jump/">ASM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Linguagem-de-Maquina/">Linguagem de máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Assembler/">Assembler</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-Assembler-SymbolTable/">Tabela de Símbolos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm/">VM</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm-segmentos/">VM - Segmentos</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm-jump/">VM - jump</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm-funcoes/">VM - Funções</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../Teoria-vm-memoria/">VM - Memória</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../Util-Video-Aulas.md">commum-content/teoria/Vídeo Aulas (Luciano)</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">MyHDL</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../../teoria/myhdl-1/">MyHDL Básico</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Z01</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Resumo-Assembly/">Resumo Assembly</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Cheat-Sheet/">Z01.1 Cheat Sheet</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-InstructionSet/">Instruction Set</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../z01/z01-Resumo-VM/">Resumo VM</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Exercícios</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-Algebra-Booleana-1/">Álgebra Booleana - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-Algebra-Booleana-2/">Álgebra Booleana - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://docs.google.com/spreadsheets/d/1rN_zQqYaVI8PjAhKqEBCmY-_06I0X9dD0RddcI-miJs/edit?usp=sharing">Dados Digitais - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-Dados-2/">Dados Digitais - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Exercicio-Aritmetica-Booleana.pdf">Aritmética binária - HW</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://forms.gle/XMsFCDMYsmz1qUP86">Lógica Sequencial</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="https://github.com/Insper/elementos-bits-content/blob/main/exercicios/Linguagem_de_maquina.pdf">Linguagem de Máquina</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-CPU-1/">Exercicio CPU - 1</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Exercicio-CPU-2/">Exercicio CPU - 2</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../exercicios/Linguagem_de_maquina.pdf"">linguagem de máquina</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  <li class="ah-togglable-item">
+    <span class="ah-togglable-handle">Útil</span>
+    <ul>
+      
+        
+  
+    <li>
+      <a href="../../util/Util-Comecando-novo-projeto/">Começando novo projeto</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/Util-vixi-sou-scrum/">Vixi! Sou desenvolvedor</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../util/Util-vixi-sou-dev/">Vixi! Sou scrum master</a>
+    </li>
+  
+
+      
+        
+  
+    <li>
+      <a href="../../../util/util-infra/">Infra</a>
+    </li>
+  
+
+      
+    </ul>
+  </li>
+
+            
+              
+  
+    <li>
+      <a href="../../../Avaliacoes/">Avaliações</a>
+    </li>
+  
+
+            
+          </ul>
+        </div>
+      </nav>
+      <main class="ah-content ah-typeset">
+        
+          <div class="ah-title-box">
+            <ul class="ah-breadcrumbs">
+              
+                
+                  
+                    <li>Teoria</li>
+                  
+                
+                <li>Dados Digitais</li>
+            </ul>
+            
+            
+          </div>
+          
+            <section class="progress-section show">
+<h1 id="dados-digitais">Dados Digitais</h1>
+<table>
+<thead>
+<tr>
+<th>Estudando</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bibliografia</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>[Cap 3,5. NISAN, 2005]</td>
+</tr>
+<tr>
+<td></td>
+<td>[Cap 8,11,12. FLOYD, 2011]</td>
+</tr>
+<tr>
+<td></td>
+<td>[Cap 7 TOCCI]</td>
+</tr>
+<tr>
+<td>Leitura extra:</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><a href="https://www.sciencedirect.com/science/article/pii/B978075064583650001X">Introduction to Digital Systems - Cap. 1</a></td>
+</tr>
+<tr>
+<td></td>
+<td><a href="https://www.sciencedirect.com/science/article/pii/B9780750645836500021">Introduction to Digital Systems - Cap. 2</a></td>
+</tr>
+<tr>
+<td>Vídeos (extra)</td>
+<td></td>
+</tr>
+<tr>
+<td>----------------</td>
+<td>--------------------------------------------------------------------------------------------------------------------</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="https://pt.khanacademy.org/math/algebra-home/alg-intro-to-algebra">KhanAcademy</a></td>
+</tr>
+<tr>
+<td></td>
+<td><a href="https://www.youtube.com/watch?v=Xpk67YzOn5w">Why Do Computers Use 1s and 0s? Binary and Transistors Explained.</a></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">Primeiras Máquinas de Calcular</p>
+<p>Wilhelm Schickard (1592–1635) construiu em 1623 uma calculadora para seu amigo astrônomo Johannes Kepler. Esta é a mais antiga calculadora mecânica conhecida de quatro funções, que foi descoberta por esboços da sua criação.</p>
+<p><img alt="" src="http://people.idsia.ch/~juergen/schickardcomputer178e.jpg" width="200" /></p>
+<blockquote>
+<p>Fonte: <a href="http://people.idsia.ch/~juergen/schickard.html">http://people.idsia.ch/~juergen/schickard.html</a></p>
+</blockquote>
+</div>
+<div class="admonition info">
+<p class="admonition-title">História</p>
+<p>Blaise Pascal (1623-1662) inventou e produziu em 1642 a Pascaline. Ela só podia fazer adição e subtração, manipulando os números inscritos em seus mostradores. Ele construiu 50 deles ao longo de 10 anos, embora só tenha vendido 15.</p>
+<p><img alt="" src="https://images.computerhistory.org/revonline/images/500004213-03-01.jpg?w=600" width="200" /></p>
+<blockquote>
+<p>Fonte: <a href="http://www.computerhistory.org/revolution/calculators/1/47">http://www.computerhistory.org/revolution/calculators/1/47</a></p>
+</blockquote>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Primeiras Máquinas de Calcular</p>
+<p>Gottfried Wilhelm von Leibniz (1646-1716) é creditado como um dos inventores do cálculo diferencial e integral. Porém, foi o primeiro a documentar e estudar profundamente o sistema binário de numeração (base 2). Em 1672 Leibniz começou a inventar uma máquina capaz de fazer as 4 operações aritméticas, o Staffelwalze.</p>
+<p><img alt="" src="https://images.computerhistory.org/revonline/images/102630768-03-01.jpg?w=600" width="300" /></p>
+<blockquote>
+<p>Fonte: <a href="https://en.wikipedia.org/wiki/Gottfried_Wilhelm_Leibniz">https://en.wikipedia.org/wiki/Gottfried_Wilhelm_Leibniz</a></p>
+</blockquote>
+</div>
+<p>Sistemas numéricos é a maneira como os seres humanos representam números, ao decorrer da história as civilizações assumiam maneiras diferentes de representar números, muitas vezes possuindo diferentes maneiras de codificar oralmente/escrito.</p>
+<p>O sistema decimal é o mais utilizado pelas civilizações modernas, nele utilizamos 10 símbolos: <code>0</code>, <code>1</code> ... <code>9</code> para representar qualquer número, essa notação remonta do fato de possuirmos 10 dedos em nossas mãos. Nesse sistema, cada digito possui um peso da ordem <span class="arithmatex">\(10^n\)</span>:</p>
+<p><img alt="" src="./figs/Teoria/Dados-decimal.svg" width="400" /></p>
+<div class="admonition info">
+<p class="admonition-title">Algarismos indo-arábicos</p>
+<p>O sistema de numeração hindu como a conhecemos hoje, pode ser atribuído a dois homens: o astrônomo Ariabata (आर्यभट) e seu pupilo Bhāskara I, durante 499-522 ac. Eles inventaram um sistema que se baseia na utilização da combinação de sílabas para formar os números, em um sistema incluindo a notação do zero.</p>
+<p><img alt="" src="https://cdn.britannica.com/60/91960-004-42DF23AB.gif" /></p>
+<blockquote>
+<p>Fonte: <a href="https://kids.britannica.com/kids/assembly/view/89478">https://kids.britannica.com/kids/assembly/view/89478</a></p>
+</blockquote>
+</div>
+<h2 id="base-2">Base 2</h2>
+<p>No sistema de base 2 possuímos apenas duas opções de símbolo: <code>0</code> e <code>1</code>. Nessa base, cada posição possui um peso da ordem <span class="arithmatex">\(2^n\)</span>:</p>
+<p><img alt="" src="../figs/Dados-binario.svg" width="500" /></p>
+<div>
+<iframe height="500" src="https://www.youtube.com/embed/7_t6IUJkJ1E?autoplay=0" type="text/html" width="100%"></iframe>
+</div>
+<p>Dessa maneira podemos construir o valor que desejarmos de decimal (<span class="arithmatex">\(m\)</span>) em binário, para isso será necessário ocupar <span class="arithmatex">\(ceil(log2(m))\)</span> bits para armazenar o valor. A tabela a seguir ilustra algumas situações:</p>
+<blockquote>
+<p><code>ceil</code>: arredondar para cima</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Valor decimal</th>
+<th>Bits necessário</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(0 .. 1\)</span></td>
+<td>1</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(0 .. 3\)</span></td>
+<td><code>ceil(log2(4))</code> = 2</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(0 .. 4\)</span></td>
+<td>2</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(0 .. 6\)</span></td>
+<td>3</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(0 .. 7\)</span></td>
+<td>3</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(0 .. 15\)</span></td>
+<td>4</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(0 .. 31\)</span></td>
+<td>5</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(0 .. 63\)</span></td>
+<td>6</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(0 .. 127\)</span></td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
+<p>Supondo que possuímos um binário de três dígitos, um contador de <code>0</code> a <code>7</code> em decimal seria em binário: <code>000</code> -&gt; <code>001</code> -&gt; <code>010</code> -&gt; <code>011</code> -&gt; <code>100</code> -&gt; <code>101</code> -&gt; <code>110</code> -&gt; <code>111</code> ... . O número <code>45</code> em binário é <code>0b101101</code>:</p>
+<table>
+<thead>
+<tr>
+<th>5</th>
+<th>4</th>
+<th>3</th>
+<th>2</th>
+<th>1</th>
+<th>0</th>
+<th>posição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2^5</td>
+<td>2^4</td>
+<td>2^3</td>
+<td>2^2</td>
+<td>2^1</td>
+<td>2^0</td>
+<td>peso</td>
+</tr>
+<tr>
+<td>32</td>
+<td>16</td>
+<td>8</td>
+<td>4</td>
+<td>2</td>
+<td>1</td>
+<td>valor</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td>número binário</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Tip 1</p>
+<p>Não tem muito segredo, para interpretar números binários facilmente é necessária prática!</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip 2</p>
+<p>Para saber qual o valor máximo de decimal que é possível armazenar com <span class="arithmatex">\(n\)</span> bits:</p>
+<p><span class="arithmatex">\(0  ..  2^n-1\)</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Nomenclatura</p>
+<p>Iremos utilizar os prefixos:</p>
+<ul>
+<li><code></code>: Para indicar um número em decimal</li>
+<li><code>0b</code>: Para indicar um número em binário</li>
+<li><code>0x</code>: Para indicar um número em hexadecimal</li>
+</ul>
+<p>Exemplo:</p>
+<div class="highlight"><pre><span></span><code>hex      bin      dec
+0x100 != 0b100 != 100
+</code></pre></div>
+</div>
+<div class="admonition exercise choice two-cols tag-choice-exercise" data-answer-idx="1" data-slug="commum-content/teoria/Teoria-Dados/choice_1" id="choice_1_0">
+<p class="admonition-title">Base 2 1</p>
+<form class="exercise-form">
+<p>Converta <code>15</code> de decimal para base 2 (binário)</p>
+<div class="form-elements">
+<div class="alternative-set">
+  
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="1" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <code>1111</code>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="0" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <code>0015</code>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="3" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <code>1101</code>
+  </div>
+</label>
+
+<label class="alternative">
+  <div class="content">
+    <input type="radio" name="data" value="2" _="   on click    set alternative to closest .alternative    if alternative matches <:not(.selected)/> then     set selected to false    else     set selected to true    end    remove .selected from .alternative in closest .alternative-set    if selected then     remove .selected from alternative     add @disabled to <input[type='submit']/> in closest .form-elements    else     add .selected to alternative     remove @disabled from <input[type='submit']/> in closest .form-elements    end   end   ">
+    <code>1110</code>
+  </div>
+</label>
+
+</div>
+<input class="ah-button ah-button--primary" type="submit" name="sendButton" value="Submit" disabled />
+</div>
+</form>
+<div class="admonition answer no-indent">
+<p class="admonition-title">Answer</p>
+<div class="highlight"><pre><span></span><code> 8+4+2+1 = 15
+ 1 1 1 1
+</code></pre></div>
+</div>
+</div>
+<h3 id="definicoes">Definições</h3>
+<p>Em muitas linguagens de programação é necessário definirmos o tamanho da variável que iremos armazenar um dado, para facilitar o entendimento damos nome a quantidade de bits que ela irá ocupar:</p>
+<ol>
+<li>4 bits: <strong>nibble</strong></li>
+<li>8 bits: <strong>byte</strong></li>
+<li>16 bits: <strong>halfword</strong></li>
+<li>32 bits: <strong>word</strong></li>
+</ol>
+<h3 id="conversao-decimal-binario">Conversão Decimal &lt;-&gt; Binário</h3>
+<p>Existem diversas técnicas de conversão binário <img alt="🔄" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/svg/1f504.svg" title=":arrows_counterclockwise:" /> decimal, a seguir detalhes de como realizar essas conversões, o segredo é entender os pesos de cada casa de um <code>bit</code> no sistema binário e então fazer a conta inversa.</p>
+<div>
+<iframe height="500" src="https://www.youtube.com/embed/_68Cn5VuDxQ?autoplay=0" type="text/html" width="100%"></iframe>
+</div>
+<div>
+<iframe height="500" src="https://www.youtube.com/embed/gOXO5H4i18Y?autoplay=0" type="text/html" width="100%"></iframe>
+</div>
+<h2 id="base-16">Base 16</h2>
+<div>
+<iframe height="500" src="https://www.youtube.com/embed/uuUzkqSxCz4?autoplay=0" type="text/html" width="100%"></iframe>
+</div>
+<p>A base 16, ou hexadecimal, é outra maneira de representarmos números utilizando não só <code>2</code> ou <code>10</code> símbolos como acabamos de ver, mas 16 símbolos! É como se conseguimos representar o valor <code>10</code> com um único carácter, no caso iremos utilizar o <code>A</code>.</p>
+<p>Nessa base, cada unidade possui um peso na forma <span class="arithmatex">\(2^{16}\)</span>:</p>
+<p><img alt="" src="../figs/Dados-hexa.svg" width="500" /></p>
+<p>Um contador no formato hexadecimal possui a seguinte forma:</p>
+<table>
+<thead>
+<tr>
+<th>Decimal</th>
+<th>Binário</th>
+<th>Hexadecimal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0000</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0001</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0010</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0011</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0100</td>
+<td>4</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0101</td>
+<td>5</td>
+</tr>
+<tr>
+<td>6</td>
+<td>0110</td>
+<td>6</td>
+</tr>
+<tr>
+<td>7</td>
+<td>0111</td>
+<td>7</td>
+</tr>
+<tr>
+<td>8</td>
+<td>1000</td>
+<td>8</td>
+</tr>
+<tr>
+<td>9</td>
+<td>1001</td>
+<td>9</td>
+</tr>
+<tr>
+<td>10</td>
+<td>1010</td>
+<td>A</td>
+</tr>
+<tr>
+<td>11</td>
+<td>1011</td>
+<td>B</td>
+</tr>
+<tr>
+<td>12</td>
+<td>1100</td>
+<td>C</td>
+</tr>
+<tr>
+<td>13</td>
+<td>1101</td>
+<td>D</td>
+</tr>
+<tr>
+<td>14</td>
+<td>1110</td>
+<td>E</td>
+</tr>
+<tr>
+<td>15</td>
+<td>1111</td>
+<td>F</td>
+</tr>
+<tr>
+<td>16</td>
+<td>0001 0000</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<h3 id="base-16-base-2">Base 16 &harr; Base 2</h3>
+<div>
+<iframe height="500" src="https://www.youtube.com/embed/SU0HpCAkIxY?autoplay=0" type="text/html" width="100%"></iframe>
+</div>
+<p>A conversão de número na base 16 para a base 2 e vice-versa acontece de forma trivial. Da base 2 para a base 16 basta separar os bits da palavra em unidades de 4 casas e então realizar a conversão de cada grupo de 4 bits para o seu equivalente em Hexa. Para a conversão de hexa para binário, basta converter cada símbolo de hexa para o seu equivalente em binário (4 dígitos), seguindo a tabela anterior.</p>
+<p>Exemplos:</p>
+<p>a) <code>0xA01</code> para binário:</p>
+<pre><code>  A   0    1
+  |    \    \
+  |     \    \
+ 1010   0000  0001
+
+ -&gt; 0b1010_0000_0001
+</code></pre>
+<p>b) <code>0b1111_0101_1000</code> para hexa:</p>
+<pre><code> 1111 0101 1000
+  |    |    |
+  |    |    |
+  F    5    8
+
+  -&gt; 0xF58
+</code></pre>
+<h3 id="base-16-base-10">Base 16 &harr; Base 10</h3>
+<iframe width="864" height="486" src="https://www.youtube.com/embed/0yAst89n0rM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<p>Para converter de Hexa para Decimal basta aplicar os pesos em cada um das unidades, como demonstrado a seguir:</p>
+<p>a) 0xA01 para decimal:</p>
+<pre><code>    A       0       1
+    |       |       |
+    |       |       |
+A.16^2  0.16^1   1.16^0
+</code></pre>
+<p>-&gt; 10.256 + 0.16 + 1.1 = 2561</p>
+<p>Para alterar a base de Decimal para Hexa, uma das soluções mais triviais é a de converter primeiro para binário e então agrupar os bits de 4 em 4 e converter para hexa:</p>
+<div class="highlight"><pre><span></span><code>   Decimal -&gt; Binário -&gt; Hexa
+</code></pre></div>
+<p>b) 42 -&gt; 0x ???</p>
+<pre><code>     32 +  8 +  2 = 42
+      \   |   /     ---------------
+       \  |  /      |             |
+        \ | /       |             v
+42 -&gt; 0b101010 -&gt; 0010 1010 -&gt; 0x2A
+                        |        ^
+                        |        |
+                        ----------
+                ----|----
+                    |
+                Blocos de 4 bits
+</code></pre>
+<h2 id="base-8">Base 8</h2>
+<p>Similar as outras bases de número, o sistema octal é composto por 8 símbolos: <code>0</code> .. <code>7</code>, e nele cada posição possui valor na forma de: <span class="arithmatex">\(8^n\)</span>. Veja o exemplo a seguir:</p>
+<p>a) 137 em octal para decimal: <span class="arithmatex">\(1.8^2 + 3.8^1 + 7.8^0=95\)</span></p>
+<table>
+<thead>
+<tr>
+<th>2</th>
+<th>1</th>
+<th>0</th>
+<th>posição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8^2</td>
+<td>8^1</td>
+<td>8^0</td>
+<td>peso</td>
+</tr>
+<tr>
+<td>64</td>
+<td>8</td>
+<td>1</td>
+<td>peso</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td><code>3</code></td>
+<td><code>7</code></td>
+<td>valor octal</td>
+</tr>
+<tr>
+<td>1*64</td>
+<td>3*8</td>
+<td>7*1</td>
+<td><img alt="➡️" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/svg/27a1.svg" title=":arrow_right:" /> <span class="arithmatex">\(64+24+7=95\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Para representarmos um valor octal em binário, é necessário reservarmos 3 bits para cada símbolo do número octal, a conversão é feita como no sistema hexadecimal, porém aqui separando blocos de 3 bits:</p>
+<p>b) 137 para binário:</p>
+<div class="highlight"><pre><span></span><code>001 011 111
+</code></pre></div>
+<p>O sistema octal é utilizado no Linux para permissões de arquivos onde são necessários 3 bits para controlar se um usuário possui: acesso de leitura, escrita e/ou execução de um determinado arquivo:</p>
+<table>
+<thead>
+<tr>
+<th>Permission</th>
+<th>rwx</th>
+<th>Binary</th>
+<th>octal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>read, write and execute</td>
+<td>rwx</td>
+<td>111</td>
+<td>7</td>
+</tr>
+<tr>
+<td>read and write</td>
+<td>rw-</td>
+<td>110</td>
+<td>6</td>
+</tr>
+<tr>
+<td>read and execute</td>
+<td>r-x</td>
+<td>101</td>
+<td>5</td>
+</tr>
+<tr>
+<td>read only</td>
+<td>r--</td>
+<td>100</td>
+<td>4</td>
+</tr>
+<tr>
+<td>write and execute</td>
+<td>-wx</td>
+<td>011</td>
+<td>3</td>
+</tr>
+<tr>
+<td>write only</td>
+<td>-w-</td>
+<td>010</td>
+<td>2</td>
+</tr>
+<tr>
+<td>execute only</td>
+<td>--x</td>
+<td>001</td>
+<td>1</td>
+</tr>
+<tr>
+<td>none</td>
+<td>---</td>
+<td>000</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Para modificar a permissão de um arquivo no linux é necessário fornecer a informação para três grupos diferentes: <code>usuário</code>, grupos na qual o usuário faz parte e qualquer outro user. Para isso basta escrever no terminal:</p>
+<div class="highlight"><pre><span></span><code>         / user
+        /
+$chmod 754 FILE
+        | \
+        |  \ others
+        group
+</code></pre></div>
+<p>Isso da permissão de:</p>
+<ul>
+<li>user: read/write/execute</li>
+<li>group: read/execute</li>
+<li>others: read</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Povos 3</p>
+<p>Alguns povos da América do Norte, México e Europa utilizam o sistema octal, pois consideram a quantidade dos vãos dos dedos e não os dedos propriamente.</p>
+<blockquote>
+<p>Fonte: <a href="https://en.wikipedia.org/wiki/Octal#By_Native_Americans">https://en.wikipedia.org/wiki/Octal#By_Native_Americans</a></p>
+</blockquote>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Início da computação 4</p>
+<p>Para que serve o sistema octal? No começo da computação a IBM possuía memórias com: 6-bit, 12-bit, 24-bit e 36-bit. Sendo todas as unidades divisíveis por 3, o que facilita a interpretação em um sistema octal.</p>
+</div>
+<h2 id="outros-sistemas">Outros sistemas</h2>
+<p>Existem inúmeras maneiras de codificação de números e/ou caracteres diversos, as mais utilizadas são:</p>
+<ul>
+<li>BCD</li>
+<li>ASCII</li>
+<li>UTF-8</li>
+</ul>
+<h3 id="bcd">BCD</h3>
+<p>No sistema <a href="https://pt.wikipedia.org/wiki/Codifica%C3%A7%C3%A3o_bin%C3%A1ria_decimal">Binary-coded decimal (BCD)</a> cada unidade de um sistema decimal é convertido para <code>4 bits</code>, muito parecido com a conversão para Hexadecimal. Ele é muito utilizado em relógios e quando há a necessidade de exibição do valor em decimal em binário (Display de 7 segmentos).</p>
+<ul>
+<li>Exemplo, <code>356</code> em BCD:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>     3    5    6    : Decimal
+    0011 0101 0110  : BCD
+</code></pre></div>
+<div>
+<iframe height="500" src="https://www.youtube.com/embed/AM0tr8Kyvzg?autoplay=0" type="text/html" width="100%"></iframe>
+</div>
+<h3 id="ascii">ASCII</h3>
+<p><a href="https://pt.wikipedia.org/wiki/ASCII">ASCII</a> (do inglês American Standard Code for Information Interchange; "Código Padrão Americano para o Intercâmbio de Informação") é uma maneira de codificar em binário (8 bits) 95 sinais gráficos (letras, símbolos e números) e alguns sinais de controle. É muito utilizada pelos programas para armazenarem 'caracteres' e 'strings'.</p>
+<p><a href="http://www.asciitable.com"><img alt="" src="https://www.asciitable.com/asciifull.gif" /></a></p>
+<blockquote>
+<p>Fonte: <a href="http://www.asciitable.com">www.asciitable.com</a></p>
+</blockquote>
+<p>Por exemplo, a palavra Insper convertido para ASCII fica da seguinte maneira (em decimal):</p>
+<p><img alt="" src="../figs/Dados-ascii.svg" width="500" /></p>
+<div>
+<iframe height="500" src="https://www.youtube.com/embed/zB85kTs-sEw?autoplay=0" type="text/html" width="100%"></iframe>
+</div>
+
+
+</section>
+          
+        
+      </main>
+      <footer class="ah-footer ah-typeset">
+        <div class="ah-footer-nav">
+          
+            <a href="../../../class/vmtranslator-lab-1/"
+               class="ah-prev"
+               title="Lab 7 - VM translator">
+              <span class="nav-label">Previous</span>
+              <span class="nav-title">Lab 7 - VM translator</span>
+            </a>
+          
+          
+            <a href="../Teoria-Algebra-Booleana/"
+               class="ah-next"
+               title="Álgebra Booleana">
+              <span class="nav-label">Next</span>
+              <span class="nav-title">Álgebra Booleana</span>
+            </a>
+          
+        </div>
+      </footer>
+    </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+  </body>
+</html>
