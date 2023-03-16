@@ -1,41 +1,30 @@
 # Lab 11: (nasm) Assembly 
 
+!!! info "💰 Laboratório com pontos"
+    Algumas tarefas deste laboratório fornecem pontos de nota individual (hardware ou software), os exercícios marcados com 💰 são os que fornecem os pontos. Os pontos apenas são validados quando contabilizados pelo CI do github. Fiquem atentos para o deadline da entrega.
+    
+    Neste laboratório você pode receber até: **({{lab_11_points}})**.
+
 Ao final desse lab você deve ser capaz de:
 
 1. Usar o simulador gráfico 
 1. Fazer pequenas modificações em um código assembly
 1. Executar script de teste do assembly
 
-!!! warning "Antes de começar"
-    1. Atualize o seu repositório de laboratório com o `upstream`
-    
-    ```
-    git remote add upstream https://github.com/Insper/bits-e-proc-labs
-    git fetch upstream
-    git checkout main
-    git merge upstream/main
-    ```
-    
-    1.  Atualize a ferramenta: 
-    
-    ```
-    pip3 install --upgrade --force-reinstall -r requirements.txt
-    ```
+!!! exercise
+    Para executar qualquer laboratório você deve seguir os passos a seguir:
 
-    1. Valide executando no terminal `bits`:
+    1. Acesse o lab pelo link {{lab_11_classroom}} 
+    1. Clone o repositório criado 
+    1. Crie o ambiente virtual python (`python3 -m venv env`)
+    1. Ative o ambiente virtual (`. env/bin/activate`)
+    1. Instale as dependências (`pip3 install -r requirements.txt`)
     
+!!! warning 
+    Sempre que for abrir um terminal novo e acessar a pasta, será necessário ativar o ambiente virtual:
+   
     ```
-    ➜ bits 
-    Usage: bits [OPTIONS] COMMAND [ARGS]...
-
-    Options:
-    -b, --debug  Enables verbose mode.
-    --help       Show this message and exit.
-
-    Commands:
-    assembly
-    gui
-    program
+    . env/bin/activate
     ```
 
 ## Simulador
@@ -188,7 +177,7 @@ Onde:
 - `ram`: É a memória RAM inicial da aplicação
 - `tst`: É o teste que será executado na memória RAM ao final do processamento
 
-### Praticando
+### 💰 Praticando
 
 Vamos implementar alguns códigos assembly, a descrição do que eles devem fazer estão no próprio arquivo `.nasm`.
 
@@ -204,11 +193,8 @@ Vamos implementar alguns códigos assembly, a descrição do que eles devem faze
     
     Tarefa: Leia o cabeçalho do arquivo e implemente o programa nasm que executa o que está descrito, teste com o `pytest`
 
-
-!!! exercise
+!!! exercise "💰 ({{lab_11_points}})"
     - File: `nasm/mov.nasm`
     - Test: `pytest -k mov`
     
     Tarefa: Leia o cabeçalho do arquivo e implemente o programa nasm que executa o que está descrito, teste com o `pytest`
-    
-

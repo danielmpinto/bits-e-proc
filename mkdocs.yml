@@ -26,6 +26,8 @@ extra:
     lab_6_classroom: https://classroom.github.com/a/yQ34x1Xc
     lab_6_points: '1 HW / 0 SW'
     lab_10_classroom: https://classroom.github.com/a/eTzJJv1o
+    lab_11_points: '0 HW / 2 SW'
+    lab_11_classroom: https://classroom.github.com/a/rS4zT505
 
 markdown_extensions:
   - markdown.extensions.admonition
