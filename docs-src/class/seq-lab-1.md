@@ -10,7 +10,7 @@
 
     1. Acesse o lab pelo link {{lab_10_classroom}} 
     1. Clone o repositório criado 
-    1. Crie o ambiente virtual python (`python3 -m venv env`)
+    1. Crie o ambiente virtual python (`python3.8 -m venv env`)
     1. Ative o ambiente virtual (`. env/bin/activate`)
     1. Instale as dependências (`pip3 install -r requirements.txt`)
     
