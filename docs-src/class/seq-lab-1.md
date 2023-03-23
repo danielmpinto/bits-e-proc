@@ -75,7 +75,7 @@ Podemos interpretar o `def seq()` da seguinte maneira: Sempre que o sinal clock 
     
 ### Aplicando
  
-Com a possibilidade de executarmos uma acão por clock, conseguimos realizar tarefas que não eram possíveis antes como por exemplo contar eventos. 
+Com a possibilidade de executarmos uma ação por clock, conseguimos realizar tarefas que não eram possíveis antes como por exemplo contar eventos. 
  
 !!! exercise
     - File: `seq_modules.py`
@@ -260,10 +260,49 @@ def seq():
     Depois modifique o toplevel para validar diferentes valores em diferentes leds:
     
     ```py
-    ic2 = blinkLed(ledr_s[0], 100, CLOCK_50, RESET_N)
-    ic3 = blinkLed(ledr_s[1], 50, CLOCK_50, RESET_N)
-    ic4 = blinkLed(ledr_s[2], 1000, CLOCK_50, RESET_N)
+    ic2 = blinkLed(ledr_s[0], 500, CLOCK_50, RESET_N)
+    ic3 = blinkLed(ledr_s[1], 1500, CLOCK_50, RESET_N)
+    ic4 = blinkLed(ledr_s[2], 3000, CLOCK_50, RESET_N)
     ```
+    
+    ??? tip "Solução"
+        ```py
+        @block
+        def contador(leds, clk, rst):
+            tmp = Signal(modbv(0)[10:])
+
+            @always_seq(clk.posedge, reset=rst)
+            def seq():
+                tmp.next = tmp + 1
+                leds.next = tmp
+
+            return instances()
+
+
+        @block
+        def blinkLed(led, time_ms, clk, rst):
+            cnt = Signal(intbv(0)[32:])
+            l = Signal(bool(0))
+
+            @always_seq(clk.posedge, reset=rst)
+            def seq():
+                if cnt < 50000000 * (time_ms / 1000):
+                    cnt.next = cnt + 1
+                else:
+                    cnt.next = 0
+                    l.next = not l
+
+            @always_comb
+            def comb():
+                led.next = l
+
+            return instances()
+        ```
+    No trecho de código abaixo estamos multiplicando a frequência do clock da placa pelo tempo requisitado (time_ms) já transformado em segundos.
+    ```
+    if cnt < 50000000 * (time_ms / 1000):
+    ```
+    
     
     Lembre de validar na FPGA!
 
@@ -289,28 +328,6 @@ def seq():
     #    for i in range(len(ledr_s)):
     #        LEDR[i].next = ledr_s[i]
     ```
-      
-    ??? tip "Solução"
-        ```py
-        cnt = Signal(intbv(0)[32:])
-        l = Signal(bool(0))
-
-        @always_seq(clk.posedge, reset=rst)
-        def seq():
-            if cnt < 25000000:
-                cnt.next = cnt + 1
-            else:
-                cnt.next = 0
-                l.next = not l
-
-        @always_comb 
-        def comb():
-            led.next = l
-
-        return instances()
-        ```
-        
-        Aqui é a mesma coisa, os sinais `l` e `cnt` são internos e podem ser lidos e escritos. A cada contagem de tempo eu inverto o valor do sinal booleano `l` e atualizo a saída `led` com o valor.
     
 !!! exercise
     - File: `seq_modules.py`
