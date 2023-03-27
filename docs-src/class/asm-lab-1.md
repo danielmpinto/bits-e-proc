@@ -117,7 +117,7 @@ Para testarmos esse código será necessário colocarmos valores iniciais na mem
 
 Vamos praticar um pouco agora programar em assembly, no começo parece bem difícil, mas com a prática as coisas vão ficando mais fáceis.
 
-Use o resumo das instruções: [AssemblyZ1](https://insper.github.io/Z01.1/Z01/Util-Resumo-Assembly/) para saber as instruções disponíveis.
+Use o resumo das instruções: [AssemblyZ1](https://insper.github.io/bits-e-proc/commum-content/z01/z01-Resumo-Assembly/) para saber as instruções disponíveis.
 
 !!! exercise 
     Altere o código para armazenar o resultado no endereço RAM[5]
