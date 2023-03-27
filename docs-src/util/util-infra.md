@@ -24,7 +24,7 @@ Primeiro instale o software VirtualBox.
     sudo apt-get install virtualbox
     sudo apt-get install virtualbox—ext–pack
     ```
-!!! Identificando dispositivos USB na VM no Ubuntu
+!!! Acessando dispositivos USB na VM no Ubuntu
     Siga o seguinte tutorial: https://help.ubuntu.com/community/VirtualBox/USB
 
 === "Windows"
