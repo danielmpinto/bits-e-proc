@@ -19,7 +19,7 @@ plugins:
 extra:
   custom_variables:
     lab_1_groups_spreadsheet: 'https://docs.google.com/spreadsheets/d/1V1h8e0awIF-E_OVm-Vc4zupaBRAQf-PcWidCq1knw74/edit?usp=sharing'
-    lab_1_mural: 'https://app.mural.co/t/elementos9119/m/elementos9119/1674526677441/31581d4e5c96eee30370b8f0896d4ed47928ff1?sender=ub569a9273c6e285461187641'
+    lab_1_mural: https://app.mural.co/t/elementos9119/m/elementos9119/1691767251465/18278e02ddfd2c0c5bec054ae54303dcf58dad23?sender=ub569a9273c6e285461187641
     lab_1_benchmark: 'https://docs.google.com/spreadsheets/d/1-wJcqGsZMZzgkiVMG4cb2BI__cL7_cRLNCoCHIYf-GA/edit?usp=sharing'
     lab_5_classroom: https://classroom.github.com/a/vL9MgUbs
     lab_5_points: '2 HW / 1 SW'
