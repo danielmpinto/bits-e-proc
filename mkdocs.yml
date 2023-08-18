@@ -113,6 +113,7 @@ nav:
       - "commum-content/teoria/Vídeo Aulas (Luciano)": "Util-Video-Aulas.md"
 
   - MyHDL:
+      - "util/infra-docker.md"
       - "teoria/myhdl-1.md"
 
   - "Z01":
