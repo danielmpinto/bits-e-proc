@@ -33,7 +33,7 @@ Implementar o outro circuito feito com transistores que implementa uma equação
 1. Abra o site: http://www.falstad.com/circuit/
 1. :arrow_right: Arquivo :arrow_right: Importar Arquivo Texto :arrow_right: Copiar e colar o texto a seguir
 
-[circuito](transistores-lab-1-exe1.txt)
+[circuito](transistores-lab-1-exe2.txt)
 
 !!! exercise
     1. Encontre a tabela verdade do circuito.
